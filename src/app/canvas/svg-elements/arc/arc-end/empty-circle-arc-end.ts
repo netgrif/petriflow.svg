@@ -3,8 +3,10 @@ import {CanvasConfiguration} from '../../../canvas-configuration';
 
 export class EmptyCircleArcEnd extends CircleArcEnd {
 
+    public static readonly ID = 'arc_end_circle_empty';
+
     constructor() {
-        super('read_arc_end_point');
+        super(EmptyCircleArcEnd.ID);
         this.circle.setAttributeNS(null, 'fill', 'white');
     }
 

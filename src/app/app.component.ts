@@ -7,6 +7,7 @@ import {RegularTransitionPlaceArc} from './canvas/svg-elements/arc/regular-trans
 import {ReadArc} from './canvas/svg-elements/arc/read-arc';
 import {InhibitorArc} from './canvas/svg-elements/arc/inhibitor-arc';
 import {ResetArc} from './canvas/svg-elements/arc/reset-arc';
+import {PetriflowCanvas} from './canvas/petriflow-canvas';
 
 @Component({
     selector: 'nab-root',
@@ -19,7 +20,7 @@ export class AppComponent implements AfterViewInit {
     private canvas: Canvas;
 
     ngAfterViewInit() {
-        this.canvas = new Canvas(this.canvasElement.nativeElement);
+        this.canvas = new PetriflowCanvas(this.canvasElement.nativeElement);
 
         const places = [];
         const transitions = [];

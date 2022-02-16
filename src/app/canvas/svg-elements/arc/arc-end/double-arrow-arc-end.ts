@@ -1,8 +1,8 @@
-import {ArrowArcEnd} from './arrow-arc-end';
-import {Arc} from '../abstract-arc/arc';
-import {CanvasElement} from '../../svg-objects/canvas-element';
+import {ArcEnd} from './arc-end';
 
-export class DoubleArrowArcEnd extends ArrowArcEnd {
+export class DoubleArrowArcEnd extends ArcEnd {
+
+    public static readonly ID = 'arc_end_arrow';
 
     constructor() {
         super();

@@ -3,10 +3,8 @@ import {CanvasConfiguration} from '../../../canvas-configuration';
 export abstract class ArcEnd {
 
     private _arrow: SVGMarkerElement;
-    private _id: string;
 
-    private constructor(id: string, height: number, width: number, refX: number, refY: number) {
-        this._id = id;
+    protected constructor(id: string, height: number, width: number, refX: number, refY: number) {
         this._arrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'marker') as SVGMarkerElement;
         this._arrow.setAttributeNS(null, 'id', id);
         this._arrow.setAttributeNS(null, 'markerHeight', `${height}`);

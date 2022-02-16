@@ -1,27 +1,31 @@
 import {CanvasElement} from './svg-elements/svg-objects/canvas-element';
 import {CanvasConfiguration} from './canvas-configuration';
 import {ArcEnd} from './svg-elements/arc/arc-end/arc-end';
+import {Container} from './svg-elements/svg-objects/container';
 
-export class Canvas {
+export class Canvas extends Container {
 
     private _svg: SVGSVGElement;
-    private _defs: SVGDefsElement;
+    private readonly _defs: SVGDefsElement;
 
     constructor(svg: SVGSVGElement) {
+        super();
         this._svg = svg;
         this._defs = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'defs') as SVGDefsElement;
+        this.svg.appendChild(this._defs);
+        this.svg.appendChild(this.container);
     }
 
     public add(object: CanvasElement): void {
-        this._svg.appendChild(object.container);
+        this.container.appendChild(object.container);
     }
 
     public remove(element): any {
-        return this._svg.removeChild(element);
+        return this.container.removeChild(element);
     }
 
     public removeAll(): void {
-        this._svg.childNodes.forEach(value => value.remove());
+        this.container.childNodes.forEach(value => value.remove());
     }
 
     public register(arcEnd: ArcEnd): void {

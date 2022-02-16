@@ -8,12 +8,11 @@ export abstract class Arc extends CanvasElement {
     private _end: NodeElement;
     private _arcLineBackground: SVGPolylineElement;
     private _arcLine: SVGPolylineElement;
-    private _arrow: ArcEnd;
     private _multiplicityElement: SVGTextElement;
     private _multiplicity: Text;
     private _linePoints: Array<DOMPoint>;
 
-    protected constructor(start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
+    protected constructor(start: NodeElement, end: NodeElement, endId: string, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
         super();
         this._start = start;
         this._end = end;
@@ -29,6 +28,7 @@ export abstract class Arc extends CanvasElement {
         this._arcLine.setAttributeNS(null, 'fill', 'none');
         this._arcLine.setAttributeNS(null, 'stroke', 'black');
         this._arcLine.setAttributeNS(null, 'stroke-width', '2');
+        this._arcLine.setAttributeNS(null, 'marker-end', endId);
         this.container.appendChild(this._arcLine);
 
         this._multiplicityElement = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as SVGTextElement;
@@ -43,24 +43,17 @@ export abstract class Arc extends CanvasElement {
             this._linePoints.push(...linePoints);
         }
 
-        this.arrow = this.createArcEnd();
-        this.container.appendChild(this.arrow.arrow);
-
         this.move(start, end);
     }
-
-    abstract createArcEnd(): ArcEnd;
 
     activate() {
         this.arcLine.setAttributeNS(null, 'class', 'svg-active-stroke');
         this.multiplicityElement.setAttributeNS(null, 'class', 'svg-active-fill');
-        this.arrow.activate();
     }
 
     deactivate() {
         this.arcLine.setAttributeNS(null, 'class', 'svg-inactive-stroke');
         this.multiplicityElement.setAttributeNS(null, 'class', 'svg-inactive-fill');
-        this.arrow.deactivate();
     }
 
     move(start: NodeElement, end: NodeElement) {
@@ -86,14 +79,6 @@ export abstract class Arc extends CanvasElement {
 
     set arcLine(value: SVGPolylineElement) {
         this._arcLine = value;
-    }
-
-    get arrow(): ArcEnd {
-        return this._arrow;
-    }
-
-    set arrow(value: ArcEnd) {
-        this._arrow = value;
     }
 
     get multiplicityElement(): SVGTextElement {

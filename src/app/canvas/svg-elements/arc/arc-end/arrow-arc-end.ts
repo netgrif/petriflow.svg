@@ -3,10 +3,12 @@ import {CanvasConfiguration} from '../../../canvas-configuration';
 
 export class ArrowArcEnd extends ArcEnd {
 
-    private _arrowHead: SVGPolygonElement;
+    public static readonly ID = 'arc_end_arrow';
+
+    private readonly _arrowHead: SVGPolygonElement;
 
     constructor() {
-        super(CanvasConfiguration.ARROW_HEAD_SIZE, CanvasConfiguration.ARROW_HEAD_SIZE, CanvasConfiguration.ARROW_HEAD_SIZE / 2, CanvasConfiguration.ARROW_HEAD_SIZE);
+        super(ArrowArcEnd.ID, CanvasConfiguration.ARROW_HEAD_SIZE, CanvasConfiguration.ARROW_HEAD_SIZE, CanvasConfiguration.ARROW_HEAD_SIZE / 2, CanvasConfiguration.ARROW_HEAD_SIZE);
         this._arrowHead = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
         this._arrowHead.setAttributeNS(null, 'points', `0 0, ${CanvasConfiguration.ARROW_HEAD_SIZE / 2} ${CanvasConfiguration.ARROW_HEAD_SIZE}, ${CanvasConfiguration.ARROW_HEAD_SIZE} 0`);
     }
