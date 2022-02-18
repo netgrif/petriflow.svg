@@ -98,11 +98,11 @@ export class Transition extends LabeledObject {
         let tdx: number;
         let tdy: number;
         if (Math.pow(d.x, 2) >= Math.pow(d.y, 2)) {
-            tdx = CanvasConfiguration.SIZE / 2;
-            tdy = (CanvasConfiguration.SIZE / 2) * (d.y / d.x);
+            tdx = CanvasConfiguration.SIZE / 2 + 1;
+            tdy = (CanvasConfiguration.SIZE / 2 + 1) * (d.y / d.x);
         } else {
-            tdx = (CanvasConfiguration.SIZE / 2) * (d.x / d.y);
-            tdy = CanvasConfiguration.SIZE / 2;
+            tdx = (CanvasConfiguration.SIZE / 2 + 1) * (d.x / d.y);
+            tdy = CanvasConfiguration.SIZE / 2 + 1;
         }
         return new DOMPoint(tdx, tdy);
     }

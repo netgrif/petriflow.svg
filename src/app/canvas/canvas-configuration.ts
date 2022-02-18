@@ -14,5 +14,5 @@ export class CanvasConfiguration {
         SIZE: 12,
         SIZE_OFFSET: 18
     };
-    public static ARROW_HEAD_SIZE = 6;
+    public static ARROW_HEAD_SIZE = 4;
 }
