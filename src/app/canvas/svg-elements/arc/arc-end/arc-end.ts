@@ -12,6 +12,7 @@ export abstract class ArcEnd {
         this._arrow.setAttributeNS(null, 'refX', `${refX}`);
         this._arrow.setAttributeNS(null, 'refY', `${refY}`);
         this._arrow.setAttributeNS(null, 'orient', 'auto');
+        this._arrow.setAttributeNS(null, 'markerUnits', 'strokeWidth');
     }
 
     get arrow(): SVGMarkerElement {

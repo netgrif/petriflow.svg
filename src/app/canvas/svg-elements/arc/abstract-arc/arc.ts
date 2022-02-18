@@ -28,7 +28,7 @@ export abstract class Arc extends CanvasElement {
         this._arcLine.setAttributeNS(null, 'fill', 'none');
         this._arcLine.setAttributeNS(null, 'stroke', 'black');
         this._arcLine.setAttributeNS(null, 'stroke-width', '2');
-        this._arcLine.setAttributeNS(null, 'marker-end', endId);
+        this._arcLine.setAttributeNS(null, 'marker-end', `url(#${endId})`);
         this.container.appendChild(this._arcLine);
 
         this._multiplicityElement = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as SVGTextElement;

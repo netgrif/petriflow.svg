@@ -7,7 +7,7 @@ import {NodeElement} from '../svg-objects/node-element';
 export class RegularPlaceTransitionArc extends PlaceTransitionArc {
 
     constructor(start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
-        super(start, end, '', linePoints, multiplicityLabel);
+        super(start, end, 'arc_end_arrow', linePoints, multiplicityLabel);
     }
 
     createArcEnd(): ArcEnd {

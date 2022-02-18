@@ -6,7 +6,7 @@ import {NodeElement} from '../svg-objects/node-element';
 export class InhibitorArc extends PlaceTransitionArc {
 
     constructor(start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
-        super(start, end, linePoints, multiplicityLabel);
+        super(start, end, 'arc_end_circle_empty', linePoints, multiplicityLabel);
     }
 
     createArcEnd(): ArcEnd {

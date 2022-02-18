@@ -73,8 +73,51 @@ export class Transition extends LabeledObject {
     }
 
     public getEdgeIntersection(from: DOMPoint): DOMPoint {
-        return this.position;
+        const d = this.getDiff(new DOMPoint(this.position.x, this.position.y), new DOMPoint(from.x, from.y));
+        const td = this.getTransitionDiff(d);
+        const bool = this.diffBool(d);
+        return this.edgeResolve(bool ? this.position.x + td.x : this.position.x - td.x,
+            bool ? this.position.y + td.y : this.position.y - td.y, this.position.x, this.position.y);
     }
+
+    private diffBool(d: DOMPoint) {
+        return (d.x * d.x >= d.y * d.y && d.x >= 0) || (d.x * d.x < d.y * d.y && d.y >= 0);
+    }
+
+    private getDiff(startElement: DOMPoint, endElement: DOMPoint) {
+        const startPointX = startElement.x;
+        const startPointY = startElement.y;
+        const endPointX = endElement.x;
+        const endPointY = endElement.y;
+        const dx = endPointX - startPointX;
+        const dy = endPointY - startPointY;
+        return new DOMPoint(dx, dy);
+    }
+
+    private getTransitionDiff(d: DOMPoint): DOMPoint {
+        let tdx: number;
+        let tdy: number;
+        if (Math.pow(d.x, 2) >= Math.pow(d.y, 2)) {
+            tdx = CanvasConfiguration.SIZE / 2;
+            tdy = (CanvasConfiguration.SIZE / 2) * (d.y / d.x);
+        } else {
+            tdx = (CanvasConfiguration.SIZE / 2) * (d.x / d.y);
+            tdy = CanvasConfiguration.SIZE / 2;
+        }
+        return new DOMPoint(tdx, tdy);
+    }
+
+    public edgeResolve(newX: number, newY: number, originX: number, originY: number): DOMPoint {
+        if (isNaN(newX)) {
+            newX = originX;
+        }
+        if (isNaN(newY)) {
+            newY = originY;
+        }
+        return new DOMPoint(newX, newY);
+    }
+
+
 
     private setElementPosition(position: DOMPoint) {
         this._element.setAttributeNS(null, 'x', `${position.x - CanvasConfiguration.SIZE / 2}`);
