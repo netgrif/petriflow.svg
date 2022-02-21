@@ -34,11 +34,10 @@ export abstract class Arc extends CanvasElement {
         this._multiplicityElement = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as SVGTextElement;
         this._multiplicityElement.setAttributeNS(null, 'font-size', `${CanvasConfiguration.FONT.SIZE}`);
         this._multiplicityElement.setAttributeNS(null, 'font-family', CanvasConfiguration.FONT.FAMILY);
-        this._multiplicity = document.createTextNode(multiplicityLabel);
+        this._multiplicity = document.createTextNode(multiplicityLabel ?? '');
         this._multiplicityElement.appendChild(this._multiplicity);
         this.container.appendChild(this._multiplicityElement);
 
-        this._linePoints = [];
         if (linePoints && linePoints.length > 0) {
             this._linePoints.push(...linePoints);
         }
@@ -63,6 +62,46 @@ export abstract class Arc extends CanvasElement {
         const arcLinePoints = points.map(p => `${p.x},${p.y}`).join(' ');
         this._arcLine.setAttributeNS(null, 'points', arcLinePoints);
         this._arcLineBackground.setAttributeNS(null, 'points', arcLinePoints);
+        const lastElement = this.arcLine.points.length - 1;
+        const middleElement = parseInt(String(lastElement / 2), 10);
+
+        const position = this.getArcWeightPosition(this.arcLine.points[middleElement], this.arcLine.points[middleElement + 1]);
+        this._multiplicityElement.setAttributeNS(null, 'x', `${position.x}`);
+        this._multiplicityElement.setAttributeNS(null, 'y', `${position.y}`);
+    }
+
+    getArcWeightPosition(startElement: SVGPoint, endElement: SVGPoint): DOMPoint {
+        const startPointX = startElement.x;
+        const startPointY = startElement.y;
+        const endPointX = endElement.x;
+        const endPointY = endElement.y;
+
+        const dx = (endPointX - startPointX) / 2;
+        const dy = (endPointY - startPointY) / 2;
+
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const unitDx = dx / length;
+        const unitDy = dy / length;
+        let x;
+        let y;
+
+        if (dx >= 0 && dy >= 0) {
+            x = (endPointX - dx + unitDy * CanvasConfiguration.WEIGHT_OFFSET);
+            y = (endPointY - dy - unitDx * CanvasConfiguration.WEIGHT_OFFSET);
+        }
+        if (dx >= 0 && dy < 0) {
+            x = (endPointX - dx - unitDy * CanvasConfiguration.WEIGHT_OFFSET);
+            y = (endPointY - dy + unitDx * CanvasConfiguration.WEIGHT_OFFSET);
+        }
+        if (dx < 0 && dy > 0) {
+            x = (endPointX - dx + unitDy * CanvasConfiguration.WEIGHT_OFFSET);
+            y = (endPointY - dy - unitDx * CanvasConfiguration.WEIGHT_OFFSET);
+        }
+        if (dx < 0 && dy <= 0) {
+            x = (endPointX - dx - unitDy * CanvasConfiguration.WEIGHT_OFFSET);
+            y = (endPointY - dy + unitDx * CanvasConfiguration.WEIGHT_OFFSET);
+        }
+        return new DOMPoint(x, y);
     }
 
     get arcLineBackground(): SVGPolylineElement {

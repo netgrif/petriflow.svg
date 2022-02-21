@@ -99,7 +99,7 @@ export class Place extends LabeledObject {
         return point;
     }
 
-    private getIntersectionCoordinate(placeCoordinate: number, firstCoordinate: number, secondCoordinate: number, offset: number): number {
+    getIntersectionCoordinate(placeCoordinate: number, firstCoordinate: number, secondCoordinate: number, offset: number): number {
         if (offset < 0) {
             if (firstCoordinate < 0) {
                 return firstCoordinate + placeCoordinate;

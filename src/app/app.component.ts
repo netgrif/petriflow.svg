@@ -32,8 +32,8 @@ export class AppComponent implements AfterViewInit {
             places.push(place);
             transitions.push(transition);
         }
-        this.canvas.add(new RegularPlaceTransitionArc(places[0], transitions[0]));
-        this.canvas.add(new RegularTransitionPlaceArc(transitions[1], places[1]));
+        this.canvas.add(new RegularPlaceTransitionArc(places[0], transitions[0], [new DOMPoint(40, 20), new DOMPoint(240, 20)], '3'));
+        this.canvas.add(new RegularTransitionPlaceArc(transitions[1], places[1], [], '5'));
         this.canvas.add(new ReadArc(places[2], transitions[2]));
         this.canvas.add(new InhibitorArc(places[3], transitions[3]));
         this.canvas.add(new ResetArc(places[4], transitions[4]));
