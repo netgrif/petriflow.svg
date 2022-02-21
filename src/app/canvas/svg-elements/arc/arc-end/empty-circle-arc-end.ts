@@ -8,7 +8,8 @@ export class EmptyCircleArcEnd extends CircleArcEnd {
     constructor() {
         super(EmptyCircleArcEnd.ID);
         this.circle.setAttributeNS(null, 'fill', 'white');
-        this.circle.setAttributeNS(null, 'stroke-width', '0.6');
+        this.circle.setAttributeNS(null, 'stroke-width', '0.5');
+        this.circle.setAttributeNS(null, 'r', `${CanvasConfiguration.ARROW_HEAD_SIZE / 2}`);
         this.deactivate();
     }
 

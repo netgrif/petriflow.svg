@@ -83,9 +83,9 @@ export class Place extends LabeledObject {
     /**
      * Source: https://mathworld.wolfram.com/Circle-LineIntersection.html
      */
-    getEdgeIntersection(from: DOMPoint): DOMPoint {
+    getEdgeIntersection(from: DOMPoint, offset: number): DOMPoint {
         const offsetFrom = new DOMPoint(from.x - this.position.x, from.y - this.position.y);
-        const r = CanvasConfiguration.RADIUS + 1;
+        const r = CanvasConfiguration.RADIUS + offset;
         const dx = 0 - offsetFrom.x;
         const dy = 0 - offsetFrom.y;
         const dr = Math.sqrt(dx * dx + dy * dy);

@@ -20,8 +20,9 @@ export abstract class NodeElement extends CanvasElement {
      * Use this function to calculate ending point for arcs where the arrow should be rendered.
      *
      * @param from start of the line
+     * @param offset intersection by offset
      */
-    public abstract getEdgeIntersection(from: DOMPoint): DOMPoint;
+    public abstract getEdgeIntersection(from: DOMPoint, offset: number): DOMPoint;
 
     get position(): DOMPoint {
         return this._position;

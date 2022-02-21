@@ -72,9 +72,9 @@ export class Transition extends LabeledObject {
         this._finishArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-finish-inactive');
     }
 
-    public getEdgeIntersection(from: DOMPoint): DOMPoint {
+    public getEdgeIntersection(from: DOMPoint, offset: number): DOMPoint {
         const d = this.getDiff(new DOMPoint(this.position.x, this.position.y), new DOMPoint(from.x, from.y));
-        const td = this.getTransitionDiff(d);
+        const td = this.getTransitionDiff(d, offset);
         const bool = this.diffBool(d);
         return this.edgeResolve(bool ? this.position.x + td.x : this.position.x - td.x,
             bool ? this.position.y + td.y : this.position.y - td.y, this.position.x, this.position.y);
@@ -94,15 +94,15 @@ export class Transition extends LabeledObject {
         return new DOMPoint(dx, dy);
     }
 
-    private getTransitionDiff(d: DOMPoint): DOMPoint {
+    private getTransitionDiff(d: DOMPoint, offset: number): DOMPoint {
         let tdx: number;
         let tdy: number;
         if (Math.pow(d.x, 2) >= Math.pow(d.y, 2)) {
-            tdx = CanvasConfiguration.SIZE / 2 + 1;
-            tdy = (CanvasConfiguration.SIZE / 2 + 1) * (d.y / d.x);
+            tdx = CanvasConfiguration.SIZE / 2 + offset;
+            tdy = (CanvasConfiguration.SIZE / 2 + offset) * (d.y / d.x);
         } else {
-            tdx = (CanvasConfiguration.SIZE / 2 + 1) * (d.x / d.y);
-            tdy = CanvasConfiguration.SIZE / 2 + 1;
+            tdx = (CanvasConfiguration.SIZE / 2 + offset) * (d.x / d.y);
+            tdy = CanvasConfiguration.SIZE / 2 + offset;
         }
         return new DOMPoint(tdx, tdy);
     }

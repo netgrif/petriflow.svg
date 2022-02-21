@@ -1,6 +1,5 @@
 import {CanvasConfiguration} from '../../../canvas-configuration';
 import {CanvasElement} from '../../svg-objects/canvas-element';
-import {ArcEnd} from '../arc-end/arc-end';
 import {NodeElement} from '../../svg-objects/node-element';
 
 export abstract class Arc extends CanvasElement {
@@ -57,11 +56,16 @@ export abstract class Arc extends CanvasElement {
 
     move(start: NodeElement, end: NodeElement) {
         const points = [start.position].concat(this._linePoints).concat(end.position);
-        points[0] = start.getEdgeIntersection(points[1]);
-        points[points.length - 1] = end.getEdgeIntersection(points[points.length - 2]);
+        const backgroundPoints = Object.assign([], points);
+        points[0] = start.getEdgeIntersection(points[1], 0);
+        points[points.length - 1] = end.getEdgeIntersection(points[points.length - 2], 1);
         const arcLinePoints = points.map(p => `${p.x},${p.y}`).join(' ');
+
+        backgroundPoints[0] = start.getEdgeIntersection(points[1], 2);
+        backgroundPoints[points.length - 1] = end.getEdgeIntersection(points[points.length - 2], 2);
         this._arcLine.setAttributeNS(null, 'points', arcLinePoints);
-        this._arcLineBackground.setAttributeNS(null, 'points', arcLinePoints);
+        const arcLinePointsTest = backgroundPoints.map(p => `${p.x},${p.y}`).join(' ');
+        this._arcLineBackground.setAttributeNS(null, 'points', arcLinePointsTest);
         const lastElement = this.arcLine.points.length - 1;
         const middleElement = parseInt(String(lastElement / 2), 10);
 

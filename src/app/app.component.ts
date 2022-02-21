@@ -39,7 +39,8 @@ export class AppComponent implements AfterViewInit {
         this.canvas.add(new ResetArc(places[4], transitions[4]));
         this.canvas.add(new ResetArc(places[4], transitions[5]));
         this.canvas.add(new RegularTransitionPlaceArc(transitions[0], places[7]));
+        this.canvas.add(new RegularTransitionPlaceArc(places[6], transitions[1]));
 
-        console.log(new Place('', '', 0, new DOMPoint(100, 100)).getEdgeIntersection(new DOMPoint(100, 150)));
+        console.log(new Place('', '', 0, new DOMPoint(100, 100)).getEdgeIntersection(new DOMPoint(100, 150), 1));
     }
 }
