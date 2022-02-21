@@ -93,17 +93,24 @@ export class Place extends LabeledObject {
         const x2 = (-this.sgn(dy) * dx * Math.sqrt(r * r * dr * dr)) / (dr * dr);
         const y1 = (+Math.abs(dy) * Math.sqrt(r * r * dr * dr)) / (dr * dr);
         const y2 = (-Math.abs(dy) * Math.sqrt(r * r * dr * dr)) / (dr * dr);
-        if (offsetFrom.x < 0) {
-            if (x1 < 0) {
-                return new DOMPoint(x1 + this.position.x, y1 + this.position.y);
+        let point = new DOMPoint();
+        point.x = this.getIntersectionCoordinate(this.position.x, x1, x2, offsetFrom.x);
+        point.y = this.getIntersectionCoordinate(this.position.y, y1, y2, offsetFrom.y);
+        return point;
+    }
+
+    private getIntersectionCoordinate(placeCoordinate: number, firstCoordinate: number, secondCoordinate: number, offset: number): number {
+        if (offset < 0) {
+            if (firstCoordinate < 0) {
+                return firstCoordinate + placeCoordinate;
             } else {
-                return new DOMPoint(x2 + this.position.x, y2 + this.position.y);
+                return secondCoordinate + placeCoordinate;
             }
         } else {
-            if (x1 > 0) {
-                return new DOMPoint(x1 + this.position.x, y1 + this.position.y);
+            if (firstCoordinate > 0) {
+                return firstCoordinate + placeCoordinate;
             } else {
-                return new DOMPoint(x2 + this.position.x, y2 + this.position.y);
+                return secondCoordinate + placeCoordinate;
             }
         }
     }
