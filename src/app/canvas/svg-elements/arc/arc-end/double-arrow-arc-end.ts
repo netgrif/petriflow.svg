@@ -16,7 +16,7 @@ export class DoubleArrowArcEnd extends ArcEnd {
 
         this.arrow.appendChild(this._arrowHead);
         this.arrow.appendChild(secondArrow);
-    }z
+    }
 
     activate(): void {
     }
