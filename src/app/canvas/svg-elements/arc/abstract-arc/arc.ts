@@ -37,6 +37,9 @@ export abstract class Arc extends CanvasElement {
         this._multiplicityElement.appendChild(this._multiplicity);
         this.container.appendChild(this._multiplicityElement);
 
+        start.arcs.push(this);
+        end.arcs.push(this);
+
         if (linePoints && linePoints.length > 0) {
             this._linePoints.push(...linePoints);
         }

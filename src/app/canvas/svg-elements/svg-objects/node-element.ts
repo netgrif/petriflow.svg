@@ -1,16 +1,22 @@
 import {CanvasElement} from './canvas-element';
+import {Arc} from '../arc/abstract-arc/arc';
 
 export abstract class NodeElement extends CanvasElement {
 
     private _position: DOMPoint;
+    private _arcs: Array<Arc>;
 
     constructor(position: DOMPoint) {
         super();
+        this._arcs = [];
         this._position = position;
     }
 
     move(position: DOMPoint) {
         this._position = position;
+        this.arcs.forEach(arc => {
+            arc.move(arc.start, arc.end);
+        });
     }
 
     /**
@@ -26,5 +32,9 @@ export abstract class NodeElement extends CanvasElement {
 
     get position(): DOMPoint {
         return this._position;
+    }
+
+    get arcs(): Array<Arc> {
+        return this._arcs;
     }
 }
