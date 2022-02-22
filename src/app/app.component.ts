@@ -8,6 +8,7 @@ import {ReadArc} from './canvas/svg-elements/arc/read-arc';
 import {InhibitorArc} from './canvas/svg-elements/arc/inhibitor-arc';
 import {ResetArc} from './canvas/svg-elements/arc/reset-arc';
 import {PetriflowCanvas} from './canvas/petriflow-canvas';
+import {StaticPlace} from "./canvas/svg-elements/place/static-place";
 
 @Component({
     selector: 'nab-root',
@@ -32,6 +33,8 @@ export class AppComponent implements AfterViewInit {
             places.push(place);
             transitions.push(transition);
         }
+        const staticPlace = new StaticPlace(`st1`, `test`, 1, new DOMPoint(300, 420));
+        this.canvas.add(staticPlace);
         this.canvas.add(new RegularPlaceTransitionArc(places[0], transitions[0], [new DOMPoint(40, 20), new DOMPoint(240, 20)], '3'));
         this.canvas.add(new RegularTransitionPlaceArc(transitions[1], places[1], [], '5'));
         this.canvas.add(new ReadArc(places[2], transitions[2]));
@@ -40,6 +43,8 @@ export class AppComponent implements AfterViewInit {
         this.canvas.add(new ResetArc(places[4], transitions[5]));
         this.canvas.add(new RegularTransitionPlaceArc(transitions[0], places[7]));
         this.canvas.add(new RegularTransitionPlaceArc(places[6], transitions[1]));
+        this.canvas.add(new RegularTransitionPlaceArc(transitions[6], staticPlace));
+        this.canvas.add(new RegularTransitionPlaceArc(places[0], places[10]));
 
         console.log(new Place('', '', 0, new DOMPoint(100, 100)).getEdgeIntersection(new DOMPoint(100, 150), 1));
     }

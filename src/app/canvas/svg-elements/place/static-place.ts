@@ -2,8 +2,17 @@ import {Place} from './place';
 
 export class StaticPlace extends Place {
 
-    deactivate() {
+    activate() {
         super.activate();
+        this.setStaticPlaceAttributes();
+    }
+
+    deactivate() {
+        super.deactivate();
+        this.setStaticPlaceAttributes();
+    }
+
+    private setStaticPlaceAttributes() {
         this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
         this.element.setAttributeNS(null, 'fill', 'white');
         this.element.setAttributeNS(null, 'stroke-dasharray', '14, 5');
