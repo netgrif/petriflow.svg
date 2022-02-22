@@ -117,8 +117,6 @@ export class Transition extends LabeledObject {
         return new DOMPoint(newX, newY);
     }
 
-
-
     private setElementPosition(position: DOMPoint) {
         this._element.setAttributeNS(null, 'x', `${position.x - CanvasConfiguration.SIZE / 2}`);
         this._element.setAttributeNS(null, 'y', `${position.y - CanvasConfiguration.SIZE / 2}`);

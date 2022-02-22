@@ -1,5 +1,4 @@
 import { CanvasConfiguration } from '../../canvas-configuration';
-import {CanvasElement} from './canvas-element';
 import {Movable} from '../movable';
 import {NodeElement} from './node-element';
 
