@@ -81,7 +81,24 @@ export class Place extends LabeledObject {
     }
 
     /**
-     * Source: https://mathworld.wolfram.com/Circle-LineIntersection.html
+     * Calculates intersection using the [Circle-Line Intersection](https://mathworld.wolfram.com/Circle-LineIntersection.html)
+     * formula. Putting the circle center to position [0, 0] we can simplify the formula:
+     * ```
+     * x1 = from.x
+     * y1 = from.y
+     * x2 = 0
+     * y2 = 0
+     *
+     * dx = x2 - x1 = 0 - x1 = -x1
+     * dy = y2 - y1 = 0 - y1 = -y1
+     * dr = sqrt(dx^2 + dy^2)
+     * D = x1*y2 - x2*y1 = x1*0 - 0*y1 = 0
+     *
+     * x = (D*dy +- sgn(dy)*dx*sqrt(r^2 * dr^2 - D^2)) / dr^2 = (0*dy +- sgn(dy)*dx*sqrt(r^2 * dr^2 - 0^2)) / dr^2 = +-sgn(dy)*dx*sqrt(r^2 * dr^2) / dr^2
+     * y = (-D*dx +- abs(dy)*sqrt(r^2 * dr^2 - D^2)) / dr^2 = (-0*dx +- abs(dy)*sqrt(r^2 * dr^2 - 0^2)) / dr^2 = +-abs(dy)*sqrt(r^2 * dr^2) / dr^2
+     * ```
+     *
+     * After that use {@link getIntersectionCoordinate} to determine the correct coordinates.
      */
     getEdgeIntersection(from: DOMPoint, offset: number): DOMPoint {
         const offsetFrom = new DOMPoint(from.x - this.position.x, from.y - this.position.y);
