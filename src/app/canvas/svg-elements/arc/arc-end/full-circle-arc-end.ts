@@ -3,8 +3,10 @@ import {CanvasConfiguration} from '../../../canvas-configuration';
 
 export class FullCircleArcEnd extends CircleArcEnd {
 
+    public static readonly ID = 'read_arc_end';
+
     constructor() {
-        super('read_arc_end');
+        super(FullCircleArcEnd.ID);
         this.deactivate();
     }
 

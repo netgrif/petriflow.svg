@@ -5,8 +5,10 @@ import {NodeElement} from '../svg-objects/node-element';
 
 export class ReadArc extends PlaceTransitionArc {
 
+    public static readonly ID = 'read_arc_end';
+
     constructor(start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
-        super(start, end, 'read_arc_end', linePoints, multiplicityLabel);
+        super(start, end, ReadArc.ID, linePoints, multiplicityLabel);
     }
 
     createArcEnd(): ArcEnd {
