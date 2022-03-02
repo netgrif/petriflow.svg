@@ -1,0 +1,33 @@
+.app-container {
+    display: flex;
+    box-sizing: border-box;
+    padding: 0 16px;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    border-bottom: 5px solid #DDDDDD;
+}
+
+.canvas {
+    width: 10000px;
+    height: 10000px;
+}
+
+.test {
+    margin: 0;
+    padding: 0;
+}
+
+.inner {
+    display: block;
+}
+
+.outer {
+    //background-color: #BABCC0;
+    display: flex;
+    overflow: scroll;
+    min-height: 100%;
+
+}

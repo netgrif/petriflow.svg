@@ -1,14 +1,11 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {Canvas} from './canvas/canvas';
-import {Place} from './canvas/svg-elements/place/place';
-import {Transition} from './canvas/svg-elements/transition/transition';
-import {RegularPlaceTransitionArc} from './canvas/svg-elements/arc/regular-place-transition-arc';
-import {RegularTransitionPlaceArc} from './canvas/svg-elements/arc/regular-transition-place-arc';
-import {ReadArc} from './canvas/svg-elements/arc/read-arc';
-import {InhibitorArc} from './canvas/svg-elements/arc/inhibitor-arc';
-import {ResetArc} from './canvas/svg-elements/arc/reset-arc';
-import {PetriflowCanvas} from './canvas/petriflow-canvas';
-import {StaticPlace} from "./canvas/svg-elements/place/static-place";
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {PetriflowCanvasService} from '../../projects/petriflow-canvas/src/lib/petriflow-canvas.service';
+import {Transition} from 'projects/petriflow-canvas/src/lib/canvas/svg-elements/transition/transition';
+import {Place} from 'projects/petriflow-canvas/src/lib/canvas/svg-elements/place/place';
+import {MatToolbar} from '@angular/material/toolbar';
+import {CanvasConfiguration} from '../../projects/petriflow-canvas/src/lib/canvas/canvas-configuration';
+import {NodeElement} from '../../projects/petriflow-canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
+import {RegularPlaceTransitionArc} from '../../projects/petriflow-canvas/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
 
 @Component({
     selector: 'nab-root',
@@ -17,35 +14,101 @@ import {StaticPlace} from "./canvas/svg-elements/place/static-place";
 })
 export class AppComponent implements AfterViewInit {
 
-    @ViewChild('canvas') canvasElement: ElementRef;
-    private canvas: Canvas;
+    private _transitionMode: string;
 
-    ngAfterViewInit() {
-        this.canvas = new PetriflowCanvas(this.canvasElement.nativeElement);
+    private _isDrawing = false;
 
-        const places = [];
-        const transitions = [];
-        for (let i = 0; i < 11; i++) {
-            const place = new Place(`p${i}`, `p${i}`, i, new DOMPoint(40, 60 * (1 + i)));
-            const transition = new Transition(`t${i}`, `t${i}`, new DOMPoint(240, 60 * (i + 1)));
-            this.canvas.add(place);
-            this.canvas.add(transition);
-            places.push(place);
-            transitions.push(transition);
+    @ViewChild(MatToolbar) toolbar: MatToolbar;
+
+    // TODO: Move properties to some service
+    private counter = 1;
+
+    private _arcLine: SVGElement;
+
+    private _source: NodeElement;
+
+    constructor(private _petriflowCanvasService: PetriflowCanvasService) {
+    }
+
+    ngAfterViewInit(): void {
+        // TODO: create custom service for events, maybe also use generic, abstraction
+        this._petriflowCanvasService.canvas.svg.addEventListener('click', (e) => this.addTransition(e));
+        this._petriflowCanvasService.canvas.svg.addEventListener('click', (e) => this.addPlace(e));
+        this._petriflowCanvasService.canvas.svg.addEventListener('mousemove', (e) => this.moveArc(e));
+    }
+
+    private addTransition($event): void {
+        if (this.transitionMode === 'transition') {
+            const transition = new Transition(`t`, `t${this.counter++}`, new DOMPoint($event.x, $event.y - this.toolbar._elementRef.nativeElement.offsetHeight));
+            transition.element.addEventListener('click', (e) => this.addArc(transition));
+            this._petriflowCanvasService.canvas.add(transition);
         }
-        const staticPlace = new StaticPlace(`st1`, `test`, 1, new DOMPoint(300, 420));
-        this.canvas.add(staticPlace);
-        this.canvas.add(new RegularPlaceTransitionArc(places[0], transitions[0], [new DOMPoint(40, 20), new DOMPoint(240, 20)], '3'));
-        this.canvas.add(new RegularTransitionPlaceArc(transitions[1], places[1], [], '5'));
-        this.canvas.add(new ReadArc(places[2], transitions[2]));
-        this.canvas.add(new InhibitorArc(places[3], transitions[3]));
-        this.canvas.add(new ResetArc(places[4], transitions[4]));
-        this.canvas.add(new ResetArc(places[4], transitions[5]));
-        this.canvas.add(new RegularTransitionPlaceArc(transitions[0], places[7]));
-        this.canvas.add(new RegularTransitionPlaceArc(places[6], transitions[1]));
-        this.canvas.add(new RegularTransitionPlaceArc(transitions[6], staticPlace));
-        this.canvas.add(new RegularTransitionPlaceArc(places[0], places[10]));
+    }
 
-        console.log(new Place('', '', 0, new DOMPoint(100, 100)).getEdgeIntersection(new DOMPoint(100, 150), 1));
+    // TODO: move all this methods below to some service
+    private createSvgArc(element: NodeElement) {
+        this._arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
+        this._arcLine.setAttributeNS(null, 'fill', 'none');
+        this._arcLine.setAttributeNS(null, 'stroke', 'black');
+        this._arcLine.setAttributeNS(null, 'stroke-width', '2');
+        this._arcLine.setAttributeNS(null, 'marker-end', `url(#arc_end_arrow)`);
+        this._arcLine.setAttributeNS(null, 'points', `${element.position.x},${element.position.y} ${element.position.x},${element.position.y} `);
+        this._source = element;
+        this._petriflowCanvasService.canvas.container.appendChild(this._arcLine);
+    }
+
+    private addPlace(e: MouseEvent) {
+        if (this.transitionMode === 'place') {
+            const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
+            place.element.addEventListener('click', (event) => this.addArc(place));
+            this._petriflowCanvasService.canvas.add(place);
+        }
+    }
+
+    private addArc(element: NodeElement) {
+        console.log('yooy');
+        if (this.transitionMode === 'arc') {
+            if (!this._arcLine) {
+                this.createSvgArc(element);
+            } else if (element.constructor !== this._source.constructor) {
+                this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
+                this.arcLine = undefined;
+                const arc = new RegularPlaceTransitionArc(this._source, element, []);
+                this._petriflowCanvasService.canvas.add(arc);
+                this._source = undefined;
+            }
+        }
+    }
+
+    private moveArc(e: MouseEvent) {
+        if (this._transitionMode === 'arc' && this._arcLine) {
+            const intersect = this._source.getEdgeIntersection(new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight), 0);
+            const offset = new DOMPoint(Math.sign(intersect.x - e.x) * 2, Math.sign(intersect.y - e.y) * 2);
+            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${e.x + offset.x},${e.y - this.toolbar._elementRef.nativeElement.offsetHeight + offset.y}`);
+        }
+    }
+
+    get transitionMode(): string {
+        return this._transitionMode;
+    }
+
+    set transitionMode(value: string) {
+        this._transitionMode = value;
+    }
+
+    get isDrawing(): boolean {
+        return this._isDrawing;
+    }
+
+    set isDrawing(value: boolean) {
+        this._isDrawing = value;
+    }
+
+    get arcLine(): SVGElement {
+        return this._arcLine;
+    }
+
+    set arcLine(value: SVGElement) {
+        this._arcLine = value;
     }
 }

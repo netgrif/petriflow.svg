@@ -21,6 +21,10 @@
         "paths": {
             "jszip": [
                 "./node_modules/jszip/dist/jszip.min.js"
+            ],
+            "petriflow-canvas": [
+                "dist/petriflow-canvas/petriflow-canvas",
+                "dist/petriflow-canvas"
             ]
         },
         "resolveJsonModule": true,
