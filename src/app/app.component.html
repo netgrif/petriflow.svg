@@ -1,13 +1,27 @@
 <div class="test">
     <mat-toolbar class="app-container mat-toolbar mat-toolbar-single-row">
         <mat-toolbar-row>
-
-            <button mat-button (click)="transitionMode = 'select'">Select</button>
-            <button mat-button (click)="transitionMode = 'transition'">Transition</button>
-            <button mat-button (click)="transitionMode = 'place'">Place</button>
-            <button mat-button (click)="transitionMode = 'arc'">Arc</button>
-            <button mat-button>Remove</button>
-            <button mat-button>Move</button>
+            <mat-button-toggle-group fxLayoutAlign="start end">
+                <mat-button-toggle mat-button (click)="transitionMode = 'select'">
+                    <mat-icon svgIcon="cursor-default-outline"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="transitionMode = 'transition'">
+                    <mat-icon svgIcon="transition"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="transitionMode = 'place'">
+                    <mat-icon svgIcon="place"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="transitionMode = 'arc'">
+                    <mat-icon svgIcon="arc"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="transitionMode = 'move'">
+                    <mat-icon>open_with</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button>
+                    <mat-icon>delete_outline</mat-icon>
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+            <button mat-raised-button id="source-button">Source</button>
         </mat-toolbar-row>
     </mat-toolbar>
     <div class="outer">

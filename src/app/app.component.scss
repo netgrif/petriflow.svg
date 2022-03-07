@@ -1,13 +1,11 @@
+@import "../netgif-theme";
+
 .app-container {
-    display: flex;
-    box-sizing: border-box;
     padding: 0 16px;
     width: 100%;
-    flex-direction: row;
-    align-items: center;
-    white-space: nowrap;
     overflow: hidden;
     border-bottom: 5px solid #DDDDDD;
+    background-color: map-get($netgrif-blue, 600);;
 }
 
 .canvas {
@@ -25,9 +23,14 @@
 }
 
 .outer {
-    //background-color: #BABCC0;
     display: flex;
     overflow: scroll;
     min-height: 100%;
 
+}
+
+#source-button {
+    position: absolute;
+    right: 15px;
+    top: 15px;
 }

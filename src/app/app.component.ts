@@ -34,13 +34,19 @@ export class AppComponent implements AfterViewInit {
         // TODO: create custom service for events, maybe also use generic, abstraction
         this._petriflowCanvasService.canvas.svg.addEventListener('click', (e) => this.addTransition(e));
         this._petriflowCanvasService.canvas.svg.addEventListener('click', (e) => this.addPlace(e));
-        this._petriflowCanvasService.canvas.svg.addEventListener('mousemove', (e) => this.moveArc(e));
+        this._petriflowCanvasService.canvas.svg.addEventListener('mousemove', (e) => {
+            this.moveArc(e);
+            this.moveElement(e);
+        });
     }
 
     private addTransition($event): void {
         if (this.transitionMode === 'transition') {
             const transition = new Transition(`t`, `t${this.counter++}`, new DOMPoint($event.x, $event.y - this.toolbar._elementRef.nativeElement.offsetHeight));
-            transition.element.addEventListener('click', (e) => this.addArc(transition));
+            transition.element.addEventListener('click', (e) => {
+                this.addArc(transition);
+                this.selectElement(transition);
+            });
             this._petriflowCanvasService.canvas.add(transition);
         }
     }
@@ -60,13 +66,15 @@ export class AppComponent implements AfterViewInit {
     private addPlace(e: MouseEvent) {
         if (this.transitionMode === 'place') {
             const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
-            place.element.addEventListener('click', (event) => this.addArc(place));
+            place.element.addEventListener('click', (event) => {
+                this.addArc(place);
+                this.selectElement(place);
+            });
             this._petriflowCanvasService.canvas.add(place);
         }
     }
 
     private addArc(element: NodeElement) {
-        console.log('yooy');
         if (this.transitionMode === 'arc') {
             if (!this._arcLine) {
                 this.createSvgArc(element);
@@ -110,5 +118,17 @@ export class AppComponent implements AfterViewInit {
 
     set arcLine(value: SVGElement) {
         this._arcLine = value;
+    }
+
+    private selectElement(element: NodeElement) {
+        if (!this._source) {
+            this._source = element;
+        }
+    }
+
+    private moveElement(e: MouseEvent) {
+        if (this.transitionMode === 'move' && this._source) {
+            this._source.move(new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
+        }
     }
 }
