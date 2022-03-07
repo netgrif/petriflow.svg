@@ -25,6 +25,10 @@
             "petriflow-canvas": [
                 "dist/petriflow-canvas/petriflow-canvas",
                 "dist/petriflow-canvas"
+            ],
+            "canvas": [
+                "dist/canvas/canvas",
+                "dist/canvas"
             ]
         },
         "resolveJsonModule": true,

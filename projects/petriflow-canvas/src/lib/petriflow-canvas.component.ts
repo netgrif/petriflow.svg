@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Canvas} from './canvas/canvas';
-import {PetriflowCanvas} from './canvas/petriflow-canvas';
 import {PetriflowCanvasService} from './petriflow-canvas.service';
+import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
+import {Canvas} from '../../../canvas/src/lib/canvas/canvas';
 
 @Component({
     selector: 'lib-petriflow-canvas',

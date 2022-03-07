@@ -1,11 +1,11 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {PetriflowCanvasService} from '../../projects/petriflow-canvas/src/lib/petriflow-canvas.service';
-import {Transition} from 'projects/petriflow-canvas/src/lib/canvas/svg-elements/transition/transition';
-import {Place} from 'projects/petriflow-canvas/src/lib/canvas/svg-elements/place/place';
 import {MatToolbar} from '@angular/material/toolbar';
-import {CanvasConfiguration} from '../../projects/petriflow-canvas/src/lib/canvas/canvas-configuration';
-import {NodeElement} from '../../projects/petriflow-canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
-import {RegularPlaceTransitionArc} from '../../projects/petriflow-canvas/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
+import {NodeElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
+import {CanvasConfiguration} from '../../projects/canvas/src/lib/canvas/canvas-configuration';
+import {RegularPlaceTransitionArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
+import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
+import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
 
 @Component({
     selector: 'nab-root',
