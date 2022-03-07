@@ -131,4 +131,8 @@ export class AppComponent implements AfterViewInit {
             this._source.move(new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
         }
     }
+
+    goToLink(url: string) {
+        window.open(url, '_blank');
+    }
 }
