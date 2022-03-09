@@ -52,8 +52,9 @@ export class AppComponent implements AfterViewInit {
 
     private addTransition($event): void {
         if (this.transitionMode === 'transition') {
-            const transition = new Transition(`t`, `t${this.counter++}`, new DOMPoint($event.x - this.getPanZoomOffset().x,
-                $event.y - this.toolbar._elementRef.nativeElement.offsetHeight - this.getPanZoomOffset().y));
+            const offset = this.getPanZoomOffset();
+            const transition = new Transition(`t`, `t${this.counter++}`, new DOMPoint(($event.x - offset.x) / offset.scale,
+                ($event.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
             transition.element.addEventListener('click', (e) => {
                 this.addArc(transition);
                 this.selectElement(transition);
@@ -71,7 +72,8 @@ export class AppComponent implements AfterViewInit {
 
     private addPlace(e: MouseEvent) {
         if (this.transitionMode === 'place') {
-            const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint(e.x - this.getPanZoomOffset().x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight - this.getPanZoomOffset().y));
+            const offset = this.getPanZoomOffset();
+            const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint((e.x - offset.x) / offset.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
             place.element.addEventListener('click', () => {
                 this.addArc(place);
                 this.selectElement(place);
@@ -171,9 +173,10 @@ export class AppComponent implements AfterViewInit {
 
     private moveArc(e: MouseEvent) {
         if (this._arcLine) {
-            const intersect = this._source.getEdgeIntersection(new DOMPoint(e.x - this.getPanZoomOffset().x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight - this.getPanZoomOffset().y), 0);
+            const offsetPanZoom = this.getPanZoomOffset();
+            const intersect = this._source.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
             const offset = new DOMPoint(Math.sign(intersect.x - e.x) * 2, Math.sign(intersect.y - e.y) * 2);
-            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${e.x + offset.x - this.getPanZoomOffset().x},${e.y - this.toolbar._elementRef.nativeElement.offsetHeight + offset.y - this.getPanZoomOffset().y}`);
+            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${(e.x + offset.x - offsetPanZoom.x) / offsetPanZoom.scale},${(e.y - this.toolbar._elementRef.nativeElement.offsetHeight + offset.y - offsetPanZoom.y) / offsetPanZoom.scale}`);
         }
     }
 
@@ -213,7 +216,8 @@ export class AppComponent implements AfterViewInit {
 
     private moveElement(e: MouseEvent) {
         if (this.transitionMode === 'move' && this._source) {
-            this._source.move(new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
+            const offsetPanZoom = this.getPanZoomOffset();
+            this._source.move(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale));
         }
     }
 

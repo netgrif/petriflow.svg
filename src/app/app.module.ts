@@ -63,5 +63,7 @@ export class AppModule {
         matIconRegistry.addSvgIcon('inhibitor', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/inhibitor.svg`));
         matIconRegistry.addSvgIcon('read', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/read.svg`));
         matIconRegistry.addSvgIcon('properties', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/properties.svg`));
+        matIconRegistry.addSvgIcon('github', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/github.svg`));
+        matIconRegistry.addSvgIcon('netgrif_logo', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/netgrif_logo.svg`));
     }
 }

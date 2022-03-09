@@ -1,6 +1,7 @@
 <div class="test">
-    <mat-toolbar class="app-container mat-toolbar mat-toolbar-single-row">
-        <mat-toolbar-row>
+    <mat-toolbar fxLayout="row" class="app-container mat-toolbar mat-toolbar-single-row">
+        <mat-toolbar-row fxFlex>
+            <mat-icon id="netgrif-icon" svgIcon="netgrif_logo"></mat-icon>
             <mat-button-toggle-group fxLayoutAlign="start end">
                 <mat-button-toggle mat-button (click)="transitionMode = 'select'">
                     <mat-icon svgIcon="cursor-default-outline"></mat-icon>
@@ -30,7 +31,10 @@
                     <mat-icon>delete_outline</mat-icon>
                 </mat-button-toggle>
             </mat-button-toggle-group>
-            <button mat-raised-button id="source-button" (click)="goToLink('https://github.com/netgrif/petriflow-svg')">Source</button>
+            <button mat-raised-button id="source-button" (click)="goToLink('https://github.com/netgrif/petriflow-svg')">
+                <mat-icon svgIcon="github"></mat-icon>
+                Source
+            </button>
         </mat-toolbar-row>
     </mat-toolbar>
     <div class="outer">
