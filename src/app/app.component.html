@@ -14,10 +14,19 @@
                 <mat-button-toggle mat-button (click)="transitionMode = 'arc'">
                     <mat-icon svgIcon="arc"></mat-icon>
                 </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="transitionMode = 'resetarc'">
+                    <mat-icon svgIcon="resetarc"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="transitionMode = 'inhibitor'">
+                    <mat-icon svgIcon="inhibitor"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="transitionMode = 'read'">
+                    <mat-icon svgIcon="read"></mat-icon>
+                </mat-button-toggle>
                 <mat-button-toggle mat-button (click)="transitionMode = 'move'">
                     <mat-icon>open_with</mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button>
+                <mat-button-toggle mat-button (click)="transitionMode = 'remove'">
                     <mat-icon>delete_outline</mat-icon>
                 </mat-button-toggle>
             </mat-button-toggle-group>

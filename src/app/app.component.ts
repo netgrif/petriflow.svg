@@ -6,6 +6,7 @@ import {CanvasConfiguration} from '../../projects/canvas/src/lib/canvas/canvas-c
 import {RegularPlaceTransitionArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
 import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
 import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
+import {CanvasElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
 
 @Component({
     selector: 'nab-root',
@@ -15,16 +16,11 @@ import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition
 export class AppComponent implements AfterViewInit {
 
     private _transitionMode: string;
-
     private _isDrawing = false;
-
     @ViewChild(MatToolbar) toolbar: MatToolbar;
-
     // TODO: Move properties to some service
     private counter = 1;
-
     private _arcLine: SVGElement;
-
     private _source: NodeElement;
 
     constructor(private _petriflowCanvasService: PetriflowCanvasService) {
@@ -32,12 +28,14 @@ export class AppComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         // TODO: create custom service for events, maybe also use generic, abstraction
-        this._petriflowCanvasService.canvas.svg.addEventListener('click', (e) => this.addTransition(e));
-        this._petriflowCanvasService.canvas.svg.addEventListener('click', (e) => this.addPlace(e));
-        this._petriflowCanvasService.canvas.svg.addEventListener('mousemove', (e) => {
+        this._petriflowCanvasService.canvas.svg.onclick = (e) => {
+            this.addTransition(e);
+            this.addPlace(e);
+        };
+        this._petriflowCanvasService.canvas.svg.onmousemove = (e) => {
             this.moveArc(e);
             this.moveElement(e);
-        });
+        };
     }
 
     private addTransition($event): void {
@@ -46,21 +44,10 @@ export class AppComponent implements AfterViewInit {
             transition.element.addEventListener('click', (e) => {
                 this.addArc(transition);
                 this.selectElement(transition);
+                this.deleteElement(transition);
             });
             this._petriflowCanvasService.canvas.add(transition);
         }
-    }
-
-    // TODO: move all this methods below to some service
-    private createSvgArc(element: NodeElement) {
-        this._arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
-        this._arcLine.setAttributeNS(null, 'fill', 'none');
-        this._arcLine.setAttributeNS(null, 'stroke', 'black');
-        this._arcLine.setAttributeNS(null, 'stroke-width', '2');
-        this._arcLine.setAttributeNS(null, 'marker-end', `url(#arc_end_arrow)`);
-        this._arcLine.setAttributeNS(null, 'points', `${element.position.x},${element.position.y} ${element.position.x},${element.position.y} `);
-        this._source = element;
-        this._petriflowCanvasService.canvas.container.appendChild(this._arcLine);
     }
 
     private addPlace(e: MouseEvent) {
@@ -69,22 +56,50 @@ export class AppComponent implements AfterViewInit {
             place.element.addEventListener('click', (event) => {
                 this.addArc(place);
                 this.selectElement(place);
+                this.deleteElement(place);
+            });
+            place.markingTokens.forEach(markingToken => {
+                markingToken.onclick = () => {
+                    this.addArc(place);
+                    this.selectElement(place);
+                    this.deleteElement(place);
+                };
             });
             this._petriflowCanvasService.canvas.add(place);
         }
     }
 
+    // TODO: move all this methods below to some service
+    private createSvgArc(element: NodeElement, arrowUrl: string) {
+        this._arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
+        this._arcLine.setAttributeNS(null, 'fill', 'none');
+        this._arcLine.setAttributeNS(null, 'stroke', 'black');
+        this._arcLine.setAttributeNS(null, 'stroke-width', '2');
+        this._arcLine.setAttributeNS(null, 'marker-end', `url(#${arrowUrl})`);
+        this._arcLine.setAttributeNS(null, 'points', `${element.position.x},${element.position.y} ${element.position.x},${element.position.y}`);
+        this._source = element;
+        this._petriflowCanvasService.canvas.container.appendChild(this._arcLine);
+    }
+
     private addArc(element: NodeElement) {
         if (this.transitionMode === 'arc') {
-            if (!this._arcLine) {
-                this.createSvgArc(element);
-            } else if (element.constructor !== this._source.constructor) {
-                this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
-                this.arcLine = undefined;
-                const arc = new RegularPlaceTransitionArc(this._source, element, []);
-                this._petriflowCanvasService.canvas.add(arc);
-                this._source = undefined;
-            }
+            this.createSpecificArc(element);
+        }
+    }
+
+    private createSpecificArc(element: NodeElement) {
+        if (!this._arcLine) {
+            this._source = element;
+            this.createSvgArc(element, 'arc_end_arrow');
+        } else if (element.constructor !== this._source.constructor) {
+            this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
+            this.arcLine = undefined;
+            const arc = new RegularPlaceTransitionArc(this._source, element, []);
+            this._petriflowCanvasService.canvas.add(arc);
+            this._source = undefined;
+            arc.arcLine.onclick = () => {
+                this.deleteElement(arc);
+            };
         }
     }
 
@@ -121,8 +136,12 @@ export class AppComponent implements AfterViewInit {
     }
 
     private selectElement(element: NodeElement) {
-        if (!this._source) {
-            this._source = element;
+        if (this._transitionMode === 'move') {
+            if (!this._source) {
+                this._source = element;
+            } else {
+                this._source = undefined;
+            }
         }
     }
 
@@ -130,6 +149,16 @@ export class AppComponent implements AfterViewInit {
         if (this.transitionMode === 'move' && this._source) {
             this._source.move(new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
         }
+    }
+
+    private deleteElement(element: CanvasElement) {
+        if (this._transitionMode === 'remove') {
+            this._petriflowCanvasService.canvas.remove(element.container);
+        }
+    }
+
+    setArcMode(arcArrowHeader: string) {
+        this.transitionMode = 'arc';
     }
 
     goToLink(url: string) {
