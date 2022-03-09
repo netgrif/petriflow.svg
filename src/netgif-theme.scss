@@ -101,3 +101,66 @@ body {
 }
 
 @include angular-material-theme($netgrif-theme);
+
+.svg-inactive-stroke {
+    stroke: black !important;
+}
+
+.svg-inactive-fill {
+    fill: black !important;
+}
+
+.svg-active-stroke {
+    stroke: map-get($netgrif-blue, A200) !important;
+}
+
+.svg-active-fill {
+    fill: map-get($netgrif-blue, A200) !important;
+}
+
+.svg-invisible-fill {
+    fill: none !important;
+}
+
+.svg-transition-enabled {
+    stroke: green;
+    fill: yellowgreen;
+}
+
+.svg-transition-disabled {
+    stroke: red;
+    fill: white;
+}
+
+.svg-transition-firing {
+    stroke: green;
+    fill: none;
+}
+
+.svg-fire-arrow-cancel-active {
+    fill: coral;
+    stroke: red;
+}
+
+.svg-fire-arrow-cancel-inactive {
+    fill: none;
+    stroke: none;
+}
+
+.svg-fire-arrow-finish-active {
+    stroke: green;
+    fill: yellowgreen;
+}
+
+.svg-fire-arrow-finish-inactive {
+    fill: none;
+    stroke: none;
+}
+
+.svg-icon-active {
+    display: block;
+}
+
+.svg-icon-inactive {
+    display: none;
+}

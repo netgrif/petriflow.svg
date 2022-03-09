@@ -13,6 +13,7 @@ import {InhibitorArc} from '../../projects/canvas/src/lib/canvas/svg-elements/ar
 import {ReadArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/read-arc';
 import {TransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/transition-place-arc';
 import {RegularTransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-transition-place-arc';
+import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
 
 @Component({
     selector: 'nab-root',
@@ -54,6 +55,12 @@ export class AppComponent implements AfterViewInit {
                 this.selectElement(transition);
                 this.deleteElement(transition);
             });
+            transition.element.onmouseenter = () => {
+                transition.activate();
+            };
+            transition.element.onmouseleave = () => {
+                transition.deactivate();
+            };
             this._petriflowCanvasService.canvas.add(transition);
         }
     }
@@ -61,16 +68,29 @@ export class AppComponent implements AfterViewInit {
     private addPlace(e: MouseEvent) {
         if (this.transitionMode === 'place') {
             const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
-            place.element.addEventListener('click', (event) => {
+            place.element.addEventListener('click', () => {
                 this.addArc(place);
                 this.selectElement(place);
                 this.deleteElement(place);
             });
+
+            place.element.onmouseenter = () => {
+                place.activate();
+            };
+            place.element.onmouseleave = () => {
+                place.deactivate();
+            };
             place.markingTokens.forEach(markingToken => {
                 markingToken.onclick = () => {
                     this.addArc(place);
                     this.selectElement(place);
                     this.deleteElement(place);
+                };
+                markingToken.onmouseenter = () => {
+                    place.activate();
+                };
+                markingToken.onmouseleave = () => {
+                    place.deactivate();
                 };
             });
             this._petriflowCanvasService.canvas.add(place);
@@ -131,6 +151,12 @@ export class AppComponent implements AfterViewInit {
             this._source = undefined;
             arc.arcLine.onclick = () => {
                 this.deleteElement(arc);
+            };
+            arc.arcLine.onmouseenter = () => {
+                arc.activate();
+            };
+            arc.arcLine.onmouseleave = () => {
+                arc.deactivate();
             };
         }
     }
@@ -194,13 +220,12 @@ export class AppComponent implements AfterViewInit {
                         this._petriflowCanvasService.canvas.remove(arc.container);
                     }
                 );
+            } else if (element instanceof Arc) {
+                (element as Arc).start.arcs.splice((element as Arc).start.arcs.indexOf(element));
+                (element as Arc).end.arcs.splice((element as Arc).end.arcs.indexOf(element));
             }
             this._petriflowCanvasService.canvas.remove(element.container);
         }
-    }
-
-    setArcMode(arcArrowHeader: string) {
-        this.transitionMode = 'arc';
     }
 
     goToLink(url: string) {
