@@ -14,6 +14,7 @@ import {ReadArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/rea
 import {TransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/transition-place-arc';
 import {RegularTransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-transition-place-arc';
 import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
+import createPanZoom, {PanZoom, Transform} from 'panzoom';
 
 @Component({
     selector: 'nab-root',
@@ -31,11 +32,13 @@ export class AppComponent implements AfterViewInit {
     private counter = 1;
     private _arcLine: SVGElement;
     private _source: NodeElement;
+    private _panzoom: PanZoom;
 
     constructor(private _petriflowCanvasService: PetriflowCanvasService) {
     }
 
     ngAfterViewInit(): void {
+        this._panzoom = createPanZoom(this._petriflowCanvasService.canvas.container);
         // TODO: create custom service for events, maybe also use generic, abstraction
         this._petriflowCanvasService.canvas.svg.onclick = (e) => {
             this.addTransition(e);
@@ -49,7 +52,8 @@ export class AppComponent implements AfterViewInit {
 
     private addTransition($event): void {
         if (this.transitionMode === 'transition') {
-            const transition = new Transition(`t`, `t${this.counter++}`, new DOMPoint($event.x, $event.y - this.toolbar._elementRef.nativeElement.offsetHeight));
+            const transition = new Transition(`t`, `t${this.counter++}`, new DOMPoint($event.x - this.getPanZoomOffset().x,
+                $event.y - this.toolbar._elementRef.nativeElement.offsetHeight - this.getPanZoomOffset().y));
             transition.element.addEventListener('click', (e) => {
                 this.addArc(transition);
                 this.selectElement(transition);
@@ -67,7 +71,7 @@ export class AppComponent implements AfterViewInit {
 
     private addPlace(e: MouseEvent) {
         if (this.transitionMode === 'place') {
-            const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight));
+            const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint(e.x - this.getPanZoomOffset().x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight - this.getPanZoomOffset().y));
             place.element.addEventListener('click', () => {
                 this.addArc(place);
                 this.selectElement(place);
@@ -167,9 +171,9 @@ export class AppComponent implements AfterViewInit {
 
     private moveArc(e: MouseEvent) {
         if (this._arcLine) {
-            const intersect = this._source.getEdgeIntersection(new DOMPoint(e.x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight), 0);
+            const intersect = this._source.getEdgeIntersection(new DOMPoint(e.x - this.getPanZoomOffset().x, e.y - this.toolbar._elementRef.nativeElement.offsetHeight - this.getPanZoomOffset().y), 0);
             const offset = new DOMPoint(Math.sign(intersect.x - e.x) * 2, Math.sign(intersect.y - e.y) * 2);
-            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${e.x + offset.x},${e.y - this.toolbar._elementRef.nativeElement.offsetHeight + offset.y}`);
+            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${e.x + offset.x - this.getPanZoomOffset().x},${e.y - this.toolbar._elementRef.nativeElement.offsetHeight + offset.y - this.getPanZoomOffset().y}`);
         }
     }
 
@@ -230,5 +234,9 @@ export class AppComponent implements AfterViewInit {
 
     goToLink(url: string) {
         window.open(url, '_blank');
+    }
+
+    getPanZoomOffset(): Transform {
+        return this._panzoom.getTransform();
     }
 }
