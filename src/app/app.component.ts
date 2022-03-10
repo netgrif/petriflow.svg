@@ -25,7 +25,7 @@ export class AppComponent implements AfterViewInit {
 
     private arcTypes = ['arc', 'resetarc', 'inhibitor', 'read'];
 
-    private _transitionMode: string;
+    private _canvasMode: string;
     private _isDrawing = false;
     @ViewChild(MatToolbar) toolbar: MatToolbar;
     // TODO: Move properties to some service
@@ -41,6 +41,7 @@ export class AppComponent implements AfterViewInit {
         this._panzoom = createPanZoom(this._petriflowCanvasService.canvas.container);
         // TODO: create custom service for events, maybe also use generic, abstraction
         this._petriflowCanvasService.canvas.svg.onclick = (e) => {
+            console.log(this._panzoom.getTransform());
             this.addTransition(e);
             this.addPlace(e);
         };
@@ -175,17 +176,18 @@ export class AppComponent implements AfterViewInit {
         if (this._arcLine) {
             const offsetPanZoom = this.getPanZoomOffset();
             const intersect = this._source.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
+            // TODO: Fix offset formula, for choosing quadrant, (after zoom, etc.)
             const offset = new DOMPoint(Math.sign(intersect.x - e.x) * 2, Math.sign(intersect.y - e.y) * 2);
             this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${(e.x + offset.x - offsetPanZoom.x) / offsetPanZoom.scale},${(e.y - this.toolbar._elementRef.nativeElement.offsetHeight + offset.y - offsetPanZoom.y) / offsetPanZoom.scale}`);
         }
     }
 
     get transitionMode(): string {
-        return this._transitionMode;
+        return this._canvasMode;
     }
 
-    set transitionMode(value: string) {
-        this._transitionMode = value;
+    set canvasMode(value: string) {
+        this._canvasMode = value;
     }
 
     get isDrawing(): boolean {
@@ -205,7 +207,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     private selectElement(element: NodeElement) {
-        if (this._transitionMode === 'move') {
+        if (this._canvasMode === 'move') {
             if (!this._source) {
                 this._source = element;
             } else {
@@ -222,7 +224,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     private deleteElement(element: CanvasElement) {
-        if (this._transitionMode === 'remove') {
+        if (this._canvasMode === 'remove') {
             if (element instanceof NodeElement) {
                 (element as NodeElement).arcs.forEach(arc => {
                         this._petriflowCanvasService.canvas.remove(arc.container);
@@ -242,5 +244,18 @@ export class AppComponent implements AfterViewInit {
 
     getPanZoomOffset(): Transform {
         return this._panzoom.getTransform();
+    }
+
+    // TODO: This move then to petriflow-canvas service
+    selectAll() {
+    }
+
+    changeCanvasMode(mode: string, panzoomEnabled = false) {
+        this.canvasMode = mode;
+        if (panzoomEnabled && this._panzoom.isPaused()) {
+            this._panzoom.resume();
+        } else if (!panzoomEnabled && !this._panzoom.isPaused()) {
+            this._panzoom.pause();
+        }
     }
 }

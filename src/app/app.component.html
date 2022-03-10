@@ -3,31 +3,34 @@
         <mat-toolbar-row fxFlex>
             <mat-icon id="netgrif-icon" svgIcon="netgrif_logo"></mat-icon>
             <mat-button-toggle-group fxLayoutAlign="start end">
-                <mat-button-toggle mat-button (click)="transitionMode = 'select'">
-                    <mat-icon svgIcon="cursor-default-outline"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'transition'">
-                    <mat-icon svgIcon="transition"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'place'">
-                    <mat-icon svgIcon="place"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'arc'">
-                    <mat-icon svgIcon="arc"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'resetarc'">
-                    <mat-icon svgIcon="resetarc"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'inhibitor'">
-                    <mat-icon svgIcon="inhibitor"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'read'">
-                    <mat-icon svgIcon="read"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'move'">
+                <mat-button-toggle mat-button (click)="changeCanvasMode('select', true)">
                     <mat-icon>open_with</mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="transitionMode = 'remove'">
+<!--                <mat-button-toggle mat-button (click)="selectAll()">-->
+<!--                    <mat-icon>tab_unselected</mat-icon>-->
+<!--                </mat-button-toggle>-->
+                <mat-button-toggle mat-button (click)="changeCanvasMode('transition')">
+                    <mat-icon svgIcon="transition"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="changeCanvasMode('place')">
+                    <mat-icon svgIcon="place"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="changeCanvasMode('arc')">
+                    <mat-icon svgIcon="arc"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="changeCanvasMode('resetarc')">
+                    <mat-icon svgIcon="resetarc"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="changeCanvasMode('inhibitor')">
+                    <mat-icon svgIcon="inhibitor"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="changeCanvasMode('read')">
+                    <mat-icon svgIcon="read"></mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="changeCanvasMode('move')">
+                    <mat-icon>open_with</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="changeCanvasMode('remove')">
                     <mat-icon>delete_outline</mat-icon>
                 </mat-button-toggle>
             </mat-button-toggle-group>
