@@ -13,7 +13,6 @@ import {InhibitorArc} from '../../projects/canvas/src/lib/canvas/svg-elements/ar
 import {ReadArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/read-arc';
 import {TransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/transition-place-arc';
 import {RegularTransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-transition-place-arc';
-import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
 import createPanZoom, {PanZoom, Transform} from 'panzoom';
 
 @Component({
@@ -176,9 +175,14 @@ export class AppComponent implements AfterViewInit {
         if (this._arcLine) {
             const offsetPanZoom = this.getPanZoomOffset();
             const intersect = this._source.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
-            // TODO: Fix offset formula, for choosing quadrant, (after zoom, etc.)
-            const offset = new DOMPoint(Math.sign(intersect.x - e.x) * 2, Math.sign(intersect.y - e.y) * 2);
-            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${(e.x + offset.x - offsetPanZoom.x) / offsetPanZoom.scale},${(e.y - this.toolbar._elementRef.nativeElement.offsetHeight + offset.y - offsetPanZoom.y) / offsetPanZoom.scale}`);
+            const xLineLength = ((e.x - offsetPanZoom.x) / offsetPanZoom.scale) - intersect.x;
+            const yLineLength = ((e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale) - intersect.y;
+            const arcLength = Math.sqrt(xLineLength * xLineLength + yLineLength * yLineLength);
+            const arcLengthOffset = arcLength - CanvasConfiguration.ARROW_HEAD_SIZE;
+            const arcRatio = arcLengthOffset / arcLength;
+            const finalX = intersect.x + xLineLength * arcRatio;
+            const finalY = intersect.y + yLineLength * arcRatio;
+            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${finalX},${finalY}`);
         }
     }
 
@@ -230,9 +234,6 @@ export class AppComponent implements AfterViewInit {
                         this._petriflowCanvasService.canvas.remove(arc.container);
                     }
                 );
-            } else if (element instanceof Arc) {
-                (element as Arc).start.arcs.splice((element as Arc).start.arcs.indexOf(element));
-                (element as Arc).end.arcs.splice((element as Arc).end.arcs.indexOf(element));
             }
             this._petriflowCanvasService.canvas.remove(element.container);
         }
@@ -255,7 +256,6 @@ export class AppComponent implements AfterViewInit {
         if (panzoomEnabled && this._panzoom.isPaused()) {
             this._panzoom.resume();
         } else if (!panzoomEnabled && !this._panzoom.isPaused()) {
-            this._panzoom.pause();
         }
     }
 }
