@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {PetriflowCanvasService} from '../../projects/petriflow-canvas/src/lib/petriflow-canvas.service';
 import {MatToolbar} from '@angular/material/toolbar';
 import {NodeElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
@@ -27,6 +27,7 @@ export class AppComponent implements AfterViewInit {
     private _canvasMode: string;
     private _isDrawing = false;
     @ViewChild(MatToolbar) toolbar: MatToolbar;
+    @ViewChild('canvasComponent') canvasComponent: ElementRef;
     // TODO: Move properties to some service
     private counter = 1;
     private _arcLine: SVGElement;
@@ -40,7 +41,6 @@ export class AppComponent implements AfterViewInit {
         this._panzoom = createPanZoom(this._petriflowCanvasService.canvas.container);
         // TODO: create custom service for events, maybe also use generic, abstraction
         this._petriflowCanvasService.canvas.svg.onclick = (e) => {
-            console.log(this._panzoom.getTransform());
             this.addTransition(e);
             this.addPlace(e);
         };
@@ -251,11 +251,21 @@ export class AppComponent implements AfterViewInit {
     selectAll() {
     }
 
-    changeCanvasMode(mode: string, panzoomEnabled = false) {
+    changeCanvasMode(mode: string, panzoomEnabled = true, cursor?: string) {
+        this.disablePreviousArcMode();
         this.canvasMode = mode;
         if (panzoomEnabled && this._panzoom.isPaused()) {
             this._panzoom.resume();
         } else if (!panzoomEnabled && !this._panzoom.isPaused()) {
+            this._panzoom.pause();
+        }
+    }
+
+    disablePreviousArcMode() {
+        if (this.arcLine) {
+            this._petriflowCanvasService.canvas.remove(this.arcLine);
+            this._source = undefined;
+            this.arcLine = undefined;
         }
     }
 }
