@@ -4,11 +4,12 @@ import {NodeElement} from './node-element';
 
 export abstract class LabeledObject extends NodeElement implements Movable {
 
+    private _id: string;
     private _labelElement: SVGTextElement;
     private _label: Text;
     private _labelBackground: SVGRectElement;
 
-    protected constructor(label: string, position: DOMPoint) {
+    protected constructor(id: string, label: string, position: DOMPoint) {
         super(position);
         this.labelBackground = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGRectElement;
         this.labelBackground.setAttributeNS(null, 'width', '0');
@@ -23,6 +24,8 @@ export abstract class LabeledObject extends NodeElement implements Movable {
         this._labelElement.setAttributeNS(null, 'text-anchor', 'middle');
         this._label = document.createTextNode(label);
         this._labelElement.appendChild(this._label);
+
+        this._id = id;
         this.container.appendChild(this._labelElement);
 
         this.setLabelElementPosition(position);
@@ -70,5 +73,17 @@ export abstract class LabeledObject extends NodeElement implements Movable {
 
     set labelBackground(value: SVGRectElement) {
         this._labelBackground = value;
+    }
+
+    get id(): string {
+        return this._id;
+    }
+
+    set id(value: string) {
+        this._id = value;
+    }
+
+    changeId(id: string): void {
+        this._label.textContent = id;
     }
 }

@@ -21,7 +21,7 @@ export class Place extends LabeledObject {
     private _marking: Text;
 
     constructor(id: string, label: string, marking: number, position: DOMPoint) {
-        super(label, position);
+        super(id, label, position);
         this._element = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'circle') as SVGCircleElement;
         this._element.id = `svg_place_${id}`;
         this._element.setAttributeNS(null, 'r', `${CanvasConfiguration.RADIUS}`);
@@ -64,12 +64,13 @@ export class Place extends LabeledObject {
 
     activate(): void {
         super.activate();
-        this._element.setAttributeNS(null, 'stroke', 'blue');
+        this._element.setAttributeNS(null, 'class', 'svg-active-stroke');
     }
 
     deactivate(): void {
         super.deactivate();
         this._element.setAttributeNS(null, 'stroke', 'black');
+        this._element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
     }
 
     move(position: DOMPoint): void {

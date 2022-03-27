@@ -11,7 +11,7 @@ export class Transition extends LabeledObject {
     private _icon: Text;
 
     constructor(id: string, label: string, position: DOMPoint, icon?: string) {
-        super(label, position);
+        super(id, label, position);
         this._cancelArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
         this._cancelArrow.id = `svg_transition_start_${id}`;
         this._cancelArrow.setAttributeNS(null, 'fill', 'white');

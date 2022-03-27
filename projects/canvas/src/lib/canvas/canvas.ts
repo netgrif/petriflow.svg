@@ -20,8 +20,8 @@ export class Canvas extends Container {
         this.container.appendChild(object.container);
     }
 
-    public remove(element): any {
-        return this.container.removeChild(element);
+    public remove(element: CanvasElement): SVGGElement {
+        return this.container.removeChild(element.container);
     }
 
     public removeAll(): void {

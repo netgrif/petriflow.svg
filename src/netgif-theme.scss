@@ -164,3 +164,15 @@ body {
 .svg-icon-inactive {
     display: none;
 }
+
+.path {
+    stroke-dasharray: 5 10;
+    animation: dash 10s linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 1000;
+    }
+}
