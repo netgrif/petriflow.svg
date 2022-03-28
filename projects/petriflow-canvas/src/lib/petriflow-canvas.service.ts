@@ -38,31 +38,25 @@ export class PetriflowCanvasService {
         this._clipboard = value;
     }
 
-    getEnclosedElementsByRectangle(rectangle: SVGElement): Array<LabeledObject> {
+    getEnclosedElementsByRectangle(rectangle: SVGElement): Array<PetriflowCanvasElement<any>> {
         const newRect = this.canvas.svg.createSVGRect();
         newRect.x = +rectangle.getAttribute('x');
         newRect.y = +rectangle.getAttribute('y');
         newRect.width = +rectangle.getAttribute('width');
         newRect.height = +rectangle.getAttribute('height');
-        return this.labeledObjects.filter(labeledElement => this.isOverlapped(newRect, labeledElement));
+        return this._petriflowElements.filter(petriflowElement => petriflowElement.isEnclosedByRectangle(newRect));
     }
 
-    // TODO: Remove
-    isOverlapped(rectangle: SVGRect, element: CanvasElement): boolean {
-        const canvasElementBox = element.container.getBBox();
-        return !(rectangle.x > canvasElementBox.x + canvasElementBox.width ||
-            canvasElementBox.x > rectangle.x + rectangle.width ||
-            rectangle.y > canvasElementBox.y + canvasElementBox.height ||
-            canvasElementBox.y > rectangle.y + rectangle.height);
-    }
-
-    copyElements(elements: Array<LabeledObject>) {
+    copyElements(elements: Array<PetriflowCanvasElement<any>>) {
         elements.forEach(element => {
-            const copyObject: LabeledObject = Object.create(element) as LabeledObject;
-            copyObject.container = element.container.cloneNode(true) as SVGGElement;
+            const copyObject = element.element.clone();
             this.clipboard.appendChild(copyObject.container);
         });
         this.canvas.container.appendChild(this.clipboard);
+    }
+
+    deleteSelectedElements() {
+
     }
 
     get labeledObjects(): Array<LabeledObject> {

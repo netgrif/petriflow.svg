@@ -5,6 +5,10 @@ export class PetriflowArcElement extends PetriflowCanvasElement<Arc> {
 
     private static arcIdCounter = 0;
 
+    constructor(element: Arc) {
+        super(element);
+    }
+
     getId(): string {
         return `a${PetriflowArcElement.arcIdCounter++}`;
     }

@@ -38,6 +38,9 @@ export class PetriflowCanvasComponent implements AfterViewInit {
                 console.log('on ctrl v');
             } else if ($event.key === 'a' || $event.key === 'A') {
                 console.log('on ctrl a');
+            } else if ($event.key === 'z' || $event.key === 'Z') {
+                console.log('on ctrl z');
+            //    TODO: undo/redo by memento ?
             }
         }
     }

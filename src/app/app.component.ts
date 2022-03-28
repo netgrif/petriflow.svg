@@ -5,7 +5,6 @@ import {NodeElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg
 import {CanvasConfiguration} from '../../projects/canvas/src/lib/canvas/canvas-configuration';
 import {RegularPlaceTransitionArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
 import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
-import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
 import {CanvasElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
 import {PlaceTransitionArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/place-transition-arc';
 import {ResetArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/reset-arc';
@@ -14,6 +13,7 @@ import {ReadArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/rea
 import {TransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/transition-place-arc';
 import {RegularTransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-transition-place-arc';
 import createPanZoom, {PanZoom, Transform} from 'panzoom';
+import {PetriflowCanvasFactoryService} from '../../projects/petriflow-canvas/src/lib/factories/petriflow-canvas-factory.service';
 
 @Component({
     selector: 'nab-root',
@@ -40,7 +40,7 @@ export class AppComponent implements AfterViewInit {
     private mouseY = 0;
     private rectangle: SVGElement;
 
-    constructor(private _petriflowCanvasService: PetriflowCanvasService) {
+    constructor(private _petriflowCanvasService: PetriflowCanvasService, private _petriflowFactoryService: PetriflowCanvasFactoryService) {
     }
 
     ngAfterViewInit(): void {
@@ -51,6 +51,7 @@ export class AppComponent implements AfterViewInit {
             this.addPlace(e);
         };
         this._petriflowCanvasService.canvas.svg.onmousedown = (e) => {
+            e.preventDefault();
             if (this.canvasMode === 'rectangle') {
                 this.mouseDown = true;
                 const offset = this.getPanZoomOffset();
@@ -72,7 +73,7 @@ export class AppComponent implements AfterViewInit {
                 if (this.rectangle) {
                     const enclosedElements = this._petriflowCanvasService.getEnclosedElementsByRectangle(this.rectangle);
                     enclosedElements.forEach(element => {
-                        element.activate();
+                        element.element.activate();
                     });
                     this._petriflowCanvasService.copyElements(enclosedElements);
                     const clipboardBox = this._petriflowCanvasService.clipboard.getBoundingClientRect();
@@ -103,34 +104,31 @@ export class AppComponent implements AfterViewInit {
     private addTransition($event): void {
         if (this.transitionMode === 'transition') {
             const offset = this.getPanZoomOffset();
-            const transition = new Transition(`t`, `t${this.counter++}`, new DOMPoint(($event.x - offset.x) / offset.scale,
+            const transition = this._petriflowFactoryService.createTransition(new DOMPoint(($event.x - offset.x) / offset.scale,
                 ($event.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
-            this._petriflowCanvasService.labeledObjects.push(transition);
-            transition.element.addEventListener('click', (e) => {
+            transition.element.onclick = (e) => {
                 this.addArc(transition);
                 this.selectElement(transition);
                 this.deleteElement(transition);
-            });
+            };
             transition.element.onmouseenter = () => {
                 transition.activate();
             };
             transition.element.onmouseleave = () => {
                 transition.deactivate();
             };
-            this._petriflowCanvasService.canvas.add(transition);
         }
     }
 
     private addPlace(e: MouseEvent) {
         if (this.transitionMode === 'place') {
             const offset = this.getPanZoomOffset();
-            const place = new Place(`p${this.counter++}`, `p${this.counter}`, 0, new DOMPoint((e.x - offset.x) / offset.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
-            this._petriflowCanvasService.labeledObjects.push(place);
-            place.element.addEventListener('click', () => {
+            const place = this._petriflowFactoryService.createPlace(0, new DOMPoint((e.x - offset.x) / offset.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
+            place.element.onclick = () => {
                 this.addArc(place);
                 this.selectElement(place);
                 this.deleteElement(place);
-            });
+            };
 
             place.element.onmouseenter = () => {
                 place.activate();
@@ -151,7 +149,6 @@ export class AppComponent implements AfterViewInit {
                     place.deactivate();
                 };
             });
-            this._petriflowCanvasService.canvas.add(place);
         }
     }
 
