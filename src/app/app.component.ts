@@ -7,6 +7,7 @@ import {CanvasElement} from '../../projects/canvas/src/lib/canvas/svg-elements/s
 import createPanZoom, {PanZoom, Transform} from 'panzoom';
 import {PetriflowCanvasFactoryService} from '../../projects/petriflow-canvas/src/lib/factories/petriflow-canvas-factory.service';
 import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
+import {PetriflowNodeElement} from "../../projects/petriflow-canvas/src/lib/svg-elements/PetriflowNodeElement";
 
 @Component({
     selector: 'nab-root',
@@ -64,9 +65,6 @@ export class AppComponent implements AfterViewInit {
             if (this.canvasMode === 'rectangle') {
                 if (this.rectangle) {
                     const enclosedElements = this._petriflowCanvasService.getEnclosedElementsByRectangle(this.rectangle);
-                    enclosedElements.forEach(element => {
-                        element.element.activate();
-                    });
                     this._petriflowCanvasService.copyElements(enclosedElements);
                     const clipboardBox = this._petriflowCanvasService.clipboard.getBoundingClientRect();
                     this._petriflowCanvasService.canvas.svg.onmousemove = (e) => {
@@ -220,10 +218,17 @@ export class AppComponent implements AfterViewInit {
     private deleteElement(element: CanvasElement) {
         if (this._canvasMode === 'remove') {
             if (element instanceof NodeElement) {
+                const removedArcs = [];
                 element.arcs.forEach(arc => {
                         this._petriflowCanvasService.canvas.remove(arc);
+                        removedArcs.push(arc);
                     }
                 );
+                this._petriflowCanvasService.petriflowElements.forEach(petriflowElement => {
+                    if (petriflowElement instanceof PetriflowNodeElement) {
+                        petriflowElement.deleteArcs(removedArcs);
+                    }
+                });
             }
             this._petriflowCanvasService.canvas.remove(element);
         }

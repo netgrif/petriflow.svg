@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 import {CanvasElement} from '../../../canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
-import {CanvasConfiguration} from '../../../canvas/src/lib/canvas/canvas-configuration';
-import {LabeledObject} from '../../../canvas/src/lib/canvas/svg-elements/svg-objects/labeled-object';
 import {PetriflowCanvasElement} from './svg-elements/PetriflowCanvasElement';
 import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
 
@@ -12,14 +10,12 @@ export class PetriflowCanvasService {
 
     private _canvas: PetriflowCanvas;
     private _clipboard: SVGElement;
-    private _labeledObjects: Array<LabeledObject>;
     private _petriflowElements: Array<PetriflowCanvasElement<CanvasElement>>;
+    private _selectedElements: Array<PetriflowCanvasElement<CanvasElement>>;
 
     constructor() {
-        this._clipboard = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'g') as SVGGElement;
-        this._clipboard.id = 'groupa';
-        this._labeledObjects = [];
         this._petriflowElements = [];
+        this._selectedElements = [];
     }
 
     get canvas(): PetriflowCanvas {
@@ -56,10 +52,6 @@ export class PetriflowCanvasService {
     }
 
     deleteSelectedElements() {
-    }
-
-    get labeledObjects(): Array<LabeledObject> {
-        return this._labeledObjects;
     }
 
     get petriflowElements(): Array<PetriflowCanvasElement<CanvasElement>> {
