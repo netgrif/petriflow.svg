@@ -56,7 +56,6 @@ export class PetriflowCanvasService {
     }
 
     deleteSelectedElements() {
-
     }
 
     get labeledObjects(): Array<LabeledObject> {

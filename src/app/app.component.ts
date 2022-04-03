@@ -3,17 +3,10 @@ import {PetriflowCanvasService} from '../../projects/petriflow-canvas/src/lib/pe
 import {MatToolbar} from '@angular/material/toolbar';
 import {NodeElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
 import {CanvasConfiguration} from '../../projects/canvas/src/lib/canvas/canvas-configuration';
-import {RegularPlaceTransitionArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
-import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
 import {CanvasElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
-import {PlaceTransitionArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/place-transition-arc';
-import {ResetArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/reset-arc';
-import {InhibitorArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/inhibitor-arc';
-import {ReadArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/read-arc';
-import {TransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/transition-place-arc';
-import {RegularTransitionPlaceArc} from '../../projects/canvas/src/lib/canvas/svg-elements/arc/regular-transition-place-arc';
 import createPanZoom, {PanZoom, Transform} from 'panzoom';
 import {PetriflowCanvasFactoryService} from '../../projects/petriflow-canvas/src/lib/factories/petriflow-canvas-factory.service';
+import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
 
 @Component({
     selector: 'nab-root',
@@ -28,10 +21,7 @@ export class AppComponent implements AfterViewInit {
     private _isDrawing = false;
     @ViewChild(MatToolbar) toolbar: MatToolbar;
     @ViewChild('canvasComponent') canvasComponent: ElementRef;
-    // TODO: Move properties to some service
-    private counter = 1;
     private _arcLine: SVGElement;
-    private _source: NodeElement;
     private _panzoom: PanZoom;
 
     // SELECT logic
@@ -39,6 +29,8 @@ export class AppComponent implements AfterViewInit {
     private mouseX = 0;
     private mouseY = 0;
     private rectangle: SVGElement;
+
+    private _source: NodeElement;
 
     constructor(private _petriflowCanvasService: PetriflowCanvasService, private _petriflowFactoryService: PetriflowCanvasFactoryService) {
     }
@@ -136,6 +128,7 @@ export class AppComponent implements AfterViewInit {
             place.element.onmouseleave = () => {
                 place.deactivate();
             };
+            // TODO: add to some abstract event listener class, for canvas elements
             place.markingTokens.forEach(markingToken => {
                 markingToken.onclick = () => {
                     this.addArc(place);
@@ -152,58 +145,14 @@ export class AppComponent implements AfterViewInit {
         }
     }
 
-    // TODO: move all this methods below to some service
-    private createSvgArc(element: NodeElement, arrowUrl: string) {
-        this._arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
-        this._arcLine.setAttributeNS(null, 'fill', 'none');
-        this._arcLine.setAttributeNS(null, 'stroke', 'black');
-        this._arcLine.setAttributeNS(null, 'stroke-width', '2');
-        this._arcLine.setAttributeNS(null, 'marker-end', `url(#${arrowUrl})`);
-        this._arcLine.setAttributeNS(null, 'points', `${element.position.x},${element.position.y} ${element.position.x},${element.position.y}`);
-        this._source = element;
-        this._petriflowCanvasService.canvas.container.appendChild(this._arcLine);
-    }
-
     private addArc(element: NodeElement) {
         if (!this._arcLine && this.arcTypes.includes(this.transitionMode)) {
             this._source = element;
-        }
-        if (this._source instanceof Place) {
-            switch (this.transitionMode) {
-                case 'arc': {
-                    this.createArcByGenericType(element, RegularPlaceTransitionArc, RegularPlaceTransitionArc.ID);
-                    break;
-                }
-                case 'resetarc': {
-                    this.createArcByGenericType(element, ResetArc, ResetArc.ID);
-                    break;
-                }
-                case 'inhibitor': {
-                    this.createArcByGenericType(element, InhibitorArc, InhibitorArc.ID);
-                    break;
-                }
-                case 'read': {
-                    this.createArcByGenericType(element, ReadArc, ReadArc.ID);
-                    break;
-                }
-            }
-        } else if (this.transitionMode === 'arc') {
-            this.createArcByGenericType(element, RegularTransitionPlaceArc, RegularPlaceTransitionArc.ID);
-        }
-    }
-
-    private createArcByGenericType<T extends PlaceTransitionArc | TransitionPlaceArc>(element: NodeElement, type: new(...args) => T, arrow: string) {
-        if (!this.arcTypes.includes(this.transitionMode)) {
-            return;
-        }
-        if (!this._arcLine) {
-            this.createSvgArc(element, arrow);
-        } else if (element.constructor !== this._source.constructor) {
-            this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
-            this.arcLine = undefined;
-            const arc: T = this.createArc(type, this._source, element, []);
-            this._petriflowCanvasService.canvas.add(arc);
+            this._arcLine = this._petriflowFactoryService.addArc(element, this.transitionMode) as SVGElement;
+        } else if (this._arcLine) {
+            const arc = this._petriflowFactoryService.addArc(element, this.transitionMode) as Arc;
             this._source = undefined;
+            this._arcLine = undefined;
             arc.arcLine.onclick = () => {
                 this.deleteElement(arc);
             };
@@ -214,10 +163,6 @@ export class AppComponent implements AfterViewInit {
                 arc.deactivate();
             };
         }
-    }
-
-    createArc<T>(type: new(...args) => T, ...params): T {
-        return new type(...params);
     }
 
     private moveArc(e: MouseEvent) {
@@ -231,7 +176,7 @@ export class AppComponent implements AfterViewInit {
             const arcRatio = arcLengthOffset / arcLength;
             const finalX = intersect.x + xLineLength * arcRatio;
             const finalY = intersect.y + yLineLength * arcRatio;
-            this.arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${finalX},${finalY}`);
+            this._arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${finalX},${finalY}`);
         }
     }
 
@@ -253,14 +198,6 @@ export class AppComponent implements AfterViewInit {
 
     set isDrawing(value: boolean) {
         this._isDrawing = value;
-    }
-
-    get arcLine(): SVGElement {
-        return this._arcLine;
-    }
-
-    set arcLine(value: SVGElement) {
-        this._arcLine = value;
     }
 
     private selectElement(element: NodeElement) {
@@ -311,10 +248,10 @@ export class AppComponent implements AfterViewInit {
     }
 
     disablePreviousArcMode() {
-        if (this.arcLine) {
-            this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
+        if (this._petriflowFactoryService.arcLine) {
+            this._petriflowCanvasService.canvas.container.removeChild(this._petriflowFactoryService.arcLine);
             this._source = undefined;
-            this.arcLine = undefined;
+            this._petriflowFactoryService.arcLine = undefined;
         }
     }
 }
