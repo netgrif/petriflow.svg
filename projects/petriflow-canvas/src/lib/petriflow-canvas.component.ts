@@ -26,7 +26,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
         return this._canvas;
     }
 
-    @HostListener('keydown', ['$event'])
+    @HostListener('window:keydown', ['$event'])
     onKeyDown($event: KeyboardEvent) {
         if (($event.ctrlKey || $event.metaKey)) {
             $event.preventDefault();
@@ -37,7 +37,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
             } else if ($event.key === 'v' || $event.key === 'V') {
                 console.log('on ctrl v');
             } else if ($event.key === 'a' || $event.key === 'A') {
-                console.log('on ctrl a');
+                this._canvasService.selectAll();
             } else if ($event.key === 'z' || $event.key === 'Z') {
                 console.log('on ctrl z');
             //    TODO: undo/redo by memento ?
@@ -45,12 +45,19 @@ export class PetriflowCanvasComponent implements AfterViewInit {
         }
     }
 
-    @HostListener('keydown.delete', ['$event'])
+    @HostListener('window:keydown.delete', ['$event'])
     onDelete() {
-        this._canvasService.petriflowElements.filter(canvasElement => canvasElement.isSelected).forEach(selectedElement => {
+        this._canvasService.selectedElements.forEach(selectedElement => {
             if (selectedElement instanceof PetriflowNodeElement) {
+                const removedArcs = [];
                 selectedElement.element.arcs.forEach(arc => {
                     this._canvasService.canvas.remove(arc);
+                    removedArcs.push(arc);
+                });
+                this._canvasService.petriflowElements.forEach(petriflowElement => {
+                    if (petriflowElement instanceof PetriflowNodeElement) {
+                        petriflowElement.deleteArcs(removedArcs);
+                    }
                 });
                 this._canvasService.canvas.remove(selectedElement.element);
             }

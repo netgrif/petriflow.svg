@@ -7,7 +7,7 @@ import {CanvasElement} from '../../projects/canvas/src/lib/canvas/svg-elements/s
 import createPanZoom, {PanZoom, Transform} from 'panzoom';
 import {PetriflowCanvasFactoryService} from '../../projects/petriflow-canvas/src/lib/factories/petriflow-canvas-factory.service';
 import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
-import {PetriflowNodeElement} from "../../projects/petriflow-canvas/src/lib/svg-elements/PetriflowNodeElement";
+import {PetriflowNodeElement} from '../../projects/petriflow-canvas/src/lib/svg-elements/PetriflowNodeElement';
 
 @Component({
     selector: 'nab-root',
@@ -64,15 +64,15 @@ export class AppComponent implements AfterViewInit {
         this._petriflowCanvasService.canvas.svg.onmouseup = () => {
             if (this.canvasMode === 'rectangle') {
                 if (this.rectangle) {
-                    const enclosedElements = this._petriflowCanvasService.getEnclosedElementsByRectangle(this.rectangle);
-                    this._petriflowCanvasService.copyElements(enclosedElements);
-                    const clipboardBox = this._petriflowCanvasService.clipboard.getBoundingClientRect();
-                    this._petriflowCanvasService.canvas.svg.onmousemove = (e) => {
-                        const offset = this.getPanZoomOffset();
-                        this.mouseX = (e.x - offset.x) / offset.scale - (clipboardBox.x + clipboardBox.width / 2 - offset.x) / offset.scale;
-                        this.mouseY = (e.y - offset.y) / offset.scale - (clipboardBox.y + clipboardBox.height / 2 - offset.y) / offset.scale;
-                        this._petriflowCanvasService.clipboard.setAttribute('transform', `matrix(1,0,0,1,${this.mouseX},${this.mouseY})`);
-                    };
+                    this._petriflowCanvasService.selectedElements = this._petriflowCanvasService.getEnclosedElementsByRectangle(this.rectangle);
+                    this._petriflowCanvasService.selectedElements.forEach(selectedElement => selectedElement.select());
+                    // const clipboardBox = this._petriflowCanvasService.clipboard.getBoundingClientRect();
+                    // this._petriflowCanvasService.canvas.svg.onmousemove = (e) => {
+                    //     const offset = this.getPanZoomOffset();
+                    //     this.mouseX = (e.x - offset.x) / offset.scale - (clipboardBox.x + clipboardBox.width / 2 - offset.x) / offset.scale;
+                    //     this.mouseY = (e.y - offset.y) / offset.scale - (clipboardBox.y + clipboardBox.height / 2 - offset.y) / offset.scale;
+                    //     this._petriflowCanvasService.clipboard.setAttribute('transform', `matrix(1,0,0,1,${this.mouseX},${this.mouseY})`);
+                    // };
                 }
                 this.mouseDown = false;
                 this._petriflowCanvasService.canvas.container.removeChild(this.rectangle);

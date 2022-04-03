@@ -54,7 +54,20 @@ export class PetriflowCanvasService {
     deleteSelectedElements() {
     }
 
+    selectAll() {
+        this.selectedElements = this.petriflowElements;
+        this.selectedElements.forEach(selectedElement => selectedElement.select());
+    }
+
     get petriflowElements(): Array<PetriflowCanvasElement<CanvasElement>> {
         return this._petriflowElements;
+    }
+
+    get selectedElements(): Array<PetriflowCanvasElement<CanvasElement>> {
+        return this._selectedElements;
+    }
+
+    set selectedElements(value: Array<PetriflowCanvasElement<CanvasElement>>) {
+        this._selectedElements = value;
     }
 }
