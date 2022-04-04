@@ -59,11 +59,9 @@ export class AppComponent implements AfterViewInit {
             }
         };
         this._petriflowCanvasService.canvas.svg.onmouseup = () => {
-            if (this.canvasMode === 'rectangle') {
-                if (this.rectangle) {
-                    this._petriflowCanvasService.selectedElements = this._petriflowCanvasService.getEnclosedElementsByRectangle(this.rectangle);
-                    this._petriflowCanvasService.selectedElements.forEach(selectedElement => selectedElement.select());
-                }
+            if (this.canvasMode === 'rectangle' && this.rectangle) {
+                this._petriflowCanvasService.selectedElements = this._petriflowCanvasService.getEnclosedElementsByRectangle(this.rectangle);
+                this._petriflowCanvasService.selectedElements.forEach(selectedElement => selectedElement.select());
                 this.mouseDown = false;
                 this._petriflowCanvasService.canvas.container.removeChild(this.rectangle);
                 this.rectangle = undefined;

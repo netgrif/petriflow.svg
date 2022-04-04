@@ -92,7 +92,9 @@ export class PetriflowCanvasService {
             }
         };
         this.canvas.svg.onmousedown = (e) => {
-            this.destroyClipboard();
+            if (this.clipboard) {
+                this.destroyClipboard();
+            }
         };
     }
 
