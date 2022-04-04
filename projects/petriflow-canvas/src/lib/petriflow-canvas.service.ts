@@ -54,6 +54,7 @@ export class PetriflowCanvasService {
                 copyElement.moveBy(matrix.e, matrix.f);
             }
             this.canvas.container.appendChild(copyElement.element.container);
+            this.petriflowElements.push(copyElement);
         });
         this.canvas.container.removeChild(this.clipboard);
         this.clipboard = undefined;

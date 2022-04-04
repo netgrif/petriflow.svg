@@ -80,7 +80,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     private addTransition($event): void {
-        if (this.transitionMode === 'transition') {
+        if (this.canvasMode === 'transition') {
             const offset = this._petriflowCanvasService.getPanZoomOffset();
             const transition = this._petriflowFactoryService.createTransition(new DOMPoint(($event.x - offset.x) / offset.scale,
                 ($event.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
@@ -89,30 +89,17 @@ export class AppComponent implements AfterViewInit {
                 this.selectElement(transition);
                 this.deleteElement(transition);
             };
-            transition.element.onmouseenter = () => {
-                transition.activate();
-            };
-            transition.element.onmouseleave = () => {
-                transition.deactivate();
-            };
         }
     }
 
     private addPlace(e: MouseEvent) {
-        if (this.transitionMode === 'place') {
+        if (this.canvasMode === 'place') {
             const offset = this._petriflowCanvasService.getPanZoomOffset();
             const place = this._petriflowFactoryService.createPlace(0, new DOMPoint((e.x - offset.x) / offset.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
             place.element.onclick = () => {
                 this.addArc(place);
                 this.selectElement(place);
                 this.deleteElement(place);
-            };
-
-            place.element.onmouseenter = () => {
-                place.activate();
-            };
-            place.element.onmouseleave = () => {
-                place.deactivate();
             };
             // TODO: add to some abstract event listener class, for canvas elements
             place.markingTokens.forEach(markingToken => {
@@ -121,33 +108,30 @@ export class AppComponent implements AfterViewInit {
                     this.selectElement(place);
                     this.deleteElement(place);
                 };
-                markingToken.onmouseenter = () => {
-                    place.activate();
-                };
-                markingToken.onmouseleave = () => {
-                    place.deactivate();
-                };
             });
         }
     }
 
     private addArc(element: NodeElement) {
-        if (!this._arcLine && this.arcTypes.includes(this.transitionMode)) {
+        if (!this._arcLine && this.arcTypes.includes(this.canvasMode)) {
             this._source = element;
-            this._arcLine = this._petriflowFactoryService.addArc(element, this.transitionMode) as SVGElement;
+            this._petriflowFactoryService.source = element;
+            this._arcLine = this._petriflowFactoryService.addArc(element, this.canvasMode) as SVGElement;
         } else if (this._arcLine) {
-            const arc = this._petriflowFactoryService.addArc(element, this.transitionMode) as Arc;
-            this._source = undefined;
-            this._arcLine = undefined;
-            arc.arcLine.onclick = () => {
-                this.deleteElement(arc);
-            };
-            arc.arcLine.onmouseenter = () => {
-                arc.activate();
-            };
-            arc.arcLine.onmouseleave = () => {
-                arc.deactivate();
-            };
+            const arc = this._petriflowFactoryService.addArc(element, this.canvasMode) as Arc;
+            if (arc) {
+                this._source = undefined;
+                this._arcLine = undefined;
+                arc.arcLine.onclick = () => {
+                    this.deleteElement(arc);
+                };
+                arc.arcLine.onmouseenter = () => {
+                    arc.activate();
+                };
+                arc.arcLine.onmouseleave = () => {
+                    arc.deactivate();
+                };
+            }
         }
     }
 
@@ -164,10 +148,6 @@ export class AppComponent implements AfterViewInit {
             const finalY = intersect.y + yLineLength * arcRatio;
             this._arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${finalX},${finalY}`);
         }
-    }
-
-    get transitionMode(): string {
-        return this._canvasMode;
     }
 
     set canvasMode(value: string) {
@@ -197,7 +177,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     private moveElement(e: MouseEvent) {
-        if (this.transitionMode === 'move' && this._source) {
+        if (this.canvasMode === 'move' && this._source) {
             const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
             this._source.move(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale));
         }

@@ -89,6 +89,7 @@ export class PetriflowCanvasFactoryService {
             const petriflowArc = new PetriflowArcElement(arc);
             this._petriflowCanvasService.petriflowElements.push(petriflowArc);
             this._source = undefined;
+            this._arcLine = undefined;
             return arc;
         }
     }

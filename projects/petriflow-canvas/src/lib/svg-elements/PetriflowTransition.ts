@@ -9,6 +9,12 @@ export class PetriflowTransition extends PetriflowNodeElement<Transition> {
     constructor(canvasElement: Transition) {
         super(canvasElement);
         this._element = canvasElement;
+        canvasElement.element.onmouseenter = () => {
+            canvasElement.activate();
+        };
+        canvasElement.element.onmouseleave = () => {
+            canvasElement.deactivate();
+        };
     }
 
     getId(): string {
