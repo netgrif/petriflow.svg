@@ -22,4 +22,7 @@ export class PetriflowArcElement extends PetriflowCanvasElement<Arc> {
         // TODO: Move breakpoints
     }
 
+    changeId(id: string) {
+    }
+
 }

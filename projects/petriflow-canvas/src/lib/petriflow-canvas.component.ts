@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, HostListener, ViewChild, ViewEncapsulation} from '@angular/core';
 import {PetriflowCanvasService} from './petriflow-canvas.service';
 import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
-import {PetriflowNodeElement} from './svg-elements/PetriflowNodeElement';
+import createPanZoom from 'panzoom';
 
 @Component({
     selector: 'lib-petriflow-canvas',
@@ -20,6 +20,8 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     ngAfterViewInit() {
         this._canvas = new PetriflowCanvas(this.canvasElement.nativeElement);
         this._canvasService.canvas = this._canvas;
+        this._canvasService.panzoom = createPanZoom(this._canvas.container);
+
     }
 
     get canvas(): PetriflowCanvas {
@@ -33,34 +35,25 @@ export class PetriflowCanvasComponent implements AfterViewInit {
             if ($event.key === 'd' || $event.key === 'D') {
                 console.log('on ctrl d');
             } else if ($event.key === 'c' || $event.key === 'C') {
-                console.log('on ctrl c');
+                this._canvasService.copyElements();
             } else if ($event.key === 'v' || $event.key === 'V') {
-                console.log('on ctrl v');
+                this._canvasService.pasteElements();
             } else if ($event.key === 'a' || $event.key === 'A') {
                 this._canvasService.selectAll();
             } else if ($event.key === 'z' || $event.key === 'Z') {
                 console.log('on ctrl z');
-            //    TODO: undo/redo by memento ?
+                //    TODO: undo/redo by memento ?
             }
         }
     }
 
     @HostListener('window:keydown.delete', ['$event'])
     onDelete() {
-        this._canvasService.selectedElements.forEach(selectedElement => {
-            if (selectedElement instanceof PetriflowNodeElement) {
-                const removedArcs = [];
-                selectedElement.element.arcs.forEach(arc => {
-                    this._canvasService.canvas.remove(arc);
-                    removedArcs.push(arc);
-                });
-                this._canvasService.petriflowElements.forEach(petriflowElement => {
-                    if (petriflowElement instanceof PetriflowNodeElement) {
-                        petriflowElement.deleteArcs(removedArcs);
-                    }
-                });
-                this._canvasService.canvas.remove(selectedElement.element);
-            }
-        });
+        this._canvasService.deleteSelectedElements();
+    }
+
+    @HostListener('window:keydown.escape', ['$event'])
+    onEscape() {
+        console.log('escape');
     }
 }

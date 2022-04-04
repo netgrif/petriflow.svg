@@ -1,7 +1,7 @@
 import {Selectable} from './Selectable';
 import {CanvasElement} from '../../../../canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
 
-export abstract class PetriflowCanvasElement<T extends CanvasElement> implements Selectable<CanvasElement> {
+export abstract class PetriflowCanvasElement<T extends CanvasElement> implements Selectable<PetriflowCanvasElement<CanvasElement>> {
 
     protected _element: T;
     protected _isSelected = false;
@@ -25,12 +25,16 @@ export abstract class PetriflowCanvasElement<T extends CanvasElement> implements
 
     abstract getId(): string;
 
+    abstract changeId(id: string);
+
     get element() {
         return this._element;
     }
 
-    copy(): CanvasElement {
-        return this._element.clone();
+    copy(): PetriflowCanvasElement<CanvasElement> {
+        const newCanvasElement = Object.create(this) as PetriflowCanvasElement<CanvasElement>;
+        newCanvasElement._element = this._element.clone();
+        return newCanvasElement;
     }
 
     select(): void {

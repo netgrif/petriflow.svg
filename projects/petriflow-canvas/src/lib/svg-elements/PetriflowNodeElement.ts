@@ -16,6 +16,13 @@ export abstract class PetriflowNodeElement<T extends NodeElement> extends Petrif
         this.element.move(position);
     }
 
+    moveBy(x: number, y: number) {
+        const moveTo = new DOMPoint(this.element.position.x + x, this.element.position.y + y);
+        this.move(moveTo);
+    }
+
+    abstract changeId(id: string);
+
     deleteArcs(arcs: Array<Arc>) {
         arcs.forEach(arc => {
             const index = this.element.arcs.indexOf(arc);

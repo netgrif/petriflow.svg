@@ -81,9 +81,6 @@ export abstract class LabeledObject extends NodeElement implements Movable {
 
     set id(value: string) {
         this._id = value;
-    }
-
-    changeId(id: string): void {
-        this._label.textContent = id;
+        this._label.textContent = value;
     }
 }
