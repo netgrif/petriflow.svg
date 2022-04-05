@@ -1,4 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -15,7 +15,6 @@ import {TaskContentComponentModule} from '@netgrif/components';
 import {ExportService, ImportService} from '@netgrif/petriflow';
 import {PetriflowCanvasModule} from '../../projects/petriflow-canvas/src/lib/petriflow-canvas.module';
 import {MatIconRegistry} from '@angular/material/icon';
-import {DomSanitizer} from '@angular/platform-browser';
 import {AppBuilderConfigurationService} from './app-builder-configuration.service';
 
 const appRoutes: Routes = [

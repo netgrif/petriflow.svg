@@ -7,6 +7,13 @@ export class PetriflowArcElement extends PetriflowCanvasElement<Arc> {
 
     constructor(element: Arc) {
         super(element);
+
+        element.arcLine.onmouseenter = () => {
+            element.activate();
+        };
+        element.arcLine.onmouseleave = () => {
+            element.deactivate();
+        };
     }
 
     getId(): string {

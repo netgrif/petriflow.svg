@@ -68,7 +68,9 @@ export class AppComponent implements AfterViewInit {
             }
         };
         this._petriflowCanvasService.canvas.svg.onmousemove = (e) => {
-            this.moveArc(e);
+            if (this._arcLine) {
+                this.moveArc(e);
+            }
             this.moveElement(e);
             if (this.mouseDown && this.canvasMode === 'rectangle') {
                 this._petriflowCanvasService.canvas.svg.deselectAll();
@@ -125,29 +127,21 @@ export class AppComponent implements AfterViewInit {
                 arc.arcLine.onclick = () => {
                     this.deleteElement(arc);
                 };
-                arc.arcLine.onmouseenter = () => {
-                    arc.activate();
-                };
-                arc.arcLine.onmouseleave = () => {
-                    arc.deactivate();
-                };
             }
         }
     }
 
     private moveArc(e: MouseEvent) {
-        if (this._arcLine) {
-            const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
-            const intersect = this._source.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
-            const xLineLength = ((e.x - offsetPanZoom.x) / offsetPanZoom.scale) - intersect.x;
-            const yLineLength = ((e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale) - intersect.y;
-            const arcLength = Math.sqrt(xLineLength * xLineLength + yLineLength * yLineLength);
-            const arcLengthOffset = arcLength - CanvasConfiguration.ARROW_HEAD_SIZE;
-            const arcRatio = arcLengthOffset / arcLength;
-            const finalX = intersect.x + xLineLength * arcRatio;
-            const finalY = intersect.y + yLineLength * arcRatio;
-            this._arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${finalX},${finalY}`);
-        }
+        const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
+        const intersect = this._source.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
+        const xLineLength = ((e.x - offsetPanZoom.x) / offsetPanZoom.scale) - intersect.x;
+        const yLineLength = ((e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale) - intersect.y;
+        const arcLength = Math.sqrt(xLineLength * xLineLength + yLineLength * yLineLength);
+        const arcLengthOffset = arcLength - CanvasConfiguration.ARROW_HEAD_SIZE;
+        const arcRatio = arcLengthOffset / arcLength;
+        const finalX = intersect.x + xLineLength * arcRatio;
+        const finalY = intersect.y + yLineLength * arcRatio;
+        this._arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${finalX},${finalY}`);
     }
 
     set canvasMode(value: string) {

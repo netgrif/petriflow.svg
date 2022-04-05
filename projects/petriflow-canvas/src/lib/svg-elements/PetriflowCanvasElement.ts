@@ -32,7 +32,7 @@ export abstract class PetriflowCanvasElement<T extends CanvasElement> implements
     }
 
     copy(): PetriflowCanvasElement<CanvasElement> {
-        const newCanvasElement = Object.create(this) as PetriflowCanvasElement<CanvasElement>;
+        const newCanvasElement = Object.assign(Object.create(this), this) as PetriflowCanvasElement<CanvasElement>;
         newCanvasElement._element = this._element.clone();
         return newCanvasElement;
     }
