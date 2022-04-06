@@ -37,4 +37,8 @@ export abstract class NodeElement extends CanvasElement {
     get arcs(): Array<Arc> {
         return this._arcs;
     }
+
+    set arcs(value: Array<Arc>) {
+        this._arcs = value;
+    }
 }

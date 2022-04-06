@@ -5,6 +5,8 @@ import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
 import {CanvasConfiguration} from '../../../canvas/src/lib/canvas/canvas-configuration';
 import {PetriflowNodeElement} from './svg-elements/PetriflowNodeElement';
 import {PanZoom, Transform} from 'panzoom';
+import {PetriflowArcElement} from './svg-elements/PetriflowArcElement';
+import {NodeElement} from '../../../canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
 
 @Injectable({
     providedIn: 'root',
@@ -52,6 +54,22 @@ export class PetriflowCanvasService {
         this._pastedElements.forEach(copyElement => {
             if (copyElement instanceof PetriflowNodeElement) {
                 copyElement.moveBy(matrix.e, matrix.f);
+                copyElement.element.arcs = [];
+            } else if (copyElement instanceof PetriflowArcElement) {
+                // TODO: refactor this later
+                const source = copyElement.element.start;
+                const destination = copyElement.element.end;
+                const startIndex = this._copiedElements.findIndex(startElement => {
+                    return source === startElement.element;
+                });
+                const endIndex = this._copiedElements.findIndex(endElement => {
+                    return destination === endElement.element;
+                });
+                copyElement.element.start = this._pastedElements[startIndex].element as NodeElement;
+                copyElement.element.end = this._pastedElements[endIndex].element as NodeElement;
+                (this._pastedElements[startIndex].element as NodeElement).arcs.push(copyElement.element);
+                (this._pastedElements[endIndex].element as NodeElement).arcs.push(copyElement.element);
+                (this._pastedElements[startIndex] as PetriflowNodeElement<NodeElement>).moveBy(0, 0);
             }
             this.canvas.container.appendChild(copyElement.element.container);
             this.petriflowElements.push(copyElement);
