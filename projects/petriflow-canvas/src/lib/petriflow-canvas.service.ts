@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
-import {CanvasElement} from '../../../canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
-import {PetriflowCanvasElement} from './svg-elements/PetriflowCanvasElement';
 import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
 import {CanvasConfiguration} from '../../../canvas/src/lib/canvas/canvas-configuration';
-import {PetriflowNodeElement} from './svg-elements/PetriflowNodeElement';
 import {PanZoom, Transform} from 'panzoom';
-import {PetriflowArcElement} from './svg-elements/PetriflowArcElement';
 import {NodeElement} from '../../../canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
+import {CanvasElement} from '../../../canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
+import { Arc } from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
 
 @Injectable({
     providedIn: 'root',
@@ -15,10 +13,10 @@ export class PetriflowCanvasService {
 
     private _canvas: PetriflowCanvas;
     private _clipboard: SVGElement;
-    private _petriflowElements: Array<PetriflowCanvasElement<CanvasElement>>;
-    private _selectedElements: Array<PetriflowCanvasElement<CanvasElement>>;
-    private _copiedElements: Array<PetriflowCanvasElement<CanvasElement>>;
-    private _pastedElements: Array<PetriflowCanvasElement<CanvasElement>>;
+    private _petriflowElements: Array<CanvasElement>;
+    private _selectedElements: Array<CanvasElement>;
+    private _copiedElements: Array<CanvasElement>;
+    private _pastedElements: Array<CanvasElement>;
     private _panzoom: PanZoom;
 
     constructor() {
@@ -26,22 +24,6 @@ export class PetriflowCanvasService {
         this._selectedElements = [];
         this._copiedElements = [];
         this._pastedElements = [];
-    }
-
-    get canvas(): PetriflowCanvas {
-        return this._canvas;
-    }
-
-    set canvas(value: PetriflowCanvas) {
-        this._canvas = value;
-    }
-
-    get clipboard(): SVGElement {
-        return this._clipboard;
-    }
-
-    set clipboard(value: SVGElement) {
-        this._clipboard = value;
     }
 
     initialiseClipboard() {
@@ -52,26 +34,26 @@ export class PetriflowCanvasService {
     destroyClipboard() {
         const matrix = (this.clipboard as SVGSVGElement).transform.baseVal[0].matrix;
         this._pastedElements.forEach(copyElement => {
-            if (copyElement instanceof PetriflowNodeElement) {
+            if (copyElement instanceof NodeElement) {
                 copyElement.moveBy(matrix.e, matrix.f);
-                copyElement.element.arcs = [];
-            } else if (copyElement instanceof PetriflowArcElement) {
+                copyElement.arcs = [];
+            } else if (copyElement instanceof Arc) {
                 // TODO: refactor this later
-                const source = copyElement.element.start;
-                const destination = copyElement.element.end;
+                const source = copyElement.start;
+                const destination = copyElement.end;
                 const startIndex = this._copiedElements.findIndex(startElement => {
-                    return source === startElement.element;
+                    return source === startElement;
                 });
                 const endIndex = this._copiedElements.findIndex(endElement => {
-                    return destination === endElement.element;
+                    return destination === endElement;
                 });
-                copyElement.element.start = this._pastedElements[startIndex].element as NodeElement;
-                copyElement.element.end = this._pastedElements[endIndex].element as NodeElement;
-                (this._pastedElements[startIndex].element as NodeElement).arcs.push(copyElement.element);
-                (this._pastedElements[endIndex].element as NodeElement).arcs.push(copyElement.element);
-                (this._pastedElements[startIndex] as PetriflowNodeElement<NodeElement>).moveBy(0, 0);
+                copyElement.start = this._pastedElements[startIndex] as NodeElement;
+                copyElement.end = this._pastedElements[endIndex] as NodeElement;
+                (this._pastedElements[startIndex] as NodeElement).arcs.push(copyElement);
+                (this._pastedElements[endIndex] as NodeElement).arcs.push(copyElement);
+                (this._pastedElements[startIndex] as NodeElement).moveBy(0, 0);
             }
-            this.canvas.container.appendChild(copyElement.element.container);
+            this.canvas.container.appendChild(copyElement.container);
             this.petriflowElements.push(copyElement);
         });
         this.canvas.container.removeChild(this.clipboard);
@@ -79,7 +61,7 @@ export class PetriflowCanvasService {
         this._pastedElements = [];
     }
 
-    getEnclosedElementsByRectangle(rectangle: SVGElement): Array<PetriflowCanvasElement<any>> {
+    getEnclosedElementsByRectangle(rectangle: SVGElement): Array<CanvasElement> {
         const newRect = this.canvas.svg.createSVGRect();
         newRect.x = +rectangle.getAttribute('x');
         newRect.y = +rectangle.getAttribute('y');
@@ -96,8 +78,8 @@ export class PetriflowCanvasService {
     pasteElements() {
         this.initialiseClipboard();
         this.copiedElements.forEach(element => {
-            const copyObject = element.copy();
-            this.clipboard.appendChild(copyObject.element.container);
+            const copyObject = element.clone();
+            this.clipboard.appendChild(copyObject.container);
             this._pastedElements.push(copyObject);
         });
         this.canvas.container.appendChild(this.clipboard);
@@ -119,18 +101,18 @@ export class PetriflowCanvasService {
 
     deleteSelectedElements() {
         this.selectedElements.forEach(selectedElement => {
-            if (selectedElement instanceof PetriflowNodeElement) {
+            if (selectedElement instanceof NodeElement) {
                 const removedArcs = [];
-                selectedElement.element.arcs.forEach(arc => {
+                selectedElement.arcs.forEach(arc => {
                     this.canvas.remove(arc);
                     removedArcs.push(arc);
                 });
                 this.petriflowElements.forEach(petriflowElement => {
-                    if (petriflowElement instanceof PetriflowNodeElement) {
+                    if (petriflowElement instanceof NodeElement) {
                         petriflowElement.deleteArcs(removedArcs);
                     }
                 });
-                this.canvas.remove(selectedElement.element);
+                this.canvas.remove(selectedElement);
             }
         });
     }
@@ -149,26 +131,54 @@ export class PetriflowCanvasService {
 
     selectAll() {
         this.selectedElements = this.petriflowElements;
-        this.selectedElements.forEach(selectedElement => selectedElement.select());
+        this.selectedElements.forEach(selectedElement => selectedElement.activate());
     }
 
-    get petriflowElements(): Array<PetriflowCanvasElement<CanvasElement>> {
+    get canvas(): PetriflowCanvas {
+        return this._canvas;
+    }
+
+    set canvas(value: PetriflowCanvas) {
+        this._canvas = value;
+    }
+
+    get clipboard(): SVGElement {
+        return this._clipboard;
+    }
+
+    set clipboard(value: SVGElement) {
+        this._clipboard = value;
+    }
+
+    get petriflowElements(): Array<CanvasElement> {
         return this._petriflowElements;
     }
 
-    get selectedElements(): Array<PetriflowCanvasElement<CanvasElement>> {
+    set petriflowElements(value: Array<CanvasElement>) {
+        this._petriflowElements = value;
+    }
+
+    get selectedElements(): Array<CanvasElement> {
         return this._selectedElements;
     }
 
-    set selectedElements(value: Array<PetriflowCanvasElement<CanvasElement>>) {
+    set selectedElements(value: Array<CanvasElement>) {
         this._selectedElements = value;
     }
 
-    get copiedElements(): Array<PetriflowCanvasElement<CanvasElement>> {
+    get copiedElements(): Array<CanvasElement> {
         return this._copiedElements;
     }
 
-    set copiedElements(value: Array<PetriflowCanvasElement<CanvasElement>>) {
+    set copiedElements(value: Array<CanvasElement>) {
         this._copiedElements = value;
+    }
+
+    get pastedElements(): Array<CanvasElement> {
+        return this._pastedElements;
+    }
+
+    set pastedElements(value: Array<CanvasElement>) {
+        this._pastedElements = value;
     }
 }

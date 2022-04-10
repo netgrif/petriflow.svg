@@ -6,7 +6,6 @@ import {CanvasConfiguration} from '../../projects/canvas/src/lib/canvas/canvas-c
 import {CanvasElement} from '../../projects/canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
 import {PetriflowCanvasFactoryService} from '../../projects/petriflow-canvas/src/lib/factories/petriflow-canvas-factory.service';
 import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
-import {PetriflowNodeElement} from '../../projects/petriflow-canvas/src/lib/svg-elements/PetriflowNodeElement';
 
 @Component({
     selector: 'nab-root',
@@ -58,10 +57,11 @@ export class AppComponent implements AfterViewInit {
                 this._petriflowCanvasService.canvas.container.appendChild(this.rectangle);
             }
         };
-        this._petriflowCanvasService.canvas.svg.onmouseup = () => {
+        this._petriflowCanvasService.canvas.svg.onmouseup = (e) => {
+            e.preventDefault();
             if (this.canvasMode === 'rectangle' && this.rectangle) {
                 this._petriflowCanvasService.selectedElements = this._petriflowCanvasService.getEnclosedElementsByRectangle(this.rectangle);
-                this._petriflowCanvasService.selectedElements.forEach(selectedElement => selectedElement.select());
+                this._petriflowCanvasService.selectedElements.forEach(selectedElement => selectedElement.activate());
                 this.mouseDown = false;
                 this._petriflowCanvasService.canvas.container.removeChild(this.rectangle);
                 this.rectangle = undefined;
@@ -91,6 +91,12 @@ export class AppComponent implements AfterViewInit {
                 this.selectElement(transition);
                 this.deleteElement(transition);
             };
+            transition.element.onmouseenter = () => {
+                transition.activate();
+            };
+            transition.element.onmouseleave = () => {
+                transition.deactivate();
+            };
         }
     }
 
@@ -103,12 +109,21 @@ export class AppComponent implements AfterViewInit {
                 this.selectElement(place);
                 this.deleteElement(place);
             };
+            place.element.onmouseenter = () => {
+                place.activate();
+            };
+            place.element.onmouseleave = () => {
+                place.deactivate();
+            };
             // TODO: add to some abstract event listener class, for canvas elements
             place.markingTokens.forEach(markingToken => {
                 markingToken.onclick = () => {
                     this.addArc(place);
                     this.selectElement(place);
                     this.deleteElement(place);
+                };
+                markingToken.onmouseenter = () => {
+                    place.activate();
                 };
             });
         }
@@ -126,6 +141,12 @@ export class AppComponent implements AfterViewInit {
                 this._arcLine = undefined;
                 arc.arcLine.onclick = () => {
                     this.deleteElement(arc);
+                };
+                arc.arcLine.onmouseenter = () => {
+                    arc.activate();
+                };
+                arc.arcLine.onmouseleave = () => {
+                    arc.deactivate();
                 };
             }
         }
@@ -187,7 +208,7 @@ export class AppComponent implements AfterViewInit {
                     }
                 );
                 this._petriflowCanvasService.petriflowElements.forEach(petriflowElement => {
-                    if (petriflowElement instanceof PetriflowNodeElement) {
+                    if (petriflowElement instanceof NodeElement) {
                         petriflowElement.deleteArcs(removedArcs);
                     }
                 });

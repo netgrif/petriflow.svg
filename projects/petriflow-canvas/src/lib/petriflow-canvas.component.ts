@@ -21,7 +21,6 @@ export class PetriflowCanvasComponent implements AfterViewInit {
         this._canvas = new PetriflowCanvas(this.canvasElement.nativeElement);
         this._canvasService.canvas = this._canvas;
         this._canvasService.panzoom = createPanZoom(this._canvas.container);
-
     }
 
     get canvas(): PetriflowCanvas {
@@ -40,9 +39,6 @@ export class PetriflowCanvasComponent implements AfterViewInit {
                 this._canvasService.pasteElements();
             } else if ($event.key === 'a' || $event.key === 'A') {
                 this._canvasService.selectAll();
-            } else if ($event.key === 'z' || $event.key === 'Z') {
-                console.log('on ctrl z');
-                //    TODO: undo/redo by memento ?
             }
         }
     }

@@ -19,6 +19,20 @@ export abstract class NodeElement extends CanvasElement {
         });
     }
 
+    deleteArcs(arcs: Array<Arc>) {
+        arcs.forEach(arc => {
+            const index = this.arcs.indexOf(arc);
+            if (index !== -1) {
+                this.arcs.splice(index, 1);
+            }
+        });
+    }
+
+    moveBy(x: number, y: number) {
+        const moveTo = new DOMPoint(this.position.x + x, this.position.y + y);
+        this.move(moveTo);
+    }
+
     /**
      * Calculates point on the edge of this element where a straight line leading from given point to the center
      * (position) of this element intersects with the edge of this element.

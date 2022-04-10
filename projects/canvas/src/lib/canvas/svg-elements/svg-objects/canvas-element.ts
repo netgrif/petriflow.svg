@@ -11,6 +11,14 @@ export abstract class CanvasElement extends Container implements Activable {
 
     abstract deactivate(): void;
 
+    isEnclosedByRectangle(rectangle: SVGRect): boolean {
+        const canvasElementBox = this.container.getBBox();
+        return !(rectangle.x > canvasElementBox.x + canvasElementBox.width ||
+            canvasElementBox.x > rectangle.x + rectangle.width ||
+            rectangle.y > canvasElementBox.y + canvasElementBox.height ||
+            canvasElementBox.y > rectangle.y + rectangle.height);
+    }
+
     clone(): CanvasElement {
         const copyObject: CanvasElement = Object.assign(Object.create(this), this) as CanvasElement;
         copyObject.container = this.container.cloneNode(true) as SVGGElement;
