@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, HostListener, ViewChild, ViewEncap
 import {PetriflowCanvasService} from './petriflow-canvas.service';
 import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
 import createPanZoom from 'panzoom';
+import {PetriflowCanvasConfigurationService} from './services/petriflow-canvas-configuration.service';
 
 @Component({
     selector: 'lib-petriflow-canvas',
@@ -14,7 +15,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     @ViewChild('canvas') canvasElement: ElementRef;
     private _canvas: PetriflowCanvas;
 
-    constructor(private _canvasService: PetriflowCanvasService) {
+    constructor(private _canvasService: PetriflowCanvasService, private _canvasConfiguration: PetriflowCanvasConfigurationService) {
     }
 
     ngAfterViewInit() {

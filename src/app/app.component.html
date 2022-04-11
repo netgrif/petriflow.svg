@@ -3,34 +3,34 @@
         <mat-toolbar-row fxFlex>
             <mat-icon id="netgrif-icon" svgIcon="netgrif_logo"></mat-icon>
             <mat-button-toggle-group fxLayoutAlign="start end">
-                <mat-button-toggle mat-button (click)="changeCanvasMode('select')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.SELECT)">
                     <mat-icon>open_with</mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('rectangle', false)">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.LASSO, false)">
                     <mat-icon>tab_unselected</mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('transition')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.CREATE_TRANSITION)">
                     <mat-icon svgIcon="transition"></mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('place')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.CREATE_PLACE)">
                     <mat-icon svgIcon="place"></mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('arc')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.CREATE_REGULAR_ARC)">
                     <mat-icon svgIcon="arc"></mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('resetarc')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.CREATE_RESET_ARC)">
                     <mat-icon svgIcon="resetarc"></mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('inhibitor')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.CREATE_INHIBITOR_ARC)">
                     <mat-icon svgIcon="inhibitor"></mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('read')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.CREATE_READ_ARC)">
                     <mat-icon svgIcon="read"></mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('move')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.MOVE)">
                     <mat-icon>all_out</mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="changeCanvasMode('remove')">
+                <mat-button-toggle mat-button (click)="changeCanvasMode(canvasMode.REMOVE)">
                     <mat-icon>delete_outline</mat-icon>
                 </mat-button-toggle>
             </mat-button-toggle-group>

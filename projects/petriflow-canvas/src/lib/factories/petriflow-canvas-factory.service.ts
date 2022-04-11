@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
 import {PetriflowCanvasService} from '../petriflow-canvas.service';
 import {PetriflowPlace} from '../svg-elements/petriflow-place';
-import {StaticPlace} from '../../../../canvas/src/lib/canvas/svg-elements/place/static-place';
-import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
 import {NodeElement} from '../../../../canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
 import {CanvasConfiguration} from '../../../../canvas/src/lib/canvas/canvas-configuration';
 import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
@@ -30,21 +28,21 @@ export class PetriflowCanvasFactoryService {
     constructor(private _petriflowCanvasService: PetriflowCanvasService) {
     }
 
-    createPlace(marking: number, position: DOMPoint): Place {
+    createPlace(marking: number, position: DOMPoint): PetriflowPlace {
         const place = new PetriflowPlace(`p${this._placeIdCounter++}`, `p${this._placeIdCounter}`, marking, position);
         this._petriflowCanvasService.canvas.add(place);
         this._petriflowCanvasService.petriflowElements.push(place);
         return place;
     }
 
-    createStaticPlace(marking: number, position: DOMPoint): StaticPlace {
+    createStaticPlace(marking: number, position: DOMPoint): PetriflowStaticPlace {
         const place = new PetriflowStaticPlace(`p${this._placeIdCounter++}`, `p${this._placeIdCounter}`, marking, position);
         this._petriflowCanvasService.canvas.add(place);
         this._petriflowCanvasService.petriflowElements.push(place);
         return place;
     }
 
-    createTransition(position: DOMPoint, icon?: string): Transition {
+    createTransition(position: DOMPoint, icon?: string): PetriflowTransition {
         const transition = new PetriflowTransition(`t${this._transitionIdCounter++}`, `t${this._transitionIdCounter}`, position, icon);
         this._petriflowCanvasService.canvas.add(transition);
         this._petriflowCanvasService.petriflowElements.push(transition);
