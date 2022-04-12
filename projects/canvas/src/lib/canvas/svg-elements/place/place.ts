@@ -19,6 +19,7 @@ export class Place extends LabeledObject {
     private _element: SVGCircleElement;
     private _markingElement: SVGTextElement;
     private _marking: Text;
+    private _tokensCount: number;
 
     constructor(id: string, label: string, marking: number, position: DOMPoint) {
         super(id, label, position);
@@ -28,6 +29,7 @@ export class Place extends LabeledObject {
         this._element.setAttributeNS(null, 'stroke-width', '2');
         this._element.setAttributeNS(null, 'fill', 'white');
         this.container.appendChild(this._element);
+        this._tokensCount = marking;
 
         this._markingTokens = [];
         for (let i = 0; i < 9; i++) {
@@ -198,5 +200,13 @@ export class Place extends LabeledObject {
 
     set marking(value: any) {
         this._marking = value;
+    }
+
+    get tokensCount(): number {
+        return this._tokensCount;
+    }
+
+    set tokensCount(value: number) {
+        this._tokensCount = value;
     }
 }

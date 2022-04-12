@@ -111,6 +111,10 @@ export abstract class Arc extends CanvasElement {
         return new DOMPoint(x, y);
     }
 
+    isEnclosedByRectangle(rectangle: SVGRect): boolean {
+        return this.start.isSelected && this.end.isSelected;
+    }
+
     get arcLineBackground(): SVGPolylineElement {
         return this._arcLineBackground;
     }

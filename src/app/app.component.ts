@@ -14,9 +14,11 @@ export class AppComponent implements AfterViewInit {
 
     @ViewChild(MatToolbar) toolbar: MatToolbar;
     @ViewChild('canvasComponent') canvasComponent: ElementRef;
+    public _mode: CanvasMode;
 
     constructor(private _petriflowCanvasService: PetriflowCanvasService, private _petriflowFactoryService: PetriflowCanvasFactoryService,
                 private _petriflowConfigService: PetriflowCanvasConfigurationService) {
+        this._mode = _petriflowConfigService.mode;
     }
 
     ngAfterViewInit(): void {

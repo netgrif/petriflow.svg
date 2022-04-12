@@ -20,7 +20,7 @@ export abstract class CanvasElement extends Container implements Activable {
     }
 
     clone(): CanvasElement {
-        const copyObject: CanvasElement = Object.assign(Object.create(this), this) as CanvasElement;
+        const copyObject: CanvasElement = Object.create(this) as CanvasElement;
         copyObject.container = this.container.cloneNode(true) as SVGGElement;
         return copyObject;
     }

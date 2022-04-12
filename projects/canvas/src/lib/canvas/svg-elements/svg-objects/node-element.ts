@@ -5,6 +5,7 @@ export abstract class NodeElement extends CanvasElement {
 
     private _position: DOMPoint;
     private _arcs: Array<Arc>;
+    private _isSelected: boolean;
 
     constructor(position: DOMPoint) {
         super();
@@ -54,5 +55,18 @@ export abstract class NodeElement extends CanvasElement {
 
     set arcs(value: Array<Arc>) {
         this._arcs = value;
+    }
+
+    isEnclosedByRectangle(rectangle: SVGRect): boolean {
+        this.isSelected = super.isEnclosedByRectangle(rectangle);
+        return this._isSelected;
+    }
+
+    get isSelected(): boolean {
+        return this._isSelected;
+    }
+
+    set isSelected(value: boolean) {
+        this._isSelected = value;
     }
 }

@@ -9,6 +9,11 @@ import {PetriflowPlace} from '../svg-elements/petriflow-place';
 import {CanvasConfiguration} from '../../../../canvas/src/lib/canvas/canvas-configuration';
 import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
 import {MatToolbar} from '@angular/material/toolbar';
+import {PetriflowPlaceTransitionArc} from '../svg-elements/arcs/petriflow-place-transition-arc';
+import {PetriflowTransitionPlaceArc} from '../svg-elements/arcs/petriflow-transition-place-arc';
+import {PetriflowReadArc} from '../svg-elements/arcs/petriflow-read-arc';
+import {PetriflowResetArc} from '../svg-elements/arcs/petriflow-reset-arc';
+import {PetriflowInhibitorArc} from '../svg-elements/arcs/petriflow-inhibitor-arc';
 
 @Injectable({
     providedIn: 'root'
@@ -25,8 +30,11 @@ export class PetriflowCanvasConfigurationService {
     private rectangle: SVGElement;
     private _source: NodeElement;
     private _toolbar: MatToolbar;
+    private _clipboardBox: DOMRect;
+    private _clipboard: SVGElement;
 
-    constructor(private _petriflowCanvasService: PetriflowCanvasService, private _petriflowCanvasFactory: PetriflowCanvasFactoryService) {
+    constructor(private _petriflowCanvasFactory: PetriflowCanvasFactoryService,
+                private _petriflowCanvasService: PetriflowCanvasService) {
     }
 
     get mode(): CanvasMode {
@@ -50,9 +58,11 @@ export class PetriflowCanvasConfigurationService {
                 this.rectangle.setAttributeNS(null, 'width', `${Math.abs((e.x - offset.x) / offset.scale - this.mouseX)}`);
                 this.rectangle.setAttributeNS(null, 'height', `${Math.abs((e.y - toolbar?._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale - this.mouseY)}`);
             }
+            this.onCanvasMouseMoveClipboard(e);
         };
         svg.onmousedown = (e) => {
             e.preventDefault();
+            this._petriflowCanvasService.deselectAll();
             if (this.mode === CanvasMode.LASSO) {
                 this.mouseDown = true;
                 const offset = this._petriflowCanvasService.getPanZoomOffset();
@@ -68,6 +78,7 @@ export class PetriflowCanvasConfigurationService {
                 this.rectangle.setAttributeNS(null, 'y', `${this.mouseY}`);
                 this._petriflowCanvasService.canvas.container.appendChild(this.rectangle);
             }
+            this.onMouseMoveDownDestroyClipboard();
         };
         svg.onmouseup = (e) => {
             e.preventDefault();
@@ -121,6 +132,7 @@ export class PetriflowCanvasConfigurationService {
             };
         });
     }
+
     // Arc Events
     addArcEvents(arc: Arc) {
         arc.arcLine.onclick = () => {
@@ -196,5 +208,113 @@ export class PetriflowCanvasConfigurationService {
             }
             this._petriflowCanvasService.canvas.remove(element);
         }
+    }
+
+    pasteElements() {
+        this.initialiseClipboard();
+        this._petriflowCanvasService.copiedElements.forEach(element => {
+            let newElement: CanvasElement;
+            // TODO: Refactor instanceof !
+            if (element instanceof PetriflowPlace) {
+                newElement = this._petriflowCanvasFactory.createPlace(element.tokensCount, element.position);
+            } else if (element instanceof PetriflowTransition) {
+                newElement = this._petriflowCanvasFactory.createTransition(element.position);
+            } else if (element instanceof Arc) {
+                newElement = this.createArcByDeterminedType(PetriflowPlaceTransitionArc, element) ?? newElement;
+                newElement = this.createArcByDeterminedType(PetriflowTransitionPlaceArc, element) ?? newElement;
+                newElement = this.createArcByDeterminedType(PetriflowReadArc, element) ?? newElement;
+                newElement = this.createArcByDeterminedType(PetriflowResetArc, element) ?? newElement;
+                newElement = this.createArcByDeterminedType(PetriflowInhibitorArc, element) ?? newElement;
+                this._petriflowCanvasService.petriflowElements.push(newElement);
+            }
+            this.clipboard.appendChild(newElement.container);
+            this._petriflowCanvasService.pastedElements.push(newElement);
+        });
+        this._petriflowCanvasService.canvas.container.appendChild(this.clipboard);
+        this._clipboardBox = this.clipboard.getBoundingClientRect();
+    }
+
+    private onMouseMoveDownDestroyClipboard() {
+        if (this.clipboard && this._clipboardBox) {
+            this.destroyClipboard();
+        }
+    }
+
+    private createArcByDeterminedType<T extends Arc>(type: new(start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) => T, element: Arc): Arc {
+        if (element instanceof type) {
+            const source = element.start;
+            const destination = element.end;
+            const startIndex = this._petriflowCanvasService.copiedElements.findIndex(startElement => {
+                return source === startElement;
+            });
+            const endIndex = this._petriflowCanvasService.copiedElements.findIndex(endElement => {
+                return destination === endElement;
+            });
+            return new type(this._petriflowCanvasService.pastedElements[startIndex] as NodeElement,
+                this._petriflowCanvasService.pastedElements[endIndex] as NodeElement,
+                element.linePoints, element.multiplicity.textContent);
+        }
+        return undefined;
+    }
+
+    private onCanvasMouseMoveClipboard(event: MouseEvent) {
+        if (this.clipboard && this._clipboardBox) {
+            const offset = this._petriflowCanvasService.getPanZoomOffset();
+            const mouseX = (event.x - offset.x) / offset.scale - (this._clipboardBox.x + this._clipboardBox.width / 2 - offset.x) / offset.scale;
+            const mouseY = (event.y - offset.y) / offset.scale - (this._clipboardBox.y + this._clipboardBox.height / 2 - offset.y) / offset.scale;
+            this.clipboard.setAttribute('transform', `matrix(1,0,0,1,${mouseX},${mouseY})`);
+        }
+    }
+
+    deleteSelectedElements() {
+        this._petriflowCanvasService.selectedElements.forEach(selectedElement => {
+            if (selectedElement instanceof NodeElement) {
+                const removedArcs = [];
+                selectedElement.arcs.forEach(arc => {
+                    this._petriflowCanvasService.canvas.remove(arc);
+                    removedArcs.push(arc);
+                });
+                this._petriflowCanvasService.petriflowElements.forEach(petriflowElement => {
+                    if (petriflowElement instanceof NodeElement) {
+                        petriflowElement.deleteArcs(removedArcs);
+                    }
+                });
+                this._petriflowCanvasService.canvas.remove(selectedElement);
+            }
+        });
+    }
+
+    initialiseClipboard() {
+        this.clipboard = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'g') as SVGGElement;
+        this.clipboard.id = 'canvas-clipboard';
+    }
+
+    destroyClipboard() {
+        const matrix = (this.clipboard as SVGSVGElement).transform.baseVal[0].matrix;
+        this._petriflowCanvasService.pastedElements.forEach(copyElement => {
+            if (copyElement instanceof NodeElement) {
+                copyElement.moveBy(matrix.e, matrix.f);
+                // TODO: instanceof away
+                if (copyElement instanceof PetriflowPlace) {
+                    this.addPlaceEvents(copyElement);
+                } else if (copyElement instanceof PetriflowTransition) {
+                    this.addTransitionEvents(copyElement);
+                }
+            } else if (copyElement instanceof Arc) {
+                this.addArcEvents(copyElement);
+            }
+            this._petriflowCanvasService.canvas.add(copyElement);
+        });
+        this._petriflowCanvasService.canvas.container.removeChild(this.clipboard);
+        this.clipboard = undefined;
+        this._petriflowCanvasService.pastedElements = [];
+    }
+
+    get clipboard(): SVGElement {
+        return this._clipboard;
+    }
+
+    set clipboard(value: SVGElement) {
+        this._clipboard = value;
     }
 }

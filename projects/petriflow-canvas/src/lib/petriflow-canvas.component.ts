@@ -15,7 +15,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     @ViewChild('canvas') canvasElement: ElementRef;
     private _canvas: PetriflowCanvas;
 
-    constructor(private _canvasService: PetriflowCanvasService, private _canvasConfiguration: PetriflowCanvasConfigurationService) {
+    constructor(private _canvasService: PetriflowCanvasService, private _canvasConfig: PetriflowCanvasConfigurationService) {
     }
 
     ngAfterViewInit() {
@@ -37,7 +37,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
             } else if ($event.key === 'c' || $event.key === 'C') {
                 this._canvasService.copyElements();
             } else if ($event.key === 'v' || $event.key === 'V') {
-                this._canvasService.pasteElements();
+                this._canvasConfig.pasteElements();
             } else if ($event.key === 'a' || $event.key === 'A') {
                 this._canvasService.selectAll();
             }
@@ -46,7 +46,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
 
     @HostListener('window:keydown.delete', ['$event'])
     onDelete() {
-        this._canvasService.deleteSelectedElements();
+        this._canvasConfig.deleteSelectedElements();
     }
 
     @HostListener('window:keydown.escape', ['$event'])
