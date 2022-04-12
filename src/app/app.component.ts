@@ -4,6 +4,8 @@ import {MatToolbar} from '@angular/material/toolbar';
 import {PetriflowCanvasFactoryService} from '../../projects/petriflow-canvas/src/lib/factories/petriflow-canvas-factory.service';
 import {CanvasMode} from '../../projects/petriflow-canvas/src/lib/canvas-mode';
 import {PetriflowCanvasConfigurationService} from '../../projects/petriflow-canvas/src/lib/services/petriflow-canvas-configuration.service';
+import {MatDialog} from '@angular/material/dialog';
+import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
 
 @Component({
     selector: 'nab-root',
@@ -17,7 +19,7 @@ export class AppComponent implements AfterViewInit {
     public _mode: CanvasMode;
 
     constructor(private _petriflowCanvasService: PetriflowCanvasService, private _petriflowFactoryService: PetriflowCanvasFactoryService,
-                private _petriflowConfigService: PetriflowCanvasConfigurationService) {
+                private _petriflowConfigService: PetriflowCanvasConfigurationService, public dialog: MatDialog) {
         this._mode = _petriflowConfigService.mode;
     }
 
@@ -27,6 +29,9 @@ export class AppComponent implements AfterViewInit {
             this.addPlace(e);
         };
         this._petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg, this.toolbar);
+        this.toolbar._elementRef.nativeElement.onmouseenter = () => {
+            this._petriflowConfigService.deleteClipboard();
+        };
     }
 
     private addTransition($event): void {
@@ -71,5 +76,9 @@ export class AppComponent implements AfterViewInit {
 
     public get canvasMode(): typeof CanvasMode {
         return CanvasMode;
+    }
+
+    openDialog() {
+        this.dialog.open(PetriflowInfoDialogComponent);
     }
 }

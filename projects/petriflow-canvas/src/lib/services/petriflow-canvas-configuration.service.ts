@@ -96,6 +96,9 @@ export class PetriflowCanvasConfigurationService {
                 this.rectangle = undefined;
             }
         };
+        svg.onmouseleave = () => {
+            this.deleteClipboard();
+        };
     }
 
     // Transition Events
@@ -109,7 +112,9 @@ export class PetriflowCanvasConfigurationService {
             transition.activate();
         };
         transition.element.onmouseleave = () => {
-            transition.deactivate();
+            if (!transition.isSelected) {
+                transition.deactivate();
+            }
         };
     }
 
@@ -124,7 +129,9 @@ export class PetriflowCanvasConfigurationService {
             place.activate();
         };
         place.element.onmouseleave = () => {
-            place.deactivate();
+            if (!place.isSelected) {
+                place.deactivate();
+            }
         };
         // TODO: add to some abstract event listener class, for canvas elements
         place.markingTokens.forEach(markingToken => {
@@ -135,6 +142,11 @@ export class PetriflowCanvasConfigurationService {
             };
             markingToken.onmouseenter = () => {
                 place.activate();
+            };
+            markingToken.onmouseleave = () => {
+                if (!place.isSelected) {
+                    place.deactivate();
+                }
             };
         });
     }
@@ -148,7 +160,9 @@ export class PetriflowCanvasConfigurationService {
             arc.activate();
         };
         arc.arcLine.onmouseleave = () => {
-            arc.deactivate();
+            if (!arc.isSelected) {
+                arc.deactivate();
+            }
         };
     }
 
@@ -322,9 +336,16 @@ export class PetriflowCanvasConfigurationService {
     }
 
     deleteClipboard() {
-        this._petriflowCanvasService.canvas.container.removeChild(this.clipboard);
-        this.clipboard = undefined;
-        this._petriflowCanvasService.pastedElements = [];
+        if (this.clipboard) {
+            this._petriflowCanvasService.canvas.container.removeChild(this.clipboard);
+            this.clipboard = undefined;
+            this._petriflowCanvasService.pastedElements = [];
+        }
+        if (this.rectangle) {
+            this.mouseDown = false;
+            this._petriflowCanvasService.canvas.container.removeChild(this.rectangle);
+            this.rectangle = undefined;
+        }
     }
 
     get clipboard(): SVGElement {

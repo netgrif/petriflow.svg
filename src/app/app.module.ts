@@ -16,6 +16,7 @@ import {ExportService, ImportService} from '@netgrif/petriflow';
 import {PetriflowCanvasModule} from '../../projects/petriflow-canvas/src/lib/petriflow-canvas.module';
 import {MatIconRegistry} from '@angular/material/icon';
 import {AppBuilderConfigurationService} from './app-builder-configuration.service';
+import { PetriflowInfoDialogComponent } from './petriflow-info-dialog/petriflow-info-dialog.component';
 
 const appRoutes: Routes = [
     {path: 'app', component: AppComponent},
@@ -25,6 +26,7 @@ const appRoutes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
+        PetriflowInfoDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -38,6 +40,7 @@ const appRoutes: Routes = [
         PetriflowCanvasModule,
         MaterialModule
     ],
+    entryComponents: [PetriflowInfoDialogComponent],
     providers: [
         ImportService,
         ExportService,

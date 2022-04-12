@@ -33,6 +33,9 @@
                 <mat-button-toggle mat-button [value]="canvasMode.REMOVE" (click)="changeCanvasMode(canvasMode.REMOVE)">
                     <mat-icon>delete_outline</mat-icon>
                 </mat-button-toggle>
+                <mat-button-toggle mat-button (click)="openDialog()">
+                    <mat-icon>info</mat-icon>
+                </mat-button-toggle>
             </mat-button-toggle-group>
             <button mat-raised-button id="source-button" (click)="goToLink('https://github.com/netgrif/petriflow-svg')">
                 <mat-icon svgIcon="github"></mat-icon>

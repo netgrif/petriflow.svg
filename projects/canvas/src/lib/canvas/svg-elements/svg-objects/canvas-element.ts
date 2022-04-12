@@ -3,6 +3,8 @@ import {Container} from './container';
 
 export abstract class CanvasElement extends Container implements Activable {
 
+    private _isSelected = false;
+
     public static pointsToString(...points: Array<DOMPoint>): string {
         return points.map(p => `${p.x},${p.y}`).join(' ') + ' ';
     }
@@ -23,5 +25,13 @@ export abstract class CanvasElement extends Container implements Activable {
         const copyObject: CanvasElement = Object.create(this) as CanvasElement;
         copyObject.container = this.container.cloneNode(true) as SVGGElement;
         return copyObject;
+    }
+
+    get isSelected(): boolean {
+        return this._isSelected;
+    }
+
+    set isSelected(value: boolean) {
+        this._isSelected = value;
     }
 }

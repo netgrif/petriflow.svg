@@ -3,6 +3,10 @@ import {SelectableNode} from './selectable-node';
 
 export class PetriflowPlace extends Place implements SelectableNode<PetriflowPlace> {
 
+    constructor(id: string, label: string, marking: number, position: DOMPoint) {
+        super(id, label, marking, position);
+    }
+
     deselect(): void {
         this.deactivate();
     }
