@@ -48,7 +48,7 @@ export class PetriflowCanvasService {
     }
 
     selectAll() {
-        this.selectedElements = this.petriflowElements;
+        this.selectedElements = [...this.petriflowElements];
         this.selectedElements.forEach(selectedElement => selectedElement.activate());
     }
 

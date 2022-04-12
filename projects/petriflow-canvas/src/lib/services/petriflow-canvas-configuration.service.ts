@@ -55,8 +55,14 @@ export class PetriflowCanvasConfigurationService {
             if (this.mouseDown && this.mode === CanvasMode.LASSO) {
                 this._petriflowCanvasService.canvas.svg.deselectAll();
                 const offset = this._petriflowCanvasService.getPanZoomOffset();
-                this.rectangle.setAttributeNS(null, 'width', `${Math.abs((e.x - offset.x) / offset.scale - this.mouseX)}`);
-                this.rectangle.setAttributeNS(null, 'height', `${Math.abs((e.y - toolbar?._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale - this.mouseY)}`);
+                const width = (e.x - offset.x) / offset.scale - this.mouseX;
+                const height = (e.y - toolbar?._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale - this.mouseY;
+                const newX = width > 0 ? this.mouseX : this.mouseX + width;
+                const newY = height > 0 ? this.mouseY : this.mouseY + height;
+                this.rectangle.setAttributeNS(null, 'width', `${Math.abs(width)}`);
+                this.rectangle.setAttributeNS(null, 'height', `${Math.abs(height)}`);
+                this.rectangle.setAttributeNS(null, 'x', `${newX}`);
+                this.rectangle.setAttributeNS(null, 'y', `${newY}`);
             }
             this.onCanvasMouseMoveClipboard(e);
         };
@@ -70,7 +76,7 @@ export class PetriflowCanvasConfigurationService {
                 this.rectangle.setAttributeNS(null, 'fill', 'none');
                 this.rectangle.setAttributeNS(null, 'class', 'path');
                 this.rectangle.setAttributeNS(null, 'stroke', 'black');
-                this.rectangle.setAttributeNS(null, 'stroke-width', '2');
+                this.rectangle.setAttributeNS(null, 'stroke-width', '1');
                 this.rectangle.setAttributeNS(null, 'animation', 'dash 5s linear');
                 this.mouseX = (e.x - offset.x) / offset.scale;
                 this.mouseY = (e.y - toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale;
@@ -216,16 +222,15 @@ export class PetriflowCanvasConfigurationService {
             let newElement: CanvasElement;
             // TODO: Refactor instanceof !
             if (element instanceof PetriflowPlace) {
-                newElement = this._petriflowCanvasFactory.createPlace(element.tokensCount, element.position);
+                newElement = this._petriflowCanvasFactory.createPlace(element.tokensCount, element.position, false);
             } else if (element instanceof PetriflowTransition) {
-                newElement = this._petriflowCanvasFactory.createTransition(element.position);
+                newElement = this._petriflowCanvasFactory.createTransition(element.position, element.icon?.textContent ?? '', false);
             } else if (element instanceof Arc) {
                 newElement = this.createArcByDeterminedType(PetriflowPlaceTransitionArc, element) ?? newElement;
                 newElement = this.createArcByDeterminedType(PetriflowTransitionPlaceArc, element) ?? newElement;
                 newElement = this.createArcByDeterminedType(PetriflowReadArc, element) ?? newElement;
                 newElement = this.createArcByDeterminedType(PetriflowResetArc, element) ?? newElement;
                 newElement = this.createArcByDeterminedType(PetriflowInhibitorArc, element) ?? newElement;
-                this._petriflowCanvasService.petriflowElements.push(newElement);
             }
             this.clipboard.appendChild(newElement.container);
             this._petriflowCanvasService.pastedElements.push(newElement);
@@ -236,7 +241,7 @@ export class PetriflowCanvasConfigurationService {
 
     private onMouseMoveDownDestroyClipboard() {
         if (this.clipboard && this._clipboardBox) {
-            this.destroyClipboard();
+            this.destroyAndReduceClipboard();
         }
     }
 
@@ -267,6 +272,7 @@ export class PetriflowCanvasConfigurationService {
     }
 
     deleteSelectedElements() {
+        const toDeleteElements = [];
         this._petriflowCanvasService.selectedElements.forEach(selectedElement => {
             if (selectedElement instanceof NodeElement) {
                 const removedArcs = [];
@@ -277,11 +283,17 @@ export class PetriflowCanvasConfigurationService {
                 this._petriflowCanvasService.petriflowElements.forEach(petriflowElement => {
                     if (petriflowElement instanceof NodeElement) {
                         petriflowElement.deleteArcs(removedArcs);
+                        toDeleteElements.push(petriflowElement);
                     }
                 });
                 this._petriflowCanvasService.canvas.remove(selectedElement);
+                toDeleteElements.push(selectedElement);
             }
         });
+        toDeleteElements.forEach(element => {
+            this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(element));
+        });
+        this._petriflowCanvasService.selectedElements = [];
     }
 
     initialiseClipboard() {
@@ -289,7 +301,7 @@ export class PetriflowCanvasConfigurationService {
         this.clipboard.id = 'canvas-clipboard';
     }
 
-    destroyClipboard() {
+    destroyAndReduceClipboard() {
         const matrix = (this.clipboard as SVGSVGElement).transform.baseVal[0].matrix;
         this._petriflowCanvasService.pastedElements.forEach(copyElement => {
             if (copyElement instanceof NodeElement) {
@@ -304,7 +316,12 @@ export class PetriflowCanvasConfigurationService {
                 this.addArcEvents(copyElement);
             }
             this._petriflowCanvasService.canvas.add(copyElement);
+            this._petriflowCanvasService.petriflowElements.push(copyElement);
         });
+        this.deleteClipboard();
+    }
+
+    deleteClipboard() {
         this._petriflowCanvasService.canvas.container.removeChild(this.clipboard);
         this.clipboard = undefined;
         this._petriflowCanvasService.pastedElements = [];

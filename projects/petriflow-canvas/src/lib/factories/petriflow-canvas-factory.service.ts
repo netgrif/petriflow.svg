@@ -12,6 +12,7 @@ import {PetriflowTransitionPlaceArc} from '../svg-elements/arcs/petriflow-transi
 import {PetriflowResetArc} from '../svg-elements/arcs/petriflow-reset-arc';
 import {PetriflowReadArc} from '../svg-elements/arcs/petriflow-read-arc';
 import {PetriflowInhibitorArc} from '../svg-elements/arcs/petriflow-inhibitor-arc';
+import {CanvasElement} from '../../../../canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
 
 @Injectable({
     providedIn: 'root'
@@ -28,25 +29,29 @@ export class PetriflowCanvasFactoryService {
     constructor(private _petriflowCanvasService: PetriflowCanvasService) {
     }
 
-    createPlace(marking: number, position: DOMPoint): PetriflowPlace {
+    createPlace(marking: number, position: DOMPoint, addToElements = true): PetriflowPlace {
         const place = new PetriflowPlace(`p${this._placeIdCounter++}`, `p${this._placeIdCounter}`, marking, position);
-        this._petriflowCanvasService.canvas.add(place);
-        this._petriflowCanvasService.petriflowElements.push(place);
+        this.addToPetriflowElements(place, addToElements);
         return place;
     }
 
-    createStaticPlace(marking: number, position: DOMPoint): PetriflowStaticPlace {
+    createStaticPlace(marking: number, position: DOMPoint, addToElements = true): PetriflowStaticPlace {
         const place = new PetriflowStaticPlace(`p${this._placeIdCounter++}`, `p${this._placeIdCounter}`, marking, position);
-        this._petriflowCanvasService.canvas.add(place);
-        this._petriflowCanvasService.petriflowElements.push(place);
+        this.addToPetriflowElements(place, addToElements);
         return place;
     }
 
-    createTransition(position: DOMPoint, icon?: string): PetriflowTransition {
+    createTransition(position: DOMPoint, icon?: string, addToElements = true): PetriflowTransition {
         const transition = new PetriflowTransition(`t${this._transitionIdCounter++}`, `t${this._transitionIdCounter}`, position, icon);
-        this._petriflowCanvasService.canvas.add(transition);
-        this._petriflowCanvasService.petriflowElements.push(transition);
+        this.addToPetriflowElements(transition, addToElements);
         return transition;
+    }
+
+    private addToPetriflowElements(canvasElement: CanvasElement, addToElements: boolean) {
+        if (addToElements) {
+            this._petriflowCanvasService.canvas.add(canvasElement);
+            this._petriflowCanvasService.petriflowElements.push(canvasElement);
+        }
     }
 
     addArc(element: NodeElement, type: string): Arc | SVGElement {
@@ -78,8 +83,7 @@ export class PetriflowCanvasFactoryService {
             this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
             this.arcLine = undefined;
             const arc: T = this.createArc(type, this._source, element, []);
-            this._petriflowCanvasService.canvas.add(arc);
-            this._petriflowCanvasService.petriflowElements.push(arc);
+            this.addToPetriflowElements(arc, true);
             this._source = undefined;
             this._arcLine = undefined;
             return arc;

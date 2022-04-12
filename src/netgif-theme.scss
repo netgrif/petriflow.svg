@@ -166,13 +166,13 @@ body {
 }
 
 .path {
-    stroke-dasharray: 5 10;
+    stroke-dasharray: 2 5;
     animation: dash 10s linear;
     animation-iteration-count: infinite;
 }
 
 @keyframes dash {
     to {
-        stroke-dashoffset: 1000;
+        stroke-dashoffset: 400;
     }
 }

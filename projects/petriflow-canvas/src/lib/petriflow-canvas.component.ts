@@ -3,6 +3,7 @@ import {PetriflowCanvasService} from './petriflow-canvas.service';
 import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
 import createPanZoom from 'panzoom';
 import {PetriflowCanvasConfigurationService} from './services/petriflow-canvas-configuration.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'lib-petriflow-canvas',
@@ -15,7 +16,8 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     @ViewChild('canvas') canvasElement: ElementRef;
     private _canvas: PetriflowCanvas;
 
-    constructor(private _canvasService: PetriflowCanvasService, private _canvasConfig: PetriflowCanvasConfigurationService) {
+    constructor(private _canvasService: PetriflowCanvasService, private _canvasConfig: PetriflowCanvasConfigurationService,
+                private _snackBar: MatSnackBar) {
     }
 
     ngAfterViewInit() {
@@ -35,10 +37,12 @@ export class PetriflowCanvasComponent implements AfterViewInit {
             if ($event.key === 'd' || $event.key === 'D') {
                 console.log('on ctrl d');
             } else if ($event.key === 'c' || $event.key === 'C') {
+                this.openSnackBar('Canvas elements copied to clipboard');
                 this._canvasService.copyElements();
             } else if ($event.key === 'v' || $event.key === 'V') {
                 this._canvasConfig.pasteElements();
             } else if ($event.key === 'a' || $event.key === 'A') {
+                this.openSnackBar('Selected all canvas elements');
                 this._canvasService.selectAll();
             }
         }
@@ -46,11 +50,17 @@ export class PetriflowCanvasComponent implements AfterViewInit {
 
     @HostListener('window:keydown.delete', ['$event'])
     onDelete() {
+        this.openSnackBar('All selected canvas elements deleted');
         this._canvasConfig.deleteSelectedElements();
     }
 
     @HostListener('window:keydown.escape', ['$event'])
     onEscape() {
-        console.log('escape');
+        this._canvasService.deselectAll();
+        this._canvasConfig.deleteClipboard();
+    }
+
+    openSnackBar(message: string) {
+        this._snackBar.open(message, undefined, {duration: 1000});
     }
 }
