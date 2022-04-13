@@ -308,6 +308,9 @@ export class PetriflowCanvasConfigurationService {
                     }
                 });
                 this._petriflowCanvasService.canvas.remove(selectedElement);
+                removedArcs.forEach(arc => {
+                    this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(arc), 1);
+                });
             }
             this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(selectedElement), 1);
         });
