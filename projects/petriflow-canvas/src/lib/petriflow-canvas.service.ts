@@ -56,7 +56,10 @@ export class PetriflowCanvasService {
     }
 
     deselectAll() {
-        this.selectedElements.forEach(selectedElement => selectedElement.deactivate());
+        this.selectedElements.forEach(selectedElement => {
+            selectedElement.isSelected = false;
+            selectedElement.deactivate();
+        });
         this.selectedElements = [];
     }
 

@@ -72,7 +72,7 @@ export class PetriflowCanvasConfigurationService {
         };
         svg.onmousedown = (e) => {
             e.preventDefault();
-            this._petriflowCanvasService.deselectAll();
+            // this._petriflowCanvasService.deselectAll();
             if (this.mode === CanvasMode.LASSO) {
                 this.mouseDown = true;
                 const offset = this._petriflowCanvasService.getPanZoomOffset();
@@ -269,7 +269,7 @@ export class PetriflowCanvasConfigurationService {
     }
 
     private onMouseMoveDownDestroyClipboard() {
-        if (this.clipboard && this._clipboardBox && this.mode === CanvasMode.LASSO) {
+        if (this.clipboard && this._clipboardBox && this.mode === CanvasMode.LASSO || this._petriflowCanvasService.pastedElements.length > 0) {
             this.destroyAndReduceClipboard();
         } else if (this.clipboard && this._clipboardBox && this.mode === CanvasMode.MOVE) {
             this.destroyAndMoveElements();
