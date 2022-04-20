@@ -188,10 +188,19 @@ export class PetriflowCanvasConfigurationService {
 
     private selectElement(element: NodeElement) {
         if (this._mode === CanvasMode.MOVE) {
-            if (!this._petriflowCanvasFactory.source) {
-                this._petriflowCanvasFactory.source = element;
+            if (this._petriflowCanvasService.selectedElements.length > 1 && this._petriflowCanvasService.selectedElements.includes(element)) {
+                this.initialiseClipboard();
+                this._petriflowCanvasService.selectedElements.forEach(selectedElement => {
+                    this.clipboard.appendChild(selectedElement.container);
+                    this._petriflowCanvasService.canvas.container.appendChild(this.clipboard);
+                });
+                this._clipboardBox = this.clipboard.getBoundingClientRect();
             } else {
-                this._petriflowCanvasFactory.source = undefined;
+                if (!this._petriflowCanvasFactory.source || this.clipboard) {
+                    this._petriflowCanvasFactory.source = element;
+                } else {
+                    this._petriflowCanvasFactory.source = undefined;
+                }
             }
         }
     }
@@ -260,8 +269,10 @@ export class PetriflowCanvasConfigurationService {
     }
 
     private onMouseMoveDownDestroyClipboard() {
-        if (this.clipboard && this._clipboardBox) {
+        if (this.clipboard && this._clipboardBox && this.mode === CanvasMode.LASSO) {
             this.destroyAndReduceClipboard();
+        } else if (this.clipboard && this._clipboardBox && this.mode === CanvasMode.MOVE) {
+            this.destroyAndMoveElements();
         }
     }
 
@@ -276,7 +287,10 @@ export class PetriflowCanvasConfigurationService {
                 return destination === endElement;
             });
             const newLinePoints = [];
-            element.linePoints.forEach(point => newLinePoints.push(Object.assign({}, {x: point.x, y: point.y} as DOMPoint)));
+            element.linePoints.forEach(point => newLinePoints.push(Object.assign({}, {
+                x: point.x,
+                y: point.y
+            } as DOMPoint)));
             return new type(this._petriflowCanvasService.pastedElements[startIndex] as NodeElement,
                 this._petriflowCanvasService.pastedElements[endIndex] as NodeElement,
                 newLinePoints, element.multiplicity.textContent);
@@ -294,10 +308,10 @@ export class PetriflowCanvasConfigurationService {
     }
 
     deleteSelectedElements() {
+        const removedArcs = [];
         this._petriflowCanvasService.selectedElements.forEach(selectedElement => {
             // TODO: instanceof
             if (selectedElement instanceof NodeElement) {
-                const removedArcs = [];
                 selectedElement.arcs.forEach(arc => {
                     this._petriflowCanvasService.canvas.remove(arc);
                     removedArcs.push(arc);
@@ -308,11 +322,11 @@ export class PetriflowCanvasConfigurationService {
                     }
                 });
                 this._petriflowCanvasService.canvas.remove(selectedElement);
-                removedArcs.forEach(arc => {
-                    this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(arc), 1);
-                });
             }
             this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(selectedElement), 1);
+        });
+        removedArcs.forEach(arc => {
+            this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(arc), 1);
         });
         this._petriflowCanvasService.selectedElements = [];
     }
@@ -323,7 +337,7 @@ export class PetriflowCanvasConfigurationService {
     }
 
     destroyAndReduceClipboard() {
-        const matrix = (this.clipboard as SVGSVGElement).transform.baseVal[0].matrix;
+        const matrix = (this.clipboard as SVGSVGElement).transform?.baseVal[0]?.matrix;
         this._petriflowCanvasService.pastedElements.forEach(copyElement => {
             if (copyElement instanceof NodeElement) {
                 copyElement.moveBy(matrix.e, matrix.f);
@@ -343,6 +357,23 @@ export class PetriflowCanvasConfigurationService {
             }
             this._petriflowCanvasService.canvas.add(copyElement);
             this._petriflowCanvasService.petriflowElements.push(copyElement);
+        });
+        this.deleteClipboard();
+    }
+
+    destroyAndMoveElements() {
+        const matrix = (this.clipboard as SVGSVGElement).transform?.baseVal[0]?.matrix;
+        this._petriflowCanvasService.selectedElements.forEach(copyElement => {
+            if (copyElement instanceof NodeElement) {
+                copyElement.moveBy(matrix.e, matrix.f);
+            } else if (copyElement instanceof Arc) {
+                copyElement.linePoints.forEach(point => {
+                    point.x = point.x + matrix.e;
+                    point.y = point.y + matrix.f;
+                });
+                copyElement.move(copyElement.start, copyElement.end);
+            }
+            this._petriflowCanvasService.canvas.add(copyElement);
         });
         this.deleteClipboard();
     }
