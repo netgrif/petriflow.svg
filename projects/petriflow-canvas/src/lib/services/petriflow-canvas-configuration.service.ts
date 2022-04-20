@@ -57,6 +57,7 @@ export class PetriflowCanvasConfigurationService {
             this.moveElement(e);
             this.moveBreakpoint(e);
             if (this.mouseDown && this.mode === CanvasMode.LASSO) {
+                this._petriflowCanvasService.deselectAll();
                 this._petriflowCanvasService.canvas.svg.deselectAll();
                 const offset = this._petriflowCanvasService.getPanZoomOffset();
                 const width = (e.x - offset.x) / offset.scale - this.mouseX;
@@ -72,8 +73,8 @@ export class PetriflowCanvasConfigurationService {
         };
         svg.onmousedown = (e) => {
             e.preventDefault();
-            // this._petriflowCanvasService.deselectAll();
             if (this.mode === CanvasMode.LASSO) {
+                this._petriflowCanvasService.deselectAll();
                 this.mouseDown = true;
                 const offset = this._petriflowCanvasService.getPanZoomOffset();
                 this.rectangle = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGElement;
@@ -308,7 +309,7 @@ export class PetriflowCanvasConfigurationService {
     }
 
     deleteSelectedElements() {
-        const removedArcs = [];
+        let removedArcs = [];
         this._petriflowCanvasService.selectedElements.forEach(selectedElement => {
             // TODO: instanceof
             if (selectedElement instanceof NodeElement) {
@@ -321,12 +322,16 @@ export class PetriflowCanvasConfigurationService {
                         petriflowElement.deleteArcs(removedArcs);
                     }
                 });
+                removedArcs.forEach(arc => {
+                    this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(arc), 1);
+                });
+                removedArcs = [];
                 this._petriflowCanvasService.canvas.remove(selectedElement);
             }
-            this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(selectedElement), 1);
-        });
-        removedArcs.forEach(arc => {
-            this._petriflowCanvasService.petriflowElements.splice(this._petriflowCanvasService.petriflowElements.indexOf(arc), 1);
+            const elementIndex = this._petriflowCanvasService.petriflowElements.indexOf(selectedElement);
+            if (elementIndex !== -1) {
+                this._petriflowCanvasService.petriflowElements.splice(elementIndex, 1);
+            }
         });
         this._petriflowCanvasService.selectedElements = [];
     }

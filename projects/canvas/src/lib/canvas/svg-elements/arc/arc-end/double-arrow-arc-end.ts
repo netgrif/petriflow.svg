@@ -19,8 +19,10 @@ export class DoubleArrowArcEnd extends ArcEnd {
     }
 
     activate(): void {
+        this._arrowHead.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.ACTIVE);
     }
 
     deactivate(): void {
+        this._arrowHead.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.INACTIVE);
     }
 }

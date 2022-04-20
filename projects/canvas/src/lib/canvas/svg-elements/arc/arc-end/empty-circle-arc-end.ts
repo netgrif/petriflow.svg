@@ -12,7 +12,7 @@ export class EmptyCircleArcEnd extends CircleArcEnd {
     }
 
     activate(): void {
-        this.circle.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.INACTIVE);
+        this.circle.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.ACTIVE);
     }
 
     deactivate(): void {
