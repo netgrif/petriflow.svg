@@ -30,23 +30,25 @@ export class PetriflowCanvasComponent implements AfterViewInit {
         return this._canvas;
     }
 
-    @HostListener('window:keydown', ['$event'])
-    onKeyDown($event: KeyboardEvent) {
-        if (($event.ctrlKey || $event.metaKey)) {
-            $event.preventDefault();
-            if ($event.key === 'd' || $event.key === 'D') {
-                console.log('on ctrl d');
-            } else if ($event.key === 'c' || $event.key === 'C') {
-                this.openSnackBar('Canvas elements copied to clipboard');
-                this._canvasService.petriflowClipboardElementsCollection = this._canvasService.copyElements(this._canvasService.petriflowElementsCollection,
-                                                                                                            this._canvasService.petriflowClipboardElementsCollection);
-            } else if ($event.key === 'v' || $event.key === 'V') {
-                this._canvasConfig.pasteElements();
-            } else if ($event.key === 'a' || $event.key === 'A') {
-                this.openSnackBar('Selected all canvas elements');
-                this._canvasService.selectAll();
-            }
-        }
+    @HostListener('window:keydown.control.c', ['$event'])
+    onControlC($event: KeyboardEvent) {
+        $event.preventDefault();
+        this.openSnackBar('Canvas elements copied to clipboard');
+        this._canvasService.petriflowClipboardElementsCollection = this._canvasService.copyElements(this._canvasService.petriflowElementsCollection,
+            this._canvasService.petriflowClipboardElementsCollection);
+    }
+
+    @HostListener('window:keydown.control.v', ['$event'])
+    onControlV($event: KeyboardEvent) {
+        $event.preventDefault();
+        this._canvasConfig.pasteElements();
+    }
+
+    @HostListener('window:keydown.control.a', ['$event'])
+    onControlA($event: KeyboardEvent) {
+        $event.preventDefault();
+        this.openSnackBar('Selected all canvas elements');
+        this._canvasService.selectAll();
     }
 
     @HostListener('window:keydown.delete', ['$event'])

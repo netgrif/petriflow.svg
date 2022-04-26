@@ -4,19 +4,16 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {RouterModule, Routes} from '@angular/router';
-import {
-    AuthenticationModule,
-    ConfigurationService,
-    MaterialModule,
-    TranslateLibModule
-} from '@netgrif/application-engine';
 import {JoyrideModule} from 'ngx-joyride';
-import {TaskContentComponentModule} from '@netgrif/components';
-import {ExportService, ImportService} from '@netgrif/petriflow';
 import {PetriflowCanvasModule} from '../../projects/petriflow-canvas/src/lib/petriflow-canvas.module';
-import {MatIconRegistry} from '@angular/material/icon';
-import {AppBuilderConfigurationService} from './app-builder-configuration.service';
+import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import { PetriflowInfoDialogComponent } from './petriflow-info-dialog/petriflow-info-dialog.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {HttpClientModule} from '@angular/common/http';
 
 const appRoutes: Routes = [
     {path: 'app', component: AppComponent},
@@ -32,20 +29,18 @@ const appRoutes: Routes = [
         BrowserModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
-        TranslateLibModule,
-        AuthenticationModule,
         RouterModule.forRoot(appRoutes),
         JoyrideModule.forRoot(),
-        TaskContentComponentModule,
         PetriflowCanvasModule,
-        MaterialModule
+        MatButtonModule,
+        MatIconModule,
+        MatButtonToggleModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatSnackBarModule,
+        HttpClientModule
     ],
     entryComponents: [PetriflowInfoDialogComponent],
-    providers: [
-        ImportService,
-        ExportService,
-        {provide: ConfigurationService, useClass: AppBuilderConfigurationService},
-    ],
     bootstrap: [
         AppComponent
     ],

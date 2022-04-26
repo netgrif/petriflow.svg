@@ -1,5 +1,4 @@
 @import '../node_modules/@angular/material/theming';
-@import '../node_modules/@netgrif/components/nae-theme';
 
 $typography: mat-typography-config(
     $font-family: Roboto,
@@ -78,7 +77,6 @@ $netgrif-accent: mat-palette($netgrif-blue, A200, A100, A400);
 $netgrif-warn: mat-palette($mat-red);
 
 $netgrif-theme: mat-light-theme($netgrif-primary, $netgrif-accent, $netgrif-warn);
-@include nae-lib-theme($netgrif-theme, $typography);
 
 body {
     ::-webkit-scrollbar-track {

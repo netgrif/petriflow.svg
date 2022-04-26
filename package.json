@@ -1,29 +1,22 @@
 {
-    "name": "@netgrif/application-builder",
-    "version": "2.0.5-31",
-    "description": "Netgrif Application Builder for building, configuring and modeling applications for Application Engine.",
+    "name": "@netgrif/petriflow-canvas-example",
+    "version": "1.0.0",
+    "description": "Netgrif Petriflow Canvas example for drawing of the Petri Net canvas elements.",
     "homepage": "https://builder.netgrif.com",
     "repository": {
         "type": "git",
-        "url": "https://bitbucket.org/netgrif/modeler.git"
+        "url": "https://github.com/netgrif/petriflow-svg.git"
     },
     "bugs": {
-        "url": "https://netgrif.atlassian.net/browse/NAB"
+        "url": "https://github.com/netgrif/petriflow-svg/issues"
     },
     "keywords": [
         "netgrif",
-        "application builder",
-        "nab",
-        "engine",
-        "builder",
-        "workflow engine"
+        "petriflow canvas"
     ],
     "contributors": [
-        "Milan Mladoniczky <mladoniczky@netgrif.com>",
         "Juraj Mažári <mazari@netgrif.com>",
-        "Tomáš Kováčik <kovacik@netgrif.com>",
-        "Jakub Kovář <kovar@netgrif.com>",
-        "Jozef Daxner <daxner@netgrif.com>"
+        "Slavomír Martavuz <martavuz@netgrif.com>"
     ],
     "scripts": {
         "ng": "ng",
@@ -59,9 +52,6 @@
         "@covalent/text-editor": "~3.1.0",
         "@mdi/angular-material": "^4.9.95",
         "@mdi/font": "^4.9.95",
-        "@netgrif/application-engine": "~5.5.2",
-        "@netgrif/components": "~5.5.2",
-        "@netgrif/petriflow": "1.3.1",
         "@ngx-translate/core": "~13.0.0",
         "@ngx-translate/http-loader": "~6.0.0",
         "@swimlane/ngx-charts": "~16.0.0",

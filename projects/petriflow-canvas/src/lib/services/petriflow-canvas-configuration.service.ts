@@ -307,7 +307,6 @@ export class PetriflowCanvasConfigurationService {
     }
 
     destroyAndReduceClipboard() {
-        console.log('teeest');
         const matrix = (this.clipboard as SVGSVGElement).transform?.baseVal[0]?.matrix;
         this.copyFromClipboardToCollection(matrix, this._petriflowCanvasService.petriflowClipboardElementsCollection.places,
             this._petriflowCanvasService.petriflowElementsCollection.places);
