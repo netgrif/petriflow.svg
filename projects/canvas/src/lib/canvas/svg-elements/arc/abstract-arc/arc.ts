@@ -111,9 +111,17 @@ export abstract class Arc extends CanvasElement {
         return new DOMPoint(x, y);
     }
 
+    moveBy(x: number, y: number): void {
+        this.linePoints.forEach(point => {
+            point.x = point.x + x;
+            point.y = point.y + y;
+        });
+        this.move(this.start, this.end);
+    }
+
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
-        this.isSelected = this.start.isSelected && this.end.isSelected;
-        return this.isSelected;
+        this.setSelected(this.start.isSelected() && this.end.isSelected());
+        return this.isSelected();
     }
 
     get arcLineBackground(): SVGPolylineElement {

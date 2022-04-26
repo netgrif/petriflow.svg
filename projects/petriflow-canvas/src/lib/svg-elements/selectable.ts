@@ -3,8 +3,6 @@ export interface Selectable<T> {
 
     deselect(): void;
 
-    clone(): T;
-
     moveBy(x: number, y: number): void;
 
     isEnclosedByRectangle(rectangle: SVGRect): boolean;
@@ -12,4 +10,8 @@ export interface Selectable<T> {
     activate(): void;
 
     getContainer(): SVGGElement;
+
+    isSelected(): boolean;
+
+    setSelected(value: boolean): void;
 }

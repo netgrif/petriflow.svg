@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {PetriflowCanvas} from '../../../canvas/src/lib/canvas/petriflow-canvas';
 import {PanZoom, Transform} from 'panzoom';
-import {CanvasElement} from '../../../canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
+import {PetriflowCanvas} from './petriflow-canvas';
+import {CanvasElementCollection} from './domain/canvas-element-collection';
 
 @Injectable({
     providedIn: 'root',
@@ -9,26 +9,47 @@ import {CanvasElement} from '../../../canvas/src/lib/canvas/svg-elements/svg-obj
 export class PetriflowCanvasService {
 
     private _canvas: PetriflowCanvas;
-    private _petriflowElements: Array<CanvasElement>;
-    private _selectedElements: Array<CanvasElement>;
-    private _copiedElements: Array<CanvasElement>;
-    private _pastedElements: Array<CanvasElement>;
+    private _petriflowElementsCollection: CanvasElementCollection;
+    private _petriflowClipboardElementsCollection: CanvasElementCollection;
     private _panzoom: PanZoom;
 
     constructor() {
-        this._petriflowElements = [];
-        this._selectedElements = [];
-        this._copiedElements = [];
-        this._pastedElements = [];
+        this._petriflowElementsCollection = new CanvasElementCollection();
+        this._petriflowClipboardElementsCollection = new CanvasElementCollection();
     }
 
-    getEnclosedElementsByRectangle(rectangle: SVGElement): Array<CanvasElement> {
+    setSelectedByRectangleEnclosure(rectangle: SVGElement) {
         const newRect = this.canvas.svg.createSVGRect();
         newRect.x = +rectangle.getAttribute('x');
         newRect.y = +rectangle.getAttribute('y');
         newRect.width = +rectangle.getAttribute('width');
         newRect.height = +rectangle.getAttribute('height');
-        return this._petriflowElements.filter(petriflowElement => petriflowElement.isEnclosedByRectangle(newRect));
+        this._petriflowElementsCollection.nodes.forEach(petriflowElement => {
+            if (petriflowElement.isEnclosedByRectangle(newRect)) {
+                petriflowElement.setSelected(true);
+                petriflowElement.activate();
+            }
+        });
+        this._petriflowElementsCollection.arcs.forEach(petriflowElement => {
+            if (petriflowElement.isEnclosedByRectangle(newRect)) {
+                petriflowElement.setSelected(true);
+                petriflowElement.activate();
+            }
+        });
+    }
+
+    copyElements(from: CanvasElementCollection, to: CanvasElementCollection, append = false): CanvasElementCollection {
+        if (!append) {
+            to = new CanvasElementCollection();
+            to.places = from.places.filter(place => place.isSelected());
+            to.transitions = from.transitions.filter(place => place.isSelected());
+            to.arcs = from.arcs.filter(place => place.isSelected());
+        } else {
+            from.places.forEach(place => to.places.push(place));
+            from.transitions.forEach(place => to.transitions.push(place));
+            from.arcs.forEach(place => to.arcs.push(place));
+        }
+        return to;
     }
 
     get panzoom(): PanZoom {
@@ -43,24 +64,26 @@ export class PetriflowCanvasService {
         return this._panzoom.getTransform();
     }
 
-    copyElements() {
-        this.copiedElements = this.selectedElements;
-    }
-
     selectAll() {
-        this.selectedElements = [...this.petriflowElements];
-        this.selectedElements.forEach(selectedElement => {
-            selectedElement.isSelected = true;
-            selectedElement.activate();
+        this.petriflowElementsCollection.nodes.forEach(element => {
+            element.setSelected(true);
+            element.activate();
+        });
+        this.petriflowElementsCollection.arcs.forEach(element => {
+            element.setSelected(true);
+            element.activate();
         });
     }
 
     deselectAll() {
-        this.selectedElements.forEach(selectedElement => {
-            selectedElement.isSelected = false;
-            selectedElement.deactivate();
+        this.petriflowElementsCollection.nodes.forEach(element => {
+            element.setSelected(false);
+            element.deactivate();
         });
-        this.selectedElements = [];
+        this.petriflowElementsCollection.arcs.forEach(element => {
+            element.setSelected(false);
+            element.deselect();
+        });
     }
 
     get canvas(): PetriflowCanvas {
@@ -71,35 +94,19 @@ export class PetriflowCanvasService {
         this._canvas = value;
     }
 
-    get petriflowElements(): Array<CanvasElement> {
-        return this._petriflowElements;
+    get petriflowElementsCollection(): CanvasElementCollection {
+        return this._petriflowElementsCollection;
     }
 
-    set petriflowElements(value: Array<CanvasElement>) {
-        this._petriflowElements = value;
+    set petriflowElementsCollection(value: CanvasElementCollection) {
+        this._petriflowElementsCollection = value;
     }
 
-    get selectedElements(): Array<CanvasElement> {
-        return this._selectedElements;
+    get petriflowClipboardElementsCollection(): CanvasElementCollection {
+        return this._petriflowClipboardElementsCollection;
     }
 
-    set selectedElements(value: Array<CanvasElement>) {
-        this._selectedElements = value;
-    }
-
-    get copiedElements(): Array<CanvasElement> {
-        return this._copiedElements;
-    }
-
-    set copiedElements(value: Array<CanvasElement>) {
-        this._copiedElements = value;
-    }
-
-    get pastedElements(): Array<CanvasElement> {
-        return this._pastedElements;
-    }
-
-    set pastedElements(value: Array<CanvasElement>) {
-        this._pastedElements = value;
+    set petriflowClipboardElementsCollection(value: CanvasElementCollection) {
+        this._petriflowClipboardElementsCollection = value;
     }
 }

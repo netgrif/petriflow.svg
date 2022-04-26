@@ -14,4 +14,8 @@ export class RegularTransitionPlaceArc extends TransitionPlaceArc {
     createArcEnd(): ArcEnd {
         return new ArrowArcEnd();
     }
+
+    clone(): RegularTransitionPlaceArc {
+        return new RegularTransitionPlaceArc(this.start, this.end, this.linePoints, this.multiplicity?.textContent);
+    }
 }

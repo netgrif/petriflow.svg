@@ -57,7 +57,7 @@ export abstract class NodeElement extends CanvasElement {
     }
 
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
-        this.isSelected = super.isEnclosedByRectangle(rectangle);
-        return this.isSelected;
+        this.setSelected(super.isEnclosedByRectangle(rectangle));
+        return this.isSelected();
     }
 }

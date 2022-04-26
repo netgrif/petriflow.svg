@@ -1,26 +1,43 @@
 import {StaticPlace} from '../../../../canvas/src/lib/canvas/svg-elements/place/static-place';
 import {SelectableNode} from './selectable-node';
+import {PetriflowPlace} from './petriflow-place';
 
-export class PetriflowStaticPlace extends StaticPlace implements SelectableNode<StaticPlace> {
-    deselect(): void {
-        this.deactivate();
+export class PetriflowStaticPlace extends StaticPlace implements SelectableNode {
+
+    private _onClickEvent;
+
+    constructor(marking: number, position: DOMPoint) {
+        super(`p${PetriflowPlace.COUNTER++}`, `p${PetriflowPlace.COUNTER}`, marking, position);
     }
 
     getPosition(): DOMPoint {
         return this.position;
     }
 
-    select(): void {
-        this.activate();
+    deselect(): void {
+        this.setSelected(false);
+        this.deactivate();
     }
 
-    clone(): PetriflowStaticPlace {
-        const copyObject: PetriflowStaticPlace = Object.assign(Object.create(this), this) as PetriflowStaticPlace;
-        copyObject.container = this.container.cloneNode(true) as SVGGElement;
-        return copyObject;
+    select(): void {
+        this.setSelected(true);
+        this.activate();
     }
 
     getContainer(): SVGGElement {
         return this.container;
+    }
+
+    clone(): PetriflowStaticPlace {
+        const cloned = new PetriflowStaticPlace(this.marking, this.position);
+        cloned.element.onclick = () => this._onClickEvent(cloned);
+        return cloned;
+    }
+
+    setOnClick(event: (element) => void): void {
+        this._onClickEvent = event;
+        this.element.onclick = () => {
+            event(this);
+        };
     }
 }

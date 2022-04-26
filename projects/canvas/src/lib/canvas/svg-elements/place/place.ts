@@ -209,4 +209,8 @@ export class Place extends LabeledObject {
     set tokensCount(value: number) {
         this._tokensCount = value;
     }
+
+    clone(): Place {
+        return new Place(this.id, this.label.data, this.marking, this.position);
+    }
 }

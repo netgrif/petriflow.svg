@@ -14,4 +14,8 @@ export class ReadArc extends PlaceTransitionArc {
     createArcEnd(): ArcEnd {
         return new FullCircleArcEnd();
     }
+
+    clone(): ReadArc {
+        return new ReadArc(this.start, this.end, this.linePoints, this.multiplicity?.textContent);
+    }
 }

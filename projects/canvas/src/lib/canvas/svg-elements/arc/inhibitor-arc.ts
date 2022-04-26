@@ -14,4 +14,8 @@ export class InhibitorArc extends PlaceTransitionArc {
     createArcEnd(): ArcEnd {
         return new EmptyCircleArcEnd();
     }
+
+    clone(): InhibitorArc {
+        return new InhibitorArc(this.start, this.end, this.linePoints, this.multiplicity?.textContent);
+    }
 }

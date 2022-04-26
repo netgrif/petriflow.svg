@@ -21,17 +21,15 @@ export abstract class CanvasElement extends Container implements Activable {
             canvasElementBox.y > rectangle.y + rectangle.height);
     }
 
-    clone(): CanvasElement {
-        const copyObject: CanvasElement = Object.create(this) as CanvasElement;
-        copyObject.container = this.container.cloneNode(true) as SVGGElement;
-        return copyObject;
-    }
+    abstract moveBy(e: number, f: number);
 
-    get isSelected(): boolean {
+    abstract clone(): CanvasElement;
+
+    isSelected(): boolean {
         return this._isSelected;
     }
 
-    set isSelected(value: boolean) {
+    setSelected(value: boolean) {
         this._isSelected = value;
     }
 }

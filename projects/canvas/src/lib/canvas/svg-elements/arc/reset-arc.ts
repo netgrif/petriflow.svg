@@ -14,4 +14,8 @@ export class ResetArc extends PlaceTransitionArc {
     createArcEnd(): ArcEnd {
         return new DoubleArrowArcEnd();
     }
+
+    clone(): ResetArc {
+        return new ResetArc(this.start, this.end, this.linePoints, this.multiplicity?.textContent);
+    }
 }
