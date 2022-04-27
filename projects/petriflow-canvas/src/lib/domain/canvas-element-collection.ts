@@ -1,6 +1,4 @@
-import {CanvasElement} from '../../../../canvas/src/lib/canvas/svg-elements/svg-objects/canvas-element';
 import {StaticPlace} from '../../../../canvas/src/lib/canvas/svg-elements/place/static-place';
-import {Arc} from 'projects/canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
 import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
 import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
 import {NodeElement} from '../../../../canvas/src/lib/canvas/svg-elements/svg-objects/node-element';

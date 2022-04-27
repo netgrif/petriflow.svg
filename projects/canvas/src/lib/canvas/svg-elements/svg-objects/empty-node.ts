@@ -1,4 +1,5 @@
 import {NodeElement} from './node-element';
+import {CanvasElement} from './canvas-element';
 
 export class EmptyNode extends NodeElement {
 
@@ -10,5 +11,9 @@ export class EmptyNode extends NodeElement {
 
     getEdgeIntersection(from: DOMPoint): DOMPoint {
         return this.position;
+    }
+
+    clone(): CanvasElement {
+        return undefined;
     }
 }
