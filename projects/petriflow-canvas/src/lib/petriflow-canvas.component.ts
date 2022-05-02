@@ -4,6 +4,7 @@ import createPanZoom from 'panzoom';
 import {PetriflowCanvasConfigurationService} from './services/petriflow-canvas-configuration.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {PetriflowCanvas} from './petriflow-canvas';
+import {PetriflowCanvasConfiguration} from './petriflow-canvas-configuration';
 
 @Component({
     selector: 'lib-petriflow-canvas',
@@ -61,6 +62,36 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     onEscape() {
         this._canvasService.deselectAll();
         this._canvasConfig.deleteClipboard();
+    }
+
+    @HostListener('window:keydown.+', ['$event'])
+    onPlusButton() {
+        this._canvasService.panzoom.smoothZoom(0, 0, PetriflowCanvasConfiguration.PANZOOM_ZOOM_IN_MULTIPLIER);
+    }
+
+    @HostListener('window:keydown.-', ['$event'])
+    onMinusButton() {
+        this._canvasService.panzoom.smoothZoom(0, 0, PetriflowCanvasConfiguration.PANZOOM_ZOOM_OUT_MULTIPLIER);
+    }
+
+    @HostListener('window:keydown.ArrowUp', ['$event'])
+    onUpButton() {
+        this._canvasService.panzoom.moveBy(0, PetriflowCanvasConfiguration.PANZOOM_MOVE, false);
+    }
+
+    @HostListener('window:keydown.ArrowRight', ['$event'])
+    onRightButton() {
+        this._canvasService.panzoom.moveBy(-PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, false);
+    }
+
+    @HostListener('window:keydown.ArrowDown', ['$event'])
+    onDownButton() {
+        this._canvasService.panzoom.moveBy(0, -PetriflowCanvasConfiguration.PANZOOM_MOVE, false);
+    }
+
+    @HostListener('window:keydown.ArrowLeft', ['$event'])
+    onLeftButton() {
+        this._canvasService.panzoom.moveBy(PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, false);
     }
 
     openSnackBar(message: string) {

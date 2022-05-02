@@ -74,6 +74,11 @@ export class AppComponent implements AfterViewInit {
         window.open(url, '_blank');
     }
 
+    resetPanZoom() {
+        this._petriflowCanvasService.panzoom.moveTo(0, 0);
+        this._petriflowCanvasService.panzoom.zoomAbs(0, 0, 1);
+    }
+
     public get canvasMode(): typeof CanvasMode {
         return CanvasMode;
     }

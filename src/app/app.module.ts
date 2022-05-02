@@ -38,6 +38,7 @@ const appRoutes: Routes = [
         MatToolbarModule,
         MatDialogModule,
         MatSnackBarModule,
+        MatButtonModule,
         HttpClientModule
     ],
     entryComponents: [PetriflowInfoDialogComponent],
