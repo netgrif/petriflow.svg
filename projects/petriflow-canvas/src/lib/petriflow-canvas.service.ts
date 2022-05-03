@@ -9,7 +9,7 @@ import {CanvasElementCollection} from './domain/canvas-element-collection';
 export class PetriflowCanvasService {
 
     private _canvas: PetriflowCanvas;
-    private _petriflowElementsCollection: CanvasElementCollection;
+    private readonly _petriflowElementsCollection: CanvasElementCollection;
     private _petriflowClipboardElementsCollection: CanvasElementCollection;
     private _panzoom: PanZoom;
 
@@ -24,13 +24,7 @@ export class PetriflowCanvasService {
         newRect.y = +rectangle.getAttribute('y');
         newRect.width = +rectangle.getAttribute('width');
         newRect.height = +rectangle.getAttribute('height');
-        this._petriflowElementsCollection.nodes.forEach(petriflowElement => {
-            if (petriflowElement.isEnclosedByRectangle(newRect)) {
-                petriflowElement.setSelected(true);
-                petriflowElement.activate();
-            }
-        });
-        this._petriflowElementsCollection.arcs.forEach(petriflowElement => {
+        this._petriflowElementsCollection.all.forEach(petriflowElement => {
             if (petriflowElement.isEnclosedByRectangle(newRect)) {
                 petriflowElement.setSelected(true);
                 petriflowElement.activate();
@@ -65,23 +59,13 @@ export class PetriflowCanvasService {
     }
 
     selectAll() {
-        this.petriflowElementsCollection.nodes.forEach(element => {
-            element.setSelected(true);
-            element.activate();
-        });
-        this.petriflowElementsCollection.arcs.forEach(element => {
-            element.setSelected(true);
-            element.activate();
+        this.petriflowElementsCollection.all.forEach(element => {
+            element.select();
         });
     }
 
     deselectAll() {
-        this.petriflowElementsCollection.nodes.forEach(element => {
-            element.setSelected(false);
-            element.deactivate();
-        });
-        this.petriflowElementsCollection.arcs.forEach(element => {
-            element.setSelected(false);
+        this.petriflowElementsCollection.all.forEach(element => {
             element.deselect();
         });
     }
@@ -96,10 +80,6 @@ export class PetriflowCanvasService {
 
     get petriflowElementsCollection(): CanvasElementCollection {
         return this._petriflowElementsCollection;
-    }
-
-    set petriflowElementsCollection(value: CanvasElementCollection) {
-        this._petriflowElementsCollection = value;
     }
 
     get petriflowClipboardElementsCollection(): CanvasElementCollection {

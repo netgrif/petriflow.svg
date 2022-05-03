@@ -1,4 +1,4 @@
-export interface Selectable<T> {
+export interface PetriflowCanvasElement {
     select(): void;
 
     deselect(): void;
@@ -9,9 +9,8 @@ export interface Selectable<T> {
 
     activate(): void;
 
-    getContainer(): SVGGElement;
-
     isSelected(): boolean;
 
     setSelected(value: boolean): void;
+
 }

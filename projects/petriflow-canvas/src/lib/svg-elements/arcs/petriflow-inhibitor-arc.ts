@@ -1,75 +1,14 @@
 import {NodeElement} from 'projects/canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
 import {InhibitorArc} from '../../../../../canvas/src/lib/canvas/svg-elements/arc/inhibitor-arc';
-import {SelectableArc} from '../selectable-arc';
+import {PetriflowArc} from '../petriflow-arc';
 
-export class PetriflowInhibitorArc extends InhibitorArc implements SelectableArc {
+export class PetriflowInhibitorArc extends PetriflowArc<InhibitorArc> {
 
-    private _onClickEvent;
-
-    constructor(start: NodeElement, end: NodeElement, linePoints: Array<DOMPoint>, multiplicityLabel: string) {
-        super(start, end, linePoints, multiplicityLabel);
-
-        this.arcLine.onmouseenter = () => {
-            this.activate();
-        };
-        this.arcLine.onmouseleave = () => {
-            if (!this.isSelected()) {
-                this.deactivate();
-            }
-        };
+    constructor(arc: InhibitorArc) {
+        super(arc);
     }
 
-    deselect(): void {
-        this.setSelected(false);
-        this.deactivate();
+    createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
+        return new PetriflowInhibitorArc(new InhibitorArc(start, end, points, this._element.multiplicity?.textContent));
     }
-
-    select(): void {
-        this.setSelected(true);
-        this.activate();
-    }
-
-    getContainer(): SVGGElement {
-        return this.container;
-    }
-
-    getDestination(): NodeElement {
-        return this.end;
-    }
-
-    getSource(): NodeElement {
-        return this.start;
-    }
-
-    cloneArc(start: NodeElement,  end: NodeElement): PetriflowInhibitorArc {
-        const newLinePoints = [];
-        this.linePoints.forEach(point => newLinePoints.push(Object.assign({}, {
-            x: point.x,
-            y: point.y
-        } as DOMPoint)));
-        const cloned = new PetriflowInhibitorArc(start, end, newLinePoints, this.multiplicity?.textContent);
-        cloned.arcLine.onclick = () => this._onClickEvent(cloned);
-        cloned.setOnClick((clone) => this._onClickEvent(clone));
-        return cloned;
-    }
-
-    setOnClick(event: (e, element) => void): void {
-        this._onClickEvent = event;
-        this.arcLine.onclick = (e) => {
-            event(e, this);
-        };
-    }
-
-    getBreakPointList(): Array<DOMPoint> {
-        return this.linePoints;
-    }
-
-    setSource(source: NodeElement): void {
-        this.start = source;
-    }
-
-    setDestination(destination: NodeElement): void {
-        this.end = destination;
-    }
-
 }

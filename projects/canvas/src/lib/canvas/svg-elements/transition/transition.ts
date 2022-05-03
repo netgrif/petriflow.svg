@@ -4,17 +4,16 @@ import {CanvasElement} from '../svg-objects/canvas-element';
 
 export class Transition extends LabeledObject {
 
-    private _element: SVGRectElement;
-
     constructor(id: string, label: string, position: DOMPoint) {
         super(id, label, position);
-        this._element = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGRectElement;
-        this._element.id = `svg_transition_${id}`;
-        this._element.setAttributeNS(null, 'width', `${CanvasConfiguration.SIZE}`);
-        this._element.setAttributeNS(null, 'height', `${CanvasConfiguration.SIZE}`);
-        this._element.setAttributeNS(null, 'stroke', 'black');
-        this._element.setAttributeNS(null, 'stroke-width', '1');
-        this.container.appendChild(this._element);
+        this.element = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGRectElement;
+        this.element.id = `svg_transition_${id}`;
+        this.element.setAttributeNS(null, 'width', `${CanvasConfiguration.SIZE}`);
+        this.element.setAttributeNS(null, 'height', `${CanvasConfiguration.SIZE}`);
+        this.element.setAttributeNS(null, 'stroke', 'black');
+        this.element.setAttributeNS(null, 'stroke-width', '1');
+        this.container.appendChild(this.element);
+        this.move(position);
     }
 
     move(position: DOMPoint) {
@@ -24,14 +23,14 @@ export class Transition extends LabeledObject {
 
     activate(): void {
         super.activate();
-        this._element.setAttributeNS(null, 'class', 'svg-active-stroke');
+        this.element.setAttributeNS(null, 'class', 'svg-active-stroke');
     }
 
     deactivate(): void {
         super.deactivate();
-        this._element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
-        this._element.setAttributeNS(null, 'fill', 'white');
-        this._element.setAttributeNS(null, 'stroke-width', '2');
+        this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
+        this.element.setAttributeNS(null, 'fill', 'white');
+        this.element.setAttributeNS(null, 'stroke-width', '2');
     }
 
     /**
@@ -56,20 +55,20 @@ export class Transition extends LabeledObject {
     }
 
     private setElementPosition(position: DOMPoint) {
-        this._element.setAttributeNS(null, 'x', `${position.x - CanvasConfiguration.SIZE / 2}`);
-        this._element.setAttributeNS(null, 'y', `${position.y - CanvasConfiguration.SIZE / 2}`);
+        this.element.setAttributeNS(null, 'x', `${position.x - CanvasConfiguration.SIZE / 2}`);
+        this.element.setAttributeNS(null, 'y', `${position.y - CanvasConfiguration.SIZE / 2}`);
     }
 
     setEnabled(firing: boolean) {
         if (firing) {
-            this._element.setAttributeNS(null, 'class', 'svg-transition-firing');
+            this.element.setAttributeNS(null, 'class', 'svg-transition-firing');
         } else {
-            this._element.setAttributeNS(null, 'class', 'svg-transition-enabled');
+            this.element.setAttributeNS(null, 'class', 'svg-transition-enabled');
         }
     }
 
     setDisabled(firing: boolean) {
-        this._element.setAttributeNS(null, 'class', 'svg-transition-disabled');
+        this.element.setAttributeNS(null, 'class', 'svg-transition-disabled');
     }
 
     cancelArrowPoints(position: DOMPoint): string {
@@ -92,14 +91,6 @@ export class Transition extends LabeledObject {
         const y2 = position.y + 0.8 * CanvasConfiguration.SIZE / 2;
         const x3 = position.x + (0.85 * CanvasConfiguration.SIZE / 2) * orientation;
         return CanvasElement.pointsToString(new DOMPoint(x1, y1), new DOMPoint(x2, y2), new DOMPoint(x3, position.y));
-    }
-
-    get element(): SVGRectElement {
-        return this._element;
-    }
-
-    set element(value: SVGRectElement) {
-        this._element = value;
     }
 
     clone(): Transition {

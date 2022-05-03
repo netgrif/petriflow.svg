@@ -3,6 +3,7 @@ import {Arc} from '../arc/abstract-arc/arc';
 
 export abstract class NodeElement extends CanvasElement {
 
+    private _element: SVGGeometryElement;
     private _position: DOMPoint;
     private _arcs: Array<Arc>;
 
@@ -54,6 +55,14 @@ export abstract class NodeElement extends CanvasElement {
 
     set arcs(value: Array<Arc>) {
         this._arcs = value;
+    }
+
+    get element(): SVGGeometryElement {
+        return this._element;
+    }
+
+    set element(value: SVGGeometryElement) {
+        this._element = value;
     }
 
     isEnclosedByRectangle(rectangle: SVGRect): boolean {

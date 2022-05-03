@@ -16,19 +16,18 @@ export class Place extends LabeledObject {
         [1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
     private _markingTokens: Array<SVGCircleElement>;
-    private _element: SVGCircleElement;
     private _markingElement: SVGTextElement;
     private _marking: Text;
     private _tokensCount: number;
 
     constructor(id: string, label: string, marking: number, position: DOMPoint) {
         super(id, label, position);
-        this._element = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'circle') as SVGCircleElement;
-        this._element.id = `svg_place_${id}`;
-        this._element.setAttributeNS(null, 'r', `${CanvasConfiguration.RADIUS}`);
-        this._element.setAttributeNS(null, 'stroke-width', '2');
-        this._element.setAttributeNS(null, 'fill', 'white');
-        this.container.appendChild(this._element);
+        this.element = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'circle') as SVGCircleElement;
+        this.element.id = `svg_place_${id}`;
+        this.element.setAttributeNS(null, 'r', `${CanvasConfiguration.RADIUS}`);
+        this.element.setAttributeNS(null, 'stroke-width', '2');
+        this.element.setAttributeNS(null, 'fill', 'white');
+        this.container.appendChild(this.element);
         this._tokensCount = marking;
 
         this._markingTokens = [];
@@ -66,13 +65,13 @@ export class Place extends LabeledObject {
 
     activate(): void {
         super.activate();
-        this._element.setAttributeNS(null, 'class', 'svg-active-stroke');
+        this.element.setAttributeNS(null, 'class', 'svg-active-stroke');
     }
 
     deactivate(): void {
         super.deactivate();
-        this._element.setAttributeNS(null, 'stroke', 'black');
-        this._element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
+        this.element.setAttributeNS(null, 'stroke', 'black');
+        this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
     }
 
     move(position: DOMPoint): void {
@@ -144,8 +143,8 @@ export class Place extends LabeledObject {
     }
 
     private setElementPosition(position: DOMPoint) {
-        this._element.setAttributeNS(null, 'cx', `${position.x}`);
-        this._element.setAttributeNS(null, 'cy', `${position.y}`);
+        this.element.setAttributeNS(null, 'cx', `${position.x}`);
+        this.element.setAttributeNS(null, 'cy', `${position.y}`);
         this._markingElement.setAttributeNS(null, 'x', `${position.x}`);
         this._markingElement.setAttributeNS(null, 'y', `${position.y}`);
     }
@@ -178,14 +177,6 @@ export class Place extends LabeledObject {
         this._markingTokens = value;
     }
 
-    get element(): any {
-        return this._element;
-    }
-
-    set element(value: any) {
-        this._element = value;
-    }
-
     get markingElement(): any {
         return this._markingElement;
     }
@@ -211,6 +202,6 @@ export class Place extends LabeledObject {
     }
 
     clone(): Place {
-        return new Place(this.id, this.label.data, this.marking, this.position);
+        return new Place(this.id, this.label.data, this.tokensCount, this.position);
     }
 }

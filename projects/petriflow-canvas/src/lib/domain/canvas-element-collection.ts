@@ -1,14 +1,16 @@
-import {StaticPlace} from '../../../../canvas/src/lib/canvas/svg-elements/place/static-place';
-import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
-import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
 import {NodeElement} from '../../../../canvas/src/lib/canvas/svg-elements/svg-objects/node-element';
-import {SelectableArc} from '../svg-elements/selectable-arc';
+import {PetriflowArc} from '../svg-elements/petriflow-arc';
+import {PetriflowPlace} from '../svg-elements/petriflow-place';
+import {PetriflowTransition} from '../svg-elements/petriflow-transition';
+import {Arc} from '../../../../canvas/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
+import {PetriflowNode} from '../svg-elements/petriflow-node';
+import {PetriflowCanvasElement} from '../svg-elements/petriflowCanvasElement';
 
 export class CanvasElementCollection {
 
-    private _places: Array<Place | StaticPlace>;
-    private _transitions: Array<Transition>;
-    private _arcs: Array<SelectableArc>;
+    private _places: Array<PetriflowPlace>;
+    private _transitions: Array<PetriflowTransition>;
+    private _arcs: Array<PetriflowArc<Arc>>;
 
     constructor() {
         this._places = [];
@@ -16,35 +18,39 @@ export class CanvasElementCollection {
         this._arcs = [];
     }
 
-    get places(): Array<Place | StaticPlace> {
+    get places(): Array<PetriflowPlace> {
         return this._places;
     }
 
-    set places(value: Array<Place | StaticPlace>) {
+    set places(value: Array<PetriflowPlace>) {
         this._places = value;
     }
 
-    get transitions(): Array<Transition> {
+    get transitions(): Array<PetriflowTransition> {
         return this._transitions;
     }
 
-    set transitions(value: Array<Transition>) {
+    set transitions(value: Array<PetriflowTransition>) {
         this._transitions = value;
     }
 
-    get arcs(): Array<SelectableArc> {
+    get arcs(): Array<PetriflowArc<Arc>> {
         return this._arcs;
     }
 
-    set arcs(value: Array<SelectableArc>) {
+    set arcs(value: Array<PetriflowArc<Arc>>) {
         this._arcs = value;
     }
 
-    get nodes(): Array<NodeElement> {
+    get nodes(): Array<PetriflowNode<NodeElement>> {
         return [...this._places, ...this._transitions];
     }
 
-    get selected(): Array<NodeElement> {
+    get selected(): Array<PetriflowNode<NodeElement>> {
         return [...this.nodes.filter(node => node.isSelected())];
+    }
+
+    get all(): Array<PetriflowCanvasElement> {
+        return [...this.nodes, ...this.arcs];
     }
 }

@@ -1,71 +1,57 @@
 import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
-import {SelectableNode} from './selectable-node';
+import {PetriflowNode} from './petriflow-node';
 import {CanvasConfiguration} from '../../../../canvas/src/lib/canvas/canvas-configuration';
 
-export class PetriflowTransition extends Transition implements SelectableNode {
+export class PetriflowTransition extends PetriflowNode<Transition> {
 
-    private static COUNTER = 0;
     private _finishArrow: SVGPolygonElement;
     private _cancelArrow: SVGPolygonElement;
     private _iconElement: SVGTextElement;
     private _icon: Text;
 
-    private _onClickEvent;
-
-    constructor(position: DOMPoint, icon?: string) {
-        super(`t${PetriflowTransition.COUNTER++}`, `t${PetriflowTransition.COUNTER}`, position);
-        const id = `t${PetriflowTransition.COUNTER}`;
+    constructor(transition: Transition, icon?: string) {
+        super(transition);
         this._cancelArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
-        this._cancelArrow.id = `svg_transition_start_${id}`;
+        this._cancelArrow.id = `svg_transition_start_${transition.id}`;
         this._cancelArrow.setAttributeNS(null, 'fill', 'white');
         this._cancelArrow.setAttributeNS(null, 'stroke', 'white');
         this._cancelArrow.setAttributeNS(null, 'stroke-width', '2');
-        this.container.appendChild(this._cancelArrow);
+        this.element.container.appendChild(this._cancelArrow);
 
         this._finishArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
-        this._finishArrow.id = `svg_transition_finish_${id}`;
+        this._finishArrow.id = `svg_transition_finish_${transition.id}`;
         this._finishArrow.setAttributeNS(null, 'fill', 'white');
         this._finishArrow.setAttributeNS(null, 'stroke', 'white');
         this._finishArrow.setAttributeNS(null, 'stroke-width', '2');
-        this.container.appendChild(this._finishArrow);
+        this.element.container.appendChild(this._finishArrow);
 
         if (icon) {
             this._iconElement = (document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as unknown) as SVGTextElement;
             this._iconElement.setAttributeNS(null, 'style', `font-family: Material Icons;font-size:${CanvasConfiguration.ICON_SIZE}`);
             this._icon = document.createTextNode(icon);
             this._iconElement.appendChild(this._icon);
-            this.container.appendChild(this._iconElement);
+            this.element.container.appendChild(this._iconElement);
         }
-        this.move(position);
         this.deactivate();
-
-        this.element.onmouseenter = () => {
-            this.activate();
-        };
-        this.element.onmouseleave = () => {
-            if (!this.isSelected()) {
-                this.deactivate();
-            }
-        };
     }
 
     move(position: DOMPoint) {
-        super.move(position);
-        this._cancelArrow.setAttributeNS(null, 'points', this.cancelArrowPoints(position));
-        this._finishArrow.setAttributeNS(null, 'points', this.finishArrowPoints(position));
+        this.element.move(position);
+        this._cancelArrow.setAttributeNS(null, 'points', this.element.cancelArrowPoints(position));
+        this._finishArrow.setAttributeNS(null, 'points', this.element.finishArrowPoints(position));
         if (this._iconElement) {
             this.setIconElementPosition(position);
         }
     }
 
     activate(): void {
-        super.activate();
+        this.element.activate();
         // this._cancelArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-cancel-active');
         // this._finishArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-finish-active');
     }
 
     deactivate(): void {
-        super.deactivate();
+        this.element.deactivate();
         this._cancelArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-cancel-inactive');
         this._finishArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-finish-inactive');
     }
@@ -76,13 +62,12 @@ export class PetriflowTransition extends Transition implements SelectableNode {
     }
 
     setEnabled(firing: boolean) {
-        super.setEnabled(firing);
+        this.element.setEnabled(firing);
         this.setIconFiringClass(firing);
-
     }
 
     setDisabled(firing: boolean) {
-        super.setDisabled(firing);
+        this.element.setDisabled(firing);
         this.setIconFiringClass(firing);
     }
 
@@ -106,14 +91,6 @@ export class PetriflowTransition extends Transition implements SelectableNode {
     select(): void {
         this.setSelected(true);
         this.activate();
-    }
-
-    getPosition(): DOMPoint {
-        return this.position;
-    }
-
-    getContainer(): SVGGElement {
-        return this.container;
     }
 
     get finishArrow(): SVGPolygonElement {
@@ -149,16 +126,9 @@ export class PetriflowTransition extends Transition implements SelectableNode {
     }
 
     clone(): PetriflowTransition {
-        const cloned = new PetriflowTransition(this.position, this.icon?.textContent);
-        cloned.element.onclick = () => this._onClickEvent(cloned);
-        cloned.setOnClick((clone) => this._onClickEvent(clone));
+        const cloned = new PetriflowTransition(this.element.clone());
+        cloned.element.element.onclick = () => this.onClickEvent(cloned);
+        cloned.setOnClick((clone) => this.onClickEvent(clone));
         return cloned;
-    }
-
-    setOnClick(event: (element) => void): void {
-        this._onClickEvent = event;
-        this.element.onclick = () => {
-            event(this);
-        };
     }
 }
