@@ -1,5 +1,6 @@
 import {Place} from 'projects/canvas/src/lib/canvas/svg-elements/place/place';
 import {PetriflowNode} from './petriflow-node';
+import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
 
 export class PetriflowPlace extends PetriflowNode<Place> {
 
@@ -31,6 +32,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
         });
         cloned.setOnClick((clone) => this.onClickEvent(clone));
         cloned.setOnTokenClickEvent((clone) => this._onTokenClickEvent(clone));
+        cloned.changeId(`p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`);
         return cloned;
     }
 
@@ -41,5 +43,10 @@ export class PetriflowPlace extends PetriflowNode<Place> {
                 event(this);
             };
         });
+    }
+
+    changeId(id: string) {
+        this.canvasElement.id = `svg_place_${id}`;
+        this.canvasElement.label.textContent = id;
     }
 }

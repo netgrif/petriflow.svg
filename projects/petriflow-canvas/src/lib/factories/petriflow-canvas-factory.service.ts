@@ -20,15 +20,12 @@ import {ResetArc} from '../../../../canvas/src/lib/canvas/svg-elements/arc/reset
 import {RegularPlaceTransitionArc} from '../../../../canvas/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
 import {ReadArc} from '../../../../canvas/src/lib/canvas/svg-elements/arc/read-arc';
 import {RegularTransitionPlaceArc} from '../../../../canvas/src/lib/canvas/svg-elements/arc/regular-transition-place-arc';
+import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PetriflowCanvasFactoryService {
-
-    private _transitionIdCounter = 0;
-    private _placeIdCounter = 0;
-    private _arcIdCounter = 0;
 
     private _source: PetriflowNode<NodeElement>;
     private _arcLine: SVGElement;
@@ -37,7 +34,7 @@ export class PetriflowCanvasFactoryService {
     }
 
     createPlace(marking: number, position: DOMPoint): PetriflowPlace {
-        const place = new Place(`p${this._placeIdCounter++}`, `p${this._placeIdCounter}`, marking, position);
+        const place = new Place(`p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, `p${PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, marking, position);
         const petriflowPlace = new PetriflowPlace(place);
         this._petriflowCanvasService.canvas.add(place);
         this._petriflowCanvasService.petriflowElementsCollection.places.push(petriflowPlace);
@@ -45,7 +42,7 @@ export class PetriflowCanvasFactoryService {
     }
 
     createStaticPlace(marking: number, position: DOMPoint): PetriflowPlace {
-        const place = new StaticPlace(`p${this._placeIdCounter++}`, `p${this._placeIdCounter}`, marking, position);
+        const place = new StaticPlace(`p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, `p${PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, marking, position);
         const petriflowPlace = new PetriflowPlace(place);
         this._petriflowCanvasService.canvas.add(place);
         this._petriflowCanvasService.petriflowElementsCollection.places.push(petriflowPlace);
@@ -53,7 +50,7 @@ export class PetriflowCanvasFactoryService {
     }
 
     createTransition(position: DOMPoint, icon?: string): PetriflowTransition {
-        const transition = new Transition(`t${this._transitionIdCounter++}`, `t${this._transitionIdCounter}`, position);
+        const transition = new Transition(`t${++PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`, `t${PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`, position);
         const petriflowTransition = new PetriflowTransition(transition, icon);
         this._petriflowCanvasService.canvas.add(transition);
         this._petriflowCanvasService.petriflowElementsCollection.transitions.push(petriflowTransition);

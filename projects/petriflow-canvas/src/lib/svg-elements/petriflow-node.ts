@@ -81,4 +81,6 @@ export abstract class PetriflowNode<T extends NodeElement> implements PetriflowC
     }
 
     abstract clone(): PetriflowNode<NodeElement>;
+
+    abstract changeId(id: string);
 }

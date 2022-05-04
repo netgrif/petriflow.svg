@@ -1,6 +1,7 @@
 import {Transition} from 'projects/canvas/src/lib/canvas/svg-elements/transition/transition';
 import {PetriflowNode} from './petriflow-node';
 import {CanvasConfiguration} from '../../../../canvas/src/lib/canvas/canvas-configuration';
+import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
 
 export class PetriflowTransition extends PetriflowNode<Transition> {
 
@@ -129,6 +130,12 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         const cloned = new PetriflowTransition(this.canvasElement.clone());
         cloned.canvasElement.element.onclick = () => this.onClickEvent(cloned);
         cloned.setOnClick((clone) => this.onClickEvent(clone));
+        cloned.changeId(`t${++PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`);
         return cloned;
+    }
+
+    changeId(id: string) {
+        this.canvasElement.id = `svg_transition_${id}`;
+        this.canvasElement.label.textContent = id;
     }
 }
