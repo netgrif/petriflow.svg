@@ -167,7 +167,7 @@ export class PetriflowCanvasConfigurationService {
                 this._petriflowCanvasService.petriflowElementsCollection.selected.includes(element as PetriflowNode<NodeElement>)) {
                 this.initialiseClipboard();
                 this._petriflowCanvasService.petriflowElementsCollection.selected.forEach(selectedElement => {
-                    this.clipboard.appendChild(selectedElement.element.container);
+                    this.clipboard.appendChild(selectedElement.canvasElement.container);
                 });
                 this._petriflowCanvasService.petriflowElementsCollection.arcs.filter(arc => arc.isSelected()).forEach(selectedElement => {
                     this.clipboard.appendChild(selectedElement.element.container);
@@ -181,13 +181,14 @@ export class PetriflowCanvasConfigurationService {
     private moveElement(e: MouseEvent) {
         if (this._mode === CanvasMode.MOVE && this._petriflowCanvasFactory.source && !this.clipboard) {
             const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
-            this._petriflowCanvasFactory.source.element.move(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale));
+            this._petriflowCanvasFactory.source.canvasElement.move(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale));
         }
     }
 
     private moveArc(e: MouseEvent) {
         const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
-        const intersect = this._source.element.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
+        const intersect = this._source.canvasElement.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale,
+            (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
         const xLineLength = ((e.x - offsetPanZoom.x) / offsetPanZoom.scale) - intersect.x;
         const yLineLength = ((e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale) - intersect.y;
         const arcLength = Math.sqrt(xLineLength * xLineLength + yLineLength * yLineLength);
@@ -201,21 +202,21 @@ export class PetriflowCanvasConfigurationService {
     private deleteElement(element: PetriflowNode<NodeElement>) {
         if (this._mode === CanvasMode.REMOVE) {
             const removedArcs = [];
-            element.element.arcs.forEach(arc => {
+            element.canvasElement.arcs.forEach(arc => {
                     this._petriflowCanvasService.canvas.remove(arc);
                     removedArcs.push(arc);
                 }
             );
             this._petriflowCanvasService.petriflowElementsCollection.nodes.forEach(petriflowElement => {
-                petriflowElement.element.deleteArcs(removedArcs);
+                petriflowElement.canvasElement.deleteArcs(removedArcs);
             });
-            this._petriflowCanvasService.canvas.remove(element.element);
+            this._petriflowCanvasService.canvas.remove(element.canvasElement);
         }
     }
 
-    private deleteArc(element: Arc) {
+    private deleteArc(petriflowElement: PetriflowArc<Arc>) {
         if (this._mode === CanvasMode.REMOVE) {
-            this._petriflowCanvasService.canvas.remove(element);
+            this._petriflowCanvasService.canvas.remove(petriflowElement.element);
         }
     }
 
@@ -243,7 +244,7 @@ export class PetriflowCanvasConfigurationService {
         const length = collection.length;
         collection.forEach(element => {
             const newElement = element.clone();
-            this.clipboard.appendChild(newElement.element.container);
+            this.clipboard.appendChild(newElement.canvasElement.container);
             collection.push(newElement);
         });
         collection.splice(0, length);
@@ -257,17 +258,17 @@ export class PetriflowCanvasConfigurationService {
         }
     }
 
-    private createArcByDeterminedType(element: PetriflowArc<Arc>, clipboardContent: Array<PetriflowNode<NodeElement>>): PetriflowArc<Arc> {
-        const source = element.element.start;
-        const destination = element.element.end;
+    private createArcByDeterminedType(petriflowArc: PetriflowArc<Arc>, clipboardContent: Array<PetriflowNode<NodeElement>>): PetriflowArc<Arc> {
+        const source = petriflowArc.element.start;
+        const destination = petriflowArc.element.end;
         const startIndex = clipboardContent.findIndex(startElement => {
-            return source.container === startElement.element.container;
+            return source.container === startElement.canvasElement.container;
         });
         const endIndex = clipboardContent.findIndex(endElement => {
-            return destination.container === endElement.element.container;
+            return destination.container === endElement.canvasElement.container;
         });
-        return element.cloneArc(this._petriflowCanvasService.petriflowClipboardElementsCollection.nodes[startIndex].element,
-            this._petriflowCanvasService.petriflowClipboardElementsCollection.nodes[endIndex].element);
+        return petriflowArc.cloneArc(this._petriflowCanvasService.petriflowClipboardElementsCollection.nodes[startIndex].canvasElement,
+            this._petriflowCanvasService.petriflowClipboardElementsCollection.nodes[endIndex].canvasElement);
     }
 
     private onCanvasMouseMoveClipboard(event: MouseEvent) {
@@ -287,16 +288,16 @@ export class PetriflowCanvasConfigurationService {
     deleteSelectedCollection(collection: Array<PetriflowNode<NodeElement>>) {
         let removedArcs = [];
         collection.filter(element => element.isSelected()).forEach(selectedElement => {
-            selectedElement.element.arcs.forEach(arc => {
+            selectedElement.canvasElement.arcs.forEach(arc => {
                 this._petriflowCanvasService.canvas.remove(arc);
                 removedArcs.push(arc);
             });
-            this._petriflowCanvasService.petriflowElementsCollection.nodes.forEach(petriflowElement => petriflowElement.element.deleteArcs(removedArcs));
+            this._petriflowCanvasService.petriflowElementsCollection.nodes.forEach(petriflowElement => petriflowElement.canvasElement.deleteArcs(removedArcs));
             removedArcs.forEach(arc => {
                 this._petriflowCanvasService.petriflowElementsCollection.arcs.splice(this._petriflowCanvasService.petriflowElementsCollection.arcs.indexOf(arc), 1);
             });
             removedArcs = [];
-            this._petriflowCanvasService.canvas.remove(selectedElement.element);
+            this._petriflowCanvasService.canvas.remove(selectedElement.canvasElement);
             collection.splice(collection.indexOf(selectedElement), 1);
         });
     }
@@ -323,7 +324,7 @@ export class PetriflowCanvasConfigurationService {
     private copyFromClipboardToCollection(matrix: SVGMatrix, collectionFrom: Array<PetriflowNode<NodeElement>>, collectionTo: Array<PetriflowNode<NodeElement>>) {
         collectionFrom.forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);
-            this._petriflowCanvasService.canvas.add(copyElement.element);
+            this._petriflowCanvasService.canvas.add(copyElement.canvasElement);
             collectionTo.push(copyElement);
         });
     }
@@ -332,7 +333,7 @@ export class PetriflowCanvasConfigurationService {
         const matrix = (this.clipboard as SVGSVGElement).transform?.baseVal[0]?.matrix;
         this._petriflowCanvasService.petriflowElementsCollection.selected.forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);
-            this._petriflowCanvasService.canvas.add(copyElement.element);
+            this._petriflowCanvasService.canvas.add(copyElement.canvasElement);
         });
         this._petriflowCanvasService.petriflowElementsCollection.arcs.filter(arc => arc.isSelected()).forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);

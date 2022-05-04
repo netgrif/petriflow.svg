@@ -61,7 +61,7 @@ export class PetriflowCanvasFactoryService {
     }
 
     addArc(element: PetriflowNode<NodeElement>, type: string): PetriflowArc<Arc> | SVGElement {
-        if (this._source instanceof Place) {
+        if (this._source.canvasElement instanceof Place) {
             switch (type) {
                 case 'arc': {
                     return this.createArcByGenericType(element, PetriflowPlaceTransitionArc, RegularPlaceTransitionArc, RegularPlaceTransitionArc.ID);
@@ -88,7 +88,7 @@ export class PetriflowCanvasFactoryService {
         } else if (element.constructor !== this._source.constructor) {
             this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
             this.arcLine = undefined;
-            const arc: A = this.createArc(typeArc, this._source.element, element.element, []);
+            const arc: A = this.createArc(typeArc, this._source.canvasElement, element.canvasElement, []);
             const petriflowArc: T = this.createArc(type, arc);
 
             this._petriflowCanvasService.canvas.container.appendChild(arc.container);

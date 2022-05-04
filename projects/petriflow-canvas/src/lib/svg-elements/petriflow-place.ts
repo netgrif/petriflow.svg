@@ -7,26 +7,26 @@ export class PetriflowPlace extends PetriflowNode<Place> {
 
     constructor(place: Place) {
         super(place);
-        this.element.markingTokens.forEach(markingToken => {
+        this.canvasElement.markingTokens.forEach(markingToken => {
             this.setPlaceActions(markingToken);
         });
     }
 
     private setPlaceActions(svgElement: SVGElement) {
         svgElement.onmouseenter = () => {
-            this.element.activate();
+            this.canvasElement.activate();
         };
         svgElement.onmouseleave = () => {
             if (!this.isSelected()) {
-                this.element.deactivate();
+                this.canvasElement.deactivate();
             }
         };
     }
 
     clone(): PetriflowPlace {
-        const cloned = new PetriflowPlace(this.element.clone());
-        cloned.element.element.onclick = () => this.onClickEvent(cloned);
-        cloned.element.markingTokens.forEach(token => {
+        const cloned = new PetriflowPlace(this.canvasElement.clone());
+        cloned.canvasElement.element.onclick = () => this.onClickEvent(cloned);
+        cloned.canvasElement.markingTokens.forEach(token => {
             token.onclick = () => this._onTokenClickEvent(cloned);
         });
         cloned.setOnClick((clone) => this.onClickEvent(clone));
@@ -36,7 +36,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
 
     setOnTokenClickEvent(event: (element) => void): void {
         this._onTokenClickEvent = event;
-        this.element.markingTokens.forEach(token => {
+        this.canvasElement.markingTokens.forEach(token => {
             token.onclick = () => {
                 event(this);
             };

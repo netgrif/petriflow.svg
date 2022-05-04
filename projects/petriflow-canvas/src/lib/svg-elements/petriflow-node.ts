@@ -3,73 +3,73 @@ import {NodeElement} from '../../../../canvas/src/lib/canvas/svg-elements/svg-ob
 
 export abstract class PetriflowNode<T extends NodeElement> implements PetriflowCanvasElement {
 
-    protected _element: T;
+    protected _canvasElement: T;
     protected _onClickEvent;
 
-    protected constructor(element: T) {
-        this._element = element;
+    protected constructor(canvasElement: T) {
+        this._canvasElement = canvasElement;
 
-        element.element.onmouseenter = () => {
-            this.element.activate();
+        canvasElement.element.onmouseenter = () => {
+            this.canvasElement.activate();
         };
-        element.element.onmouseleave = () => {
+        canvasElement.element.onmouseleave = () => {
             if (!this.isSelected()) {
-                this.element.deactivate();
+                this.canvasElement.deactivate();
             }
         };
     }
 
     setOnClick(event: (element) => void): void {
         this.onClickEvent = event;
-        this.element.element.onclick = () => {
+        this.canvasElement.element.onclick = () => {
             event(this);
         };
     }
 
     isSelected(): boolean {
-        return this.element.isSelected();
+        return this.canvasElement.isSelected();
     }
 
     deselect(): void {
-        this.element.setSelected(false);
-        this.element.deactivate();
+        this.canvasElement.setSelected(false);
+        this.canvasElement.deactivate();
     }
 
     select(): void {
-        this.element.setSelected(true);
-        this.element.activate();
+        this.canvasElement.setSelected(true);
+        this.canvasElement.activate();
     }
 
     getPosition(): DOMPoint {
-        return this.element.position;
+        return this.canvasElement.position;
     }
 
     activate(): void {
-        this.element.activate();
+        this.canvasElement.activate();
     }
 
     deactivate(): void {
-        this.element.deactivate();
+        this.canvasElement.deactivate();
     }
 
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
-        return this.element.isEnclosedByRectangle(rectangle);
+        return this.canvasElement.isEnclosedByRectangle(rectangle);
     }
 
     moveBy(x: number, y: number): void {
-        this.element.moveBy(x, y);
+        this.canvasElement.moveBy(x, y);
     }
 
     setSelected(value: boolean): void {
-        this.element.setSelected(value);
+        this.canvasElement.setSelected(value);
     }
 
-    get element(): T {
-        return this._element;
+    get canvasElement(): T {
+        return this._canvasElement;
     }
 
-    set element(value: T) {
-        this._element = value;
+    set canvasElement(value: T) {
+        this._canvasElement = value;
     }
 
     get onClickEvent() {
