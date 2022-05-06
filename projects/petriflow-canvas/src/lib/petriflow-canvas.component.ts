@@ -16,6 +16,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
 
     @ViewChild('canvas') canvasElement: ElementRef;
     private _canvas: PetriflowCanvas;
+    private _mouseEvent: MouseEvent;
 
     constructor(private _canvasService: PetriflowCanvasService, private _canvasConfig: PetriflowCanvasConfigurationService,
                 private _snackBar: MatSnackBar) {
@@ -66,12 +67,12 @@ export class PetriflowCanvasComponent implements AfterViewInit {
 
     @HostListener('window:keydown.+', ['$event'])
     onPlusButton() {
-        this._canvasService.panzoom.smoothZoom(0, 0, PetriflowCanvasConfiguration.PANZOOM_ZOOM_IN_MULTIPLIER);
+        this._canvasService.panzoom.smoothZoom(this._mouseEvent.x, this._mouseEvent.y, PetriflowCanvasConfiguration.PANZOOM_ZOOM_IN_MULTIPLIER);
     }
 
     @HostListener('window:keydown.-', ['$event'])
     onMinusButton() {
-        this._canvasService.panzoom.smoothZoom(0, 0, PetriflowCanvasConfiguration.PANZOOM_ZOOM_OUT_MULTIPLIER);
+        this._canvasService.panzoom.smoothZoom(this._mouseEvent.x, this._mouseEvent.y, PetriflowCanvasConfiguration.PANZOOM_ZOOM_OUT_MULTIPLIER);
     }
 
     @HostListener('window:keydown.ArrowUp', ['$event'])
@@ -92,6 +93,11 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     @HostListener('window:keydown.ArrowLeft', ['$event'])
     onLeftButton() {
         this._canvasService.panzoom.moveBy(PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, false);
+    }
+
+    @HostListener('mousemove', ['$event'])
+    onMouseMove($event: MouseEvent) {
+        this._mouseEvent = $event;
     }
 
     openSnackBar(message: string) {
