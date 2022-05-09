@@ -1,52 +1,57 @@
-<div class="test">
-    <mat-toolbar fxLayout="row" class="app-container mat-toolbar mat-toolbar-single-row">
-        <mat-toolbar-row fxFlex>
-            <mat-icon id="netgrif-icon" svgIcon="netgrif_logo"></mat-icon>
-            <mat-button-toggle-group [value]="_mode" fxLayoutAlign="start end">
-                <mat-button-toggle mat-button [value]="canvasMode.SELECT" (click)="changeCanvasMode(canvasMode.SELECT)">
-                    <mat-icon>open_with</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.LASSO" (click)="changeCanvasMode(canvasMode.LASSO, false)">
-                    <mat-icon>tab_unselected</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.CREATE_TRANSITION" (click)="changeCanvasMode(canvasMode.CREATE_TRANSITION)">
-                    <mat-icon svgIcon="transition"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.CREATE_PLACE" (click)="changeCanvasMode(canvasMode.CREATE_PLACE)">
-                    <mat-icon svgIcon="place"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.CREATE_REGULAR_ARC" (click)="changeCanvasMode(canvasMode.CREATE_REGULAR_ARC)">
-                    <mat-icon svgIcon="arc"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.CREATE_RESET_ARC" (click)="changeCanvasMode(canvasMode.CREATE_RESET_ARC)">
-                    <mat-icon svgIcon="resetarc"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.CREATE_INHIBITOR_ARC" (click)="changeCanvasMode(canvasMode.CREATE_INHIBITOR_ARC)">
-                    <mat-icon svgIcon="inhibitor"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.CREATE_READ_ARC" (click)="changeCanvasMode(canvasMode.CREATE_READ_ARC)">
-                    <mat-icon svgIcon="read"></mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.MOVE" (click)="changeCanvasMode(canvasMode.MOVE)">
-                    <mat-icon>all_out</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button [value]="canvasMode.REMOVE" (click)="changeCanvasMode(canvasMode.REMOVE)">
-                    <mat-icon>delete_outline</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button (click)="openDialog()">
-                    <mat-icon>info</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle mat-button id="reset-zoom-button" (click)="resetPanZoom()">
-                    <mat-icon>clear</mat-icon>
-                </mat-button-toggle>
-            </mat-button-toggle-group>
-            <button mat-raised-button id="source-button" (click)="goToLink('https://github.com/netgrif/petriflow-svg')">
-                <mat-icon svgIcon="github"></mat-icon>
-                Source
-            </button>
-        </mat-toolbar-row>
-    </mat-toolbar>
-    <div class="outer">
-        <lib-petriflow-canvas class="canvas"></lib-petriflow-canvas>
-    </div>
+<mat-toolbar fxLayout="row" class="app-container mat-toolbar mat-toolbar-single-row">
+    <mat-toolbar-row fxFlex>
+        <mat-icon id="netgrif-icon" svgIcon="netgrif_logo"></mat-icon>
+        <mat-button-toggle-group [value]="_mode" fxLayoutAlign="start end">
+            <mat-button-toggle mat-button [value]="canvasMode.SELECT" (click)="changeCanvasMode(canvasMode.SELECT)">
+                <mat-icon>open_with</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.LASSO"
+                               (click)="changeCanvasMode(canvasMode.LASSO, false)">
+                <mat-icon>tab_unselected</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.CREATE_TRANSITION"
+                               (click)="changeCanvasMode(canvasMode.CREATE_TRANSITION)">
+                <mat-icon svgIcon="transition"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.CREATE_PLACE"
+                               (click)="changeCanvasMode(canvasMode.CREATE_PLACE)">
+                <mat-icon svgIcon="place"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.CREATE_REGULAR_ARC"
+                               (click)="changeCanvasMode(canvasMode.CREATE_REGULAR_ARC)">
+                <mat-icon svgIcon="arc"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.CREATE_RESET_ARC"
+                               (click)="changeCanvasMode(canvasMode.CREATE_RESET_ARC)">
+                <mat-icon svgIcon="resetarc"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.CREATE_INHIBITOR_ARC"
+                               (click)="changeCanvasMode(canvasMode.CREATE_INHIBITOR_ARC)">
+                <mat-icon svgIcon="inhibitor"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.CREATE_READ_ARC"
+                               (click)="changeCanvasMode(canvasMode.CREATE_READ_ARC)">
+                <mat-icon svgIcon="read"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.MOVE" (click)="changeCanvasMode(canvasMode.MOVE)">
+                <mat-icon>all_out</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.REMOVE" (click)="changeCanvasMode(canvasMode.REMOVE)">
+                <mat-icon>delete_outline</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button (click)="openDialog()">
+                <mat-icon>info</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button id="reset-zoom-button" (click)="resetPanZoom()">
+                <mat-icon>clear</mat-icon>
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+        <button mat-raised-button id="source-button" (click)="goToLink('https://github.com/netgrif/petriflow-svg')">
+            <mat-icon svgIcon="github"></mat-icon>
+            Source
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="outer">
+    <lib-petriflow-canvas class="canvas"></lib-petriflow-canvas>
 </div>

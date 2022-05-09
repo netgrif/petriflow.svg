@@ -58,8 +58,8 @@ export class PetriflowCanvasConfigurationService {
                 this._petriflowCanvasService.deselectAll();
                 this._petriflowCanvasService.canvas.svg.deselectAll();
                 const offset = this._petriflowCanvasService.getPanZoomOffset();
-                const width = (e.x - offset.x) / offset.scale - this.mouseX;
-                const height = (e.y - toolbar?._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale - this.mouseY;
+                const width = (e.offsetX - offset.x) / offset.scale - this.mouseX;
+                const height = (e.offsetY - offset.y) / offset.scale - this.mouseY;
                 const newX = width > 0 ? this.mouseX : this.mouseX + width;
                 const newY = height > 0 ? this.mouseY : this.mouseY + height;
                 this.rectangle.setAttributeNS(null, 'width', `${Math.abs(width)}`);
@@ -81,8 +81,8 @@ export class PetriflowCanvasConfigurationService {
                 this.rectangle.setAttributeNS(null, 'stroke', 'black');
                 this.rectangle.setAttributeNS(null, 'stroke-width', '1');
                 this.rectangle.setAttributeNS(null, 'animation', 'dash 5s linear');
-                this.mouseX = (e.x - offset.x) / offset.scale;
-                this.mouseY = (e.y - toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale;
+                this.mouseX = (e.offsetX - offset.x) / offset.scale;
+                this.mouseY = (e.offsetY - offset.y) / offset.scale;
                 this.rectangle.setAttributeNS(null, 'x', `${this.mouseX}`);
                 this.rectangle.setAttributeNS(null, 'y', `${this.mouseY}`);
                 this._petriflowCanvasService.canvas.container.appendChild(this.rectangle);
@@ -181,16 +181,16 @@ export class PetriflowCanvasConfigurationService {
     private moveElement(e: MouseEvent) {
         if (this._mode === CanvasMode.MOVE && this._petriflowCanvasFactory.source && !this.clipboard) {
             const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
-            this._petriflowCanvasFactory.source.canvasElement.move(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale, (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale));
+            this._petriflowCanvasFactory.source.canvasElement.move(new DOMPoint((e.offsetX - offsetPanZoom.x) / offsetPanZoom.scale, (e.offsetY - offsetPanZoom.y) / offsetPanZoom.scale));
         }
     }
 
     private moveArc(e: MouseEvent) {
         const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
-        const intersect = this._source.canvasElement.getEdgeIntersection(new DOMPoint((e.x - offsetPanZoom.x) / offsetPanZoom.scale,
-            (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale), 0);
-        const xLineLength = ((e.x - offsetPanZoom.x) / offsetPanZoom.scale) - intersect.x;
-        const yLineLength = ((e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offsetPanZoom.y) / offsetPanZoom.scale) - intersect.y;
+        const intersect = this._source.canvasElement.getEdgeIntersection(new DOMPoint((e.offsetX - offsetPanZoom.x) / offsetPanZoom.scale,
+            (e.offsetY - offsetPanZoom.y) / offsetPanZoom.scale), 0);
+        const xLineLength = ((e.offsetX - offsetPanZoom.x) / offsetPanZoom.scale) - intersect.x;
+        const yLineLength = ((e.offsetY - offsetPanZoom.y) / offsetPanZoom.scale) - intersect.y;
         const arcLength = Math.sqrt(xLineLength * xLineLength + yLineLength * yLineLength);
         const arcLengthOffset = arcLength - CanvasConfiguration.ARROW_HEAD_SIZE;
         const arcRatio = arcLengthOffset / arcLength;
@@ -372,8 +372,8 @@ export class PetriflowCanvasConfigurationService {
     private createBreakpoint(e: MouseEvent, arc: PetriflowArc<Arc>) {
         if (this.mode === CanvasMode.MOVE && !this._selectedArc) {
             const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const mouseX = (e.x - offset.x) / offset.scale;
-            const mouseY = (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale;
+            const mouseX = (e.offsetX - offset.x) / offset.scale;
+            const mouseY = (e.offsetY - offset.y) / offset.scale;
             const newBreakpoint = new DOMPoint(mouseX, mouseY);
             arc.element.linePoints.splice(this.getBreakpointIndex(newBreakpoint, arc.element), 0, newBreakpoint);
             arc.element.move(arc.element.start, arc.element.end);
@@ -408,8 +408,8 @@ export class PetriflowCanvasConfigurationService {
     private moveBreakpoint(e: MouseEvent) {
         if (this.mode === CanvasMode.MOVE && this._breakpoint) {
             const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const mouseX = (e.x - offset.x) / offset.scale;
-            const mouseY = (e.y - this._toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale;
+            const mouseX = (e.offsetX - offset.x) / offset.scale;
+            const mouseY = (e.offsetY - offset.y) / offset.scale;
             this._breakpoint.x = mouseX;
             this._breakpoint.y = mouseY;
             this._selectedArc.element.move(this._selectedArc.element.start, this._selectedArc.element.end);

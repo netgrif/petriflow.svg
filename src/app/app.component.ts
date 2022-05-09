@@ -37,8 +37,8 @@ export class AppComponent implements AfterViewInit {
     private addTransition($event): void {
         if (this._petriflowConfigService.mode === CanvasMode.CREATE_TRANSITION) {
             const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const transition = this._petriflowFactoryService.createTransition(new DOMPoint(($event.x - offset.x) / offset.scale,
-                ($event.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
+            const transition = this._petriflowFactoryService.createTransition(new DOMPoint(($event.offsetX - offset.x) / offset.scale,
+                ($event.offsetY - offset.y) / offset.scale));
             this._petriflowConfigService.addTransitionEvents(transition);
 
         }
@@ -47,7 +47,7 @@ export class AppComponent implements AfterViewInit {
     private addPlace(e: MouseEvent) {
         if (this._petriflowConfigService.mode === CanvasMode.CREATE_PLACE) {
             const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const place = this._petriflowFactoryService.createPlace(0, new DOMPoint((e.x - offset.x) / offset.scale, (e.y - this.toolbar._elementRef.nativeElement.offsetHeight - offset.y) / offset.scale));
+            const place = this._petriflowFactoryService.createPlace(0, new DOMPoint((e.offsetX - offset.x) / offset.scale, (e.offsetY - offset.y) / offset.scale));
             this._petriflowConfigService.addPlaceEvents(place);
         }
     }
