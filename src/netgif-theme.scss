@@ -1,5 +1,4 @@
 @import '../node_modules/@angular/material/theming';
-@import '../node_modules/@netgrif/components/nae-theme';
 
 $typography: mat-typography-config(
     $font-family: Roboto,
@@ -78,7 +77,6 @@ $netgrif-accent: mat-palette($netgrif-blue, A200, A100, A400);
 $netgrif-warn: mat-palette($mat-red);
 
 $netgrif-theme: mat-light-theme($netgrif-primary, $netgrif-accent, $netgrif-warn);
-@include nae-lib-theme($netgrif-theme, $typography);
 
 body {
     ::-webkit-scrollbar-track {
@@ -101,3 +99,78 @@ body {
 }
 
 @include angular-material-theme($netgrif-theme);
+
+.svg-inactive-stroke {
+    stroke: black !important;
+}
+
+.svg-inactive-fill {
+    fill: black !important;
+}
+
+.svg-active-stroke {
+    stroke: map-get($netgrif-blue, A200) !important;
+}
+
+.svg-active-fill {
+    fill: map-get($netgrif-blue, A200) !important;
+}
+
+.svg-invisible-fill {
+    fill: none !important;
+}
+
+.svg-transition-enabled {
+    stroke: green;
+    fill: yellowgreen;
+}
+
+.svg-transition-disabled {
+    stroke: red;
+    fill: white;
+}
+
+.svg-transition-firing {
+    stroke: green;
+    fill: none;
+}
+
+.svg-fire-arrow-cancel-active {
+    fill: coral;
+    stroke: red;
+}
+
+.svg-fire-arrow-cancel-inactive {
+    fill: none;
+    stroke: none;
+}
+
+.svg-fire-arrow-finish-active {
+    stroke: green;
+    fill: yellowgreen;
+}
+
+.svg-fire-arrow-finish-inactive {
+    fill: none;
+    stroke: none;
+}
+
+.svg-icon-active {
+    display: block;
+}
+
+.svg-icon-inactive {
+    display: none;
+}
+
+.path {
+    stroke-dasharray: 2 5;
+    animation: dash 10s linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 400;
+    }
+}

@@ -133,6 +133,86 @@
                     }
                 }
             }
+        },
+        "petriflow-canvas": {
+            "projectType": "library",
+            "root": "projects/petriflow-canvas",
+            "sourceRoot": "projects/petriflow-canvas/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "projects/petriflow-canvas/tsconfig.lib.json",
+                        "project": "projects/petriflow-canvas/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/petriflow-canvas/tsconfig.lib.prod.json"
+                        }
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/petriflow-canvas/src/test.ts",
+                        "tsConfig": "projects/petriflow-canvas/tsconfig.spec.json",
+                        "karmaConfig": "projects/petriflow-canvas/karma.conf.js"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "projects/petriflow-canvas/tsconfig.lib.json",
+                            "projects/petriflow-canvas/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        },
+        "canvas": {
+            "projectType": "library",
+            "root": "projects/canvas",
+            "sourceRoot": "projects/canvas/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "projects/canvas/tsconfig.lib.json",
+                        "project": "projects/canvas/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/canvas/tsconfig.lib.prod.json"
+                        }
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/canvas/src/test.ts",
+                        "tsConfig": "projects/canvas/tsconfig.spec.json",
+                        "karmaConfig": "projects/canvas/karma.conf.js"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "projects/canvas/tsconfig.lib.json",
+                            "projects/canvas/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
         }
     },
     "defaultProject": "application-builder",

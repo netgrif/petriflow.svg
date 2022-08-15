@@ -1,14 +1,11 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {Canvas} from './canvas/canvas';
-import {Place} from './canvas/svg-elements/place/place';
-import {Transition} from './canvas/svg-elements/transition/transition';
-import {RegularPlaceTransitionArc} from './canvas/svg-elements/arc/regular-place-transition-arc';
-import {RegularTransitionPlaceArc} from './canvas/svg-elements/arc/regular-transition-place-arc';
-import {ReadArc} from './canvas/svg-elements/arc/read-arc';
-import {InhibitorArc} from './canvas/svg-elements/arc/inhibitor-arc';
-import {ResetArc} from './canvas/svg-elements/arc/reset-arc';
-import {PetriflowCanvas} from './canvas/petriflow-canvas';
-import {StaticPlace} from "./canvas/svg-elements/place/static-place";
+import {PetriflowCanvasService} from '../../projects/petriflow-canvas/src/lib/petriflow-canvas.service';
+import {MatToolbar} from '@angular/material/toolbar';
+import {PetriflowCanvasFactoryService} from '../../projects/petriflow-canvas/src/lib/factories/petriflow-canvas-factory.service';
+import {CanvasMode} from '../../projects/petriflow-canvas/src/lib/canvas-mode';
+import {PetriflowCanvasConfigurationService} from '../../projects/petriflow-canvas/src/lib/services/petriflow-canvas-configuration.service';
+import {MatDialog} from '@angular/material/dialog';
+import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
 
 @Component({
     selector: 'nab-root',
@@ -17,35 +14,76 @@ import {StaticPlace} from "./canvas/svg-elements/place/static-place";
 })
 export class AppComponent implements AfterViewInit {
 
-    @ViewChild('canvas') canvasElement: ElementRef;
-    private canvas: Canvas;
+    @ViewChild(MatToolbar) toolbar: MatToolbar;
+    @ViewChild('canvasComponent') canvasComponent: ElementRef;
+    public _mode: CanvasMode;
 
-    ngAfterViewInit() {
-        this.canvas = new PetriflowCanvas(this.canvasElement.nativeElement);
+    constructor(private _petriflowCanvasService: PetriflowCanvasService, private _petriflowFactoryService: PetriflowCanvasFactoryService,
+                private _petriflowConfigService: PetriflowCanvasConfigurationService, public dialog: MatDialog) {
+        this._mode = _petriflowConfigService.mode;
+    }
 
-        const places = [];
-        const transitions = [];
-        for (let i = 0; i < 11; i++) {
-            const place = new Place(`p${i}`, `p${i}`, i, new DOMPoint(40, 60 * (1 + i)));
-            const transition = new Transition(`t${i}`, `t${i}`, new DOMPoint(240, 60 * (i + 1)));
-            this.canvas.add(place);
-            this.canvas.add(transition);
-            places.push(place);
-            transitions.push(transition);
+    ngAfterViewInit(): void {
+        this._petriflowCanvasService.canvas.svg.onclick = (e) => {
+            this.addTransition(e);
+            this.addPlace(e);
+        };
+        this._petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg, this.toolbar);
+        this.toolbar._elementRef.nativeElement.onmouseenter = () => {
+            this._petriflowConfigService.deleteClipboard();
+        };
+    }
+
+    private addTransition($event): void {
+        if (this._petriflowConfigService.mode === CanvasMode.CREATE_TRANSITION) {
+            const offset = this._petriflowCanvasService.getPanZoomOffset();
+            const transition = this._petriflowFactoryService.createTransition(new DOMPoint(($event.offsetX - offset.x) / offset.scale,
+                ($event.offsetY - offset.y) / offset.scale));
+            this._petriflowConfigService.addTransitionEvents(transition);
+
         }
-        const staticPlace = new StaticPlace(`st1`, `test`, 1, new DOMPoint(300, 420));
-        this.canvas.add(staticPlace);
-        this.canvas.add(new RegularPlaceTransitionArc(places[0], transitions[0], [new DOMPoint(40, 20), new DOMPoint(240, 20)], '3'));
-        this.canvas.add(new RegularTransitionPlaceArc(transitions[1], places[1], [], '5'));
-        this.canvas.add(new ReadArc(places[2], transitions[2]));
-        this.canvas.add(new InhibitorArc(places[3], transitions[3]));
-        this.canvas.add(new ResetArc(places[4], transitions[4]));
-        this.canvas.add(new ResetArc(places[4], transitions[5]));
-        this.canvas.add(new RegularTransitionPlaceArc(transitions[0], places[7]));
-        this.canvas.add(new RegularTransitionPlaceArc(places[6], transitions[1]));
-        this.canvas.add(new RegularTransitionPlaceArc(transitions[6], staticPlace));
-        this.canvas.add(new RegularTransitionPlaceArc(places[0], places[10]));
+    }
 
-        console.log(new Place('', '', 0, new DOMPoint(100, 100)).getEdgeIntersection(new DOMPoint(100, 150), 1));
+    private addPlace(e: MouseEvent) {
+        if (this._petriflowConfigService.mode === CanvasMode.CREATE_PLACE) {
+            const offset = this._petriflowCanvasService.getPanZoomOffset();
+            const place = this._petriflowFactoryService.createPlace(0, new DOMPoint((e.offsetX - offset.x) / offset.scale, (e.offsetY - offset.y) / offset.scale));
+            this._petriflowConfigService.addPlaceEvents(place);
+        }
+    }
+
+    disablePreviousArcMode() {
+        if (this._petriflowFactoryService.arcLine) {
+            this._petriflowCanvasService.canvas.container.removeChild(this._petriflowFactoryService.arcLine);
+            this._petriflowFactoryService.source = undefined;
+            this._petriflowFactoryService.arcLine = undefined;
+        }
+    }
+
+    changeCanvasMode(mode: CanvasMode, panzoomEnabled = true, cursor?: string) {
+        this.disablePreviousArcMode();
+        this._petriflowConfigService.mode = mode;
+        if (panzoomEnabled && this._petriflowCanvasService.panzoom.isPaused()) {
+            this._petriflowCanvasService.panzoom.resume();
+        } else if (!panzoomEnabled && !this._petriflowCanvasService.panzoom.isPaused()) {
+            this._petriflowCanvasService.panzoom.pause();
+        }
+    }
+
+    goToLink(url: string) {
+        window.open(url, '_blank');
+    }
+
+    resetPanZoom() {
+        this._petriflowCanvasService.panzoom.moveTo(0, 0);
+        this._petriflowCanvasService.panzoom.zoomAbs(0, 0, 1);
+    }
+
+    public get canvasMode(): typeof CanvasMode {
+        return CanvasMode;
+    }
+
+    openDialog() {
+        this.dialog.open(PetriflowInfoDialogComponent);
     }
 }
