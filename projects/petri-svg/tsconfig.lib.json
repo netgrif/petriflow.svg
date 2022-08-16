@@ -1,0 +1,18 @@
+
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "inlineSources": true,
+        "lib": [
+            "dom",
+            "es2018"
+        ]
+    },
+    "include": [
+        "./src/lib/**/*"
+    ],
+    "exclude": [
+        "./src/test/test.ts",
+        "./**/*.spec.ts"
+    ]
+}

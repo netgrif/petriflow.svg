@@ -24,8 +24,11 @@
         "build": "ng build",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e",
-        "builder:sonar:ci": "node src/scripts/sonar-scanner-analysis.js",
+        "e2e": "ng projects/example-app/e2e",
+        "petrisvg:lint": "eslint projects/petri-svg/src --ext .ts",
+        "petrisvg:spell": "cspell --gitignore -s \"projects/petri-svg/**/*.{md,ts}\"",
+        "petrisvg:doc": "typedoc --tsconfig projects/petri-svg/tsconfig.lib.json --entryPoints projects/petri-svg/src/lib/index.ts --exclude **/*.spec.* --out projects/petri-svg/docs --theme default",
+        "builder:sonar:ci": "node projects/example-app/scripts/sonar-scanner-analysis.js",
         "builder:clean-dist": "rm -rf dist",
         "builder:build:prod": "ng build --prod --aot=false --build-optimizer=false",
         "ng-high-memory": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng serve"
@@ -106,7 +109,14 @@
         "ts-node": "~8.3.0",
         "tslint": "~5.18.0",
         "tslint-no-circular-imports": "^0.7.0",
-        "typescript": "~4.0.2",
+        "eslint": "~8.22.0",
+        "eslint-plugin-eslint-comments": "~3.2.0",
+        "eslint-plugin-import": "~2.26.0",
+        "@typescript-eslint/parser": "~5.33.1",
+        "@typescript-eslint/eslint-plugin": "~5.33.1",
+        "cspell": "~6.6.1",
+        "typedoc": "~0.23.10",
+        "typescript": "~4.7.4",
         "typescript-json-schema": "~0.42.0"
     }
 }

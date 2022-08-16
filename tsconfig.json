@@ -3,13 +3,8 @@
     "compilerOptions": {
         "baseUrl": "./",
         "outDir": "./dist",
-        "sourceMap": true,
-        "declaration": false,
-        "downlevelIteration": true,
-        "experimentalDecorators": true,
         "module": "esnext",
         "moduleResolution": "node",
-        "importHelpers": true,
         "target": "es5",
         "typeRoots": [
             "node_modules/@types"
@@ -23,21 +18,46 @@
                 "./node_modules/jszip/dist/jszip.min.js"
             ],
             "petriflow-canvas": [
-                "dist/petriflow-canvas/petriflow-canvas",
-                "dist/petriflow-canvas"
+                "dist/petriflow-svg"
             ],
             "canvas": [
-                "dist/canvas/canvas",
-                "dist/canvas"
+                "dist/petri-svg"
             ]
         },
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "strict": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "alwaysStrict": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+
+        /* Debugging options */
+        "traceResolution": false,
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "pretty": true
     },
+    "exclude": [
+        "node_modules/**",
+        "**/*.spec.*"
+    ],
     "angularCompilerOptions": {
         "fullTemplateTypeCheck": true,
         "strictInjectionParameters": true,
+        "structMetadataEmit": true,
+        "enableResourceInlining": true,
         "enableIvy": false
     }
 }
