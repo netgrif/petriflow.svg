@@ -16,12 +16,13 @@ jobs:
                 uses: actions/setup-node@v2
                 with:
                     node-version: 16
-            -   run: npm i --legacy-peer-deps
-            -   name: Build & test petri.svg
-                run: |
+            -   run: |
+                    npm i --legacy-peer-deps
                     cd projects/petri-svg
                     npm i
                     cd ../..
+            -   name: Build & test petri.svg
+                run: |
                     npm run petrisvg:build
                     npm run petrisvg:test:full
                     npm run petrisvg:doc

@@ -12,6 +12,10 @@ jobs:
                     node-version: 16
             -   name: Build & test libraries
             -   run: |
+                    npm i --legacy-peer-deps
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
                     npm run petrisvg:build
                     npm run petrisvg:test:full
                     npm i ./dist/petri-svg --save-optional --legacy-peer-deps
@@ -28,7 +32,11 @@ jobs:
                 with:
                     node-version: 16
                     registry-url: https://registry.npmjs.org/
-            -   run: npm i --legacy-peer-deps
+            -   run: |
+                    npm i --legacy-peer-deps
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
             -   name: Publish petri.svg
                 run: |
                     npm run petrisvg:build
@@ -56,7 +64,11 @@ jobs:
                 with:
                     node-version: 16
                     registry-url: https://npm.pkg.github.com
-            -   run: npm i --legacy-peer-deps
+            -   run: |
+                    npm i --legacy-peer-deps
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
             -   name: Publish petri.svg
                 run: |
                     npm run petrisvg:build

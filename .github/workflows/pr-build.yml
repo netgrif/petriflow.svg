@@ -1,4 +1,4 @@
-name: Build
+name: Pull Request Build & Test
 on:
     pull_request:
         types: [ opened, synchronize, reopened ]
@@ -11,15 +11,16 @@ jobs:
                 with:
                     fetch-depth: 0
             -   uses: actions/setup-node@v2
-                name: Full Test
+                name: Use Node.js 16
                 with:
                     node-version: 16
-            -   run: npm i --legacy-peer-deps
-            -   name: Build & test petri.svg
-                run: |
+            -   run: |
+                    npm i --legacy-peer-deps
                     cd projects/petri-svg
                     npm i
                     cd ../..
+            -   name: Build & test petri.svg
+                run: |
                     npm run petrisvg:build
                     npm run petrisvg:test:full
                     npm i ./dist/petri-svg --save-optional --legacy-peer-deps
