@@ -1,6 +1,5 @@
-import {NodeElement} from 'projects/petri-svg/src/lib/canvas/svg-elements/svg-objects/node-element';
+import {NodeElement, ResetArc} from '@netgrif/petri.svg';
 import {PetriflowArc} from '../petriflow-arc';
-import {ResetArc} from '../../../../../petri-svg/src/lib/canvas/svg-elements/arc/reset-arc';
 
 export class PetriflowResetArc extends PetriflowArc<ResetArc> {
 
@@ -9,6 +8,6 @@ export class PetriflowResetArc extends PetriflowArc<ResetArc> {
     }
 
     createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
-        return new PetriflowResetArc(new ResetArc(start, end, points, this._element.multiplicity?.textContent));
+        return new PetriflowResetArc(new ResetArc(start, end, points, multiplicity));
     }
 }

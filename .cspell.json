@@ -36,7 +36,10 @@
         "DATAGROUPS",
         "multichoice",
         "Multichoice",
-        "verdana"
+        "verdana",
+        "resetarc",
+        "panzoom",
+        "initialise"
     ],
     "flagWords": [],
     "ignorePaths": [

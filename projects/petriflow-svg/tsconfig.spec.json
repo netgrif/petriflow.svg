@@ -4,8 +4,13 @@
     "compilerOptions": {
         "outDir": "../../out-tsc/spec",
         "types": [
-            "jasmine"
-        ]
+            "jasmine",
+            "node"
+        ],
+        "target": "ES5",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
     },
     "files": [
         "src/test.ts"

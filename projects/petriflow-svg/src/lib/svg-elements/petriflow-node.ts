@@ -1,10 +1,11 @@
-import {PetriflowCanvasElement} from './petriflowCanvasElement';
-import {NodeElement} from '../../../../petri-svg/src/lib/canvas/svg-elements/svg-objects/node-element';
+import {PetriflowCanvasElement} from './petriflow-canvas-element';
+import {NodeElement} from '@netgrif/petri.svg';
+import {PetriflowNodeClickEventFunction, EMPTY_FUNCTION} from "../common";
 
 export abstract class PetriflowNode<T extends NodeElement> implements PetriflowCanvasElement {
 
     protected _canvasElement: T;
-    protected _onClickEvent;
+    protected _onClickEvent: PetriflowNodeClickEventFunction;
 
     protected constructor(canvasElement: T) {
         this._canvasElement = canvasElement;
@@ -17,9 +18,10 @@ export abstract class PetriflowNode<T extends NodeElement> implements PetriflowC
                 this.canvasElement.deactivate();
             }
         };
+        this._onClickEvent = EMPTY_FUNCTION;
     }
 
-    setOnClick(event: (element) => void): void {
+    setOnClick(event: PetriflowNodeClickEventFunction): void {
         this.onClickEvent = event;
         this.canvasElement.element.onclick = () => {
             event(this);
@@ -82,5 +84,5 @@ export abstract class PetriflowNode<T extends NodeElement> implements PetriflowC
 
     abstract clone(): PetriflowNode<NodeElement>;
 
-    abstract changeId(id: string);
+    abstract changeId(id: string): void;
 }

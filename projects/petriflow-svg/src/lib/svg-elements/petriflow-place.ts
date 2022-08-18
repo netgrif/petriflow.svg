@@ -1,16 +1,18 @@
-import {Place} from 'projects/petri-svg/src/lib/canvas/svg-elements/place/place';
+import {Place} from '@netgrif/petri.svg';
 import {PetriflowNode} from './petriflow-node';
 import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
+import {defaultPlace, EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from "../common";
 
 export class PetriflowPlace extends PetriflowNode<Place> {
 
-    private _onTokenClickEvent;
+    private _onTokenClickEvent: PetriflowNodeClickEventFunction;
 
     constructor(place: Place) {
         super(place);
         this.canvasElement.markingTokens.forEach(markingToken => {
             this.setPlaceActions(markingToken);
         });
+        this._onTokenClickEvent = EMPTY_FUNCTION;
     }
 
     private setPlaceActions(svgElement: SVGElement) {
@@ -25,7 +27,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
     }
 
     clone(): PetriflowPlace {
-        const cloned = new PetriflowPlace(this.canvasElement.clone());
+        const cloned = new PetriflowPlace(this.canvasElement.clone() ?? defaultPlace());
         cloned.canvasElement.element.onclick = () => this.onClickEvent(cloned);
         cloned.canvasElement.markingTokens.forEach(token => {
             token.onclick = () => this._onTokenClickEvent(cloned);
@@ -36,7 +38,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
         return cloned;
     }
 
-    setOnTokenClickEvent(event: (element) => void): void {
+    setOnTokenClickEvent(event: PetriflowNodeClickEventFunction): void {
         this._onTokenClickEvent = event;
         this.canvasElement.markingTokens.forEach(token => {
             token.onclick = () => {
@@ -45,7 +47,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
         });
     }
 
-    changeId(id: string) {
+    changeId(id: string): void {
         this.canvasElement.id = `svg_place_${id}`;
         this.canvasElement.label.textContent = id;
     }

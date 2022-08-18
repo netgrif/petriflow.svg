@@ -7,28 +7,28 @@ import {PetriflowCanvas} from './petriflow-canvas';
 import {PetriflowCanvasConfiguration} from './petriflow-canvas-configuration';
 
 @Component({
-    selector: 'lib-petriflow-petri-svg',
+    selector: 'petriflow-svg-canvas',
     templateUrl: './petriflow-canvas.component.html',
     styles: [],
     encapsulation: ViewEncapsulation.None
 })
 export class PetriflowCanvasComponent implements AfterViewInit {
 
-    @ViewChild('canvas') canvasElement: ElementRef;
-    private _canvas: PetriflowCanvas;
-    private _mouseEvent: MouseEvent;
+    @ViewChild('canvas') canvasElement: ElementRef | undefined;
+    private _canvas: PetriflowCanvas | undefined;
+    private _mouseEvent: MouseEvent | undefined;
 
     constructor(private _canvasService: PetriflowCanvasService, private _canvasConfig: PetriflowCanvasConfigurationService,
                 private _snackBar: MatSnackBar) {
     }
 
     ngAfterViewInit() {
-        this._canvas = new PetriflowCanvas(this.canvasElement.nativeElement);
+        this._canvas = new PetriflowCanvas(this.canvasElement?.nativeElement);
         this._canvasService.canvas = this._canvas;
         this._canvasService.panzoom = createPanZoom(this._canvas.container);
     }
 
-    get canvas(): PetriflowCanvas {
+    get canvas(): PetriflowCanvas | undefined {
         return this._canvas;
     }
 
@@ -67,32 +67,32 @@ export class PetriflowCanvasComponent implements AfterViewInit {
 
     @HostListener('window:keydown.+', ['$event'])
     onPlusButton() {
-        this._canvasService.panzoom.smoothZoom(this._mouseEvent.x, this._mouseEvent.y, PetriflowCanvasConfiguration.PANZOOM_ZOOM_IN_MULTIPLIER);
+        this._canvasService.panzoom?.smoothZoom(this._mouseEvent?.x ?? 0, this._mouseEvent?.y ?? 0, PetriflowCanvasConfiguration.PANZOOM_ZOOM_IN_MULTIPLIER);
     }
 
     @HostListener('window:keydown.-', ['$event'])
     onMinusButton() {
-        this._canvasService.panzoom.smoothZoom(this._mouseEvent.x, this._mouseEvent.y, PetriflowCanvasConfiguration.PANZOOM_ZOOM_OUT_MULTIPLIER);
+        this._canvasService.panzoom?.smoothZoom(this._mouseEvent?.x ?? 0, this._mouseEvent?.y ?? 0, PetriflowCanvasConfiguration.PANZOOM_ZOOM_OUT_MULTIPLIER);
     }
 
     @HostListener('window:keydown.ArrowUp', ['$event'])
     onUpButton() {
-        this._canvasService.panzoom.moveBy(0, PetriflowCanvasConfiguration.PANZOOM_MOVE, false);
+        this._canvasService.panzoom?.moveBy(0, PetriflowCanvasConfiguration.PANZOOM_MOVE, false);
     }
 
     @HostListener('window:keydown.ArrowRight', ['$event'])
     onRightButton() {
-        this._canvasService.panzoom.moveBy(-PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, false);
+        this._canvasService.panzoom?.moveBy(-PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, false);
     }
 
     @HostListener('window:keydown.ArrowDown', ['$event'])
     onDownButton() {
-        this._canvasService.panzoom.moveBy(0, -PetriflowCanvasConfiguration.PANZOOM_MOVE, false);
+        this._canvasService.panzoom?.moveBy(0, -PetriflowCanvasConfiguration.PANZOOM_MOVE, false);
     }
 
     @HostListener('window:keydown.ArrowLeft', ['$event'])
     onLeftButton() {
-        this._canvasService.panzoom.moveBy(PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, false);
+        this._canvasService.panzoom?.moveBy(PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, false);
     }
 
     @HostListener('mousemove', ['$event'])

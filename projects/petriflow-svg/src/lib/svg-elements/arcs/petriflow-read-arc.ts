@@ -1,6 +1,5 @@
-import {NodeElement} from 'projects/petri-svg/src/lib/canvas/svg-elements/svg-objects/node-element';
+import {NodeElement, ReadArc} from '@netgrif/petri.svg';
 import {PetriflowArc} from '../petriflow-arc';
-import {ReadArc} from '../../../../../petri-svg/src/lib/canvas/svg-elements/arc/read-arc';
 
 export class PetriflowReadArc extends PetriflowArc<ReadArc> {
 
@@ -9,6 +8,6 @@ export class PetriflowReadArc extends PetriflowArc<ReadArc> {
     }
 
     createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
-        return new PetriflowReadArc(new ReadArc(start, end, points, this._element.multiplicity?.textContent));
+        return new PetriflowReadArc(new ReadArc(start, end, points, multiplicity));
     }
 }

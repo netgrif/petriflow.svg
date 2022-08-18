@@ -1,7 +1,10 @@
 {
-  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/petriflow-canvas",
-  "lib": {
-    "entryFile": "src/public-api.ts"
-  }
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../dist/petriflow-svg",
+    "lib": {
+        "entryFile": "src/public-api.ts"
+    },
+    "allowedNonPeerDependencies": [
+        "@netgrif/petri.svg"
+    ]
 }

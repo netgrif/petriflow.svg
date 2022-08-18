@@ -252,3 +252,4 @@ out/
 **/package-lock.json
 
 **/test-report.xml
+**/.angular

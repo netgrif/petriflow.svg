@@ -119,7 +119,8 @@ export abstract class Arc extends CanvasElement {
         this.move(this.start, this.end);
     }
 
-    isEnclosedByRectangle(): boolean {
+    isEnclosedByRectangle(rectangle: SVGRect): boolean {
+        console.debug("By default the rectangle argument is ignored. Ignoring passed object.", rectangle)
         this.setSelected(this.start.isSelected() && this.end.isSelected());
         return this.isSelected();
     }

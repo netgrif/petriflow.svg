@@ -1,5 +1,4 @@
-import {NodeElement} from 'projects/petri-svg/src/lib/canvas/svg-elements/svg-objects/node-element';
-import {InhibitorArc} from '../../../../../petri-svg/src/lib/canvas/svg-elements/arc/inhibitor-arc';
+import {InhibitorArc, NodeElement} from '@netgrif/petri.svg';
 import {PetriflowArc} from '../petriflow-arc';
 
 export class PetriflowInhibitorArc extends PetriflowArc<InhibitorArc> {
@@ -9,6 +8,6 @@ export class PetriflowInhibitorArc extends PetriflowArc<InhibitorArc> {
     }
 
     createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
-        return new PetriflowInhibitorArc(new InhibitorArc(start, end, points, this._element.multiplicity?.textContent));
+        return new PetriflowInhibitorArc(new InhibitorArc(start, end, points, multiplicity));
     }
 }

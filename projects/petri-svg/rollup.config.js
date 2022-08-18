@@ -2,12 +2,15 @@ import typescript from "@rollup/plugin-typescript";
 import {terser} from "rollup-plugin-terser";
 import dts from 'rollup-plugin-dts';
 import del from 'rollup-plugin-delete'
+import copy from "rollup-plugin-copy";
+
+const dist = "../../dist/petri-svg"
 
 export default [
     {
         input: './src/lib/index.ts',
         output: [{
-            file: '../../dist/petri-svg/petri.svg.esm.js',
+            file: dist + '/petri.svg.esm.js',
             format: 'esm',
             sourcemap: true
         }],
@@ -21,7 +24,7 @@ export default [
     {
         input: './src/lib/index.ts',
         output: [{
-            file: '../../dist/petri-svg/petri.svg.js',
+            file: dist + '/petri.svg.js',
             format: 'cjs',
             sourcemap: true
         }],
@@ -29,19 +32,24 @@ export default [
             typescript({
                 tsconfig: './tsconfig.lib.json'
             }),
-            terser()
+            terser(),
+            copy({
+                targets: [
+                    {src: ["./package.json", "./README.md", "../../LICENSE", "../../CHANGELOG.md"], dest: dist},
+                ]
+            })
         ]
     },
     {
-        input: '../../dist/petri-svg/dts/index.d.ts',
+        input: dist + '/dts/index.d.ts',
         output: [{
-            file: '../../dist/petri-svg/petri.svg.d.ts',
+            file: dist + '/petri.svg.d.ts',
             format: 'es'
         }],
         plugins: [
             dts(),
             del({
-                targets: '../../dist/petri-svg/dts',
+                targets: dist + '/dts',
                 hook: 'buildEnd',
                 force: true
             })

@@ -1,17 +1,49 @@
-
 {
-    "extends": "../../tsconfig.json",
+    "compileOnSave": false,
     "compilerOptions": {
-        "inlineSources": true,
+        "baseUrl": "./",
+        "outDir": "../../dist/petri-svg",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "target": "es5",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
         "lib": [
             "dom",
             "es2018"
-        ]
+        ],
+        "inlineSources": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "strict": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "alwaysStrict": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+
+        /* Debugging options */
+        "traceResolution": false,
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "pretty": true
     },
     "include": [
         "./src/lib/**/*"
     ],
     "exclude": [
+        "**/node_modules/**",
         "./src/test/test.ts",
         "./**/*.spec.ts"
     ]

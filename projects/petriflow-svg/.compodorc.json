@@ -1,0 +1,14 @@
+{
+    "$schema": "../../node_modules/@compodoc/compodoc/src/config/schema.json",
+    "tsconfig": "./tsconfig.lib.json",
+    "output": "./docs/compodoc",
+    "unitTestCoverage": "../../coverage/petriflow-svg/coverage-summary.json",
+    "name": "Petriflow.SVG library Documentation",
+    "theme": "gitbook",
+    "customLogo": "./assets/docs-title-logo.png",
+    "customFavicon": "./assets/docs-favicon.ico",
+    "language": "en-US",
+    "disableSourceCode": false,
+    "disablePrivate": false,
+    "disableInternal": false
+}

@@ -1,8 +1,4 @@
-import { Canvas } from 'projects/petri-svg/src/lib/canvas/canvas';
-import {ArrowArcEnd} from '../../../petri-svg/src/lib/canvas/svg-elements/arc/arc-end/arrow-arc-end';
-import {EmptyCircleArcEnd} from '../../../petri-svg/src/lib/canvas/svg-elements/arc/arc-end/empty-circle-arc-end';
-import {FullCircleArcEnd} from '../../../petri-svg/src/lib/canvas/svg-elements/arc/arc-end/full-circle-arc-end';
-import {DoubleArrowArcEnd} from '../../../petri-svg/src/lib/canvas/svg-elements/arc/arc-end/double-arrow-arc-end';
+import {ArrowArcEnd, Canvas, DoubleArrowArcEnd, EmptyCircleArcEnd, FullCircleArcEnd} from '@netgrif/petri.svg';
 
 export class PetriflowCanvas extends Canvas {
 

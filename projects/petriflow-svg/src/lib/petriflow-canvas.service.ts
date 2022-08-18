@@ -8,10 +8,10 @@ import {CanvasElementCollection} from './domain/canvas-element-collection';
 })
 export class PetriflowCanvasService {
 
-    private _canvas: PetriflowCanvas;
+    private _canvas: PetriflowCanvas | undefined;
     private readonly _petriflowElementsCollection: CanvasElementCollection;
     private _petriflowClipboardElementsCollection: CanvasElementCollection;
-    private _panzoom: PanZoom;
+    private _panzoom: PanZoom | undefined;
 
     constructor() {
         this._petriflowElementsCollection = new CanvasElementCollection();
@@ -19,11 +19,12 @@ export class PetriflowCanvasService {
     }
 
     setSelectedByRectangleEnclosure(rectangle: SVGElement) {
-        const newRect = this.canvas.svg.createSVGRect();
-        newRect.x = +rectangle.getAttribute('x');
-        newRect.y = +rectangle.getAttribute('y');
-        newRect.width = +rectangle.getAttribute('width');
-        newRect.height = +rectangle.getAttribute('height');
+        if (!this._canvas) return;
+        const newRect = this._canvas.svg.createSVGRect();
+        newRect.x = +(rectangle.getAttribute('x') ?? 0);
+        newRect.y = +(rectangle.getAttribute('y') ?? 0);
+        newRect.width = +(rectangle.getAttribute('width') ?? 0);
+        newRect.height = +(rectangle.getAttribute('height') ?? 0);
         this._petriflowElementsCollection.all.forEach(petriflowElement => {
             if (petriflowElement.isEnclosedByRectangle(newRect)) {
                 petriflowElement.setSelected(true);
@@ -46,16 +47,16 @@ export class PetriflowCanvasService {
         return to;
     }
 
-    get panzoom(): PanZoom {
+    get panzoom(): PanZoom | undefined {
         return this._panzoom;
     }
 
-    set panzoom(value: PanZoom) {
+    set panzoom(value: PanZoom | undefined) {
         this._panzoom = value;
     }
 
-    getPanZoomOffset(): Transform {
-        return this._panzoom.getTransform();
+    getPanZoomOffset(): Transform | undefined {
+        return this?._panzoom?.getTransform();
     }
 
     selectAll() {
@@ -70,11 +71,11 @@ export class PetriflowCanvasService {
         });
     }
 
-    get canvas(): PetriflowCanvas {
+    get canvas(): PetriflowCanvas | undefined {
         return this._canvas;
     }
 
-    set canvas(value: PetriflowCanvas) {
+    set canvas(value: PetriflowCanvas | undefined) {
         this._canvas = value;
     }
 

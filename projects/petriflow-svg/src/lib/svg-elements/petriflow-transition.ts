@@ -1,14 +1,13 @@
-import {Transition} from 'projects/petri-svg/src/lib/canvas/svg-elements/transition/transition';
 import {PetriflowNode} from './petriflow-node';
-import {CanvasConfiguration} from '../../../../petri-svg/src/lib/canvas/canvas-configuration';
+import {CanvasConfiguration, Transition} from '@netgrif/petri.svg';
 import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
 
 export class PetriflowTransition extends PetriflowNode<Transition> {
 
     private _finishArrow: SVGPolygonElement;
     private _cancelArrow: SVGPolygonElement;
-    private _iconElement: SVGTextElement;
-    private _icon: Text;
+    private _iconElement: SVGTextElement | undefined;
+    private _icon: Text | undefined;
 
     constructor(transition: Transition, icon?: string) {
         super(transition);
@@ -58,8 +57,10 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
     }
 
     private setIconElementPosition(position: DOMPoint) {
-        this._iconElement.setAttributeNS(null, 'x', `${position.x - CanvasConfiguration.ICON_SIZE / 2}`);
-        this._iconElement.setAttributeNS(null, 'y', `${position.y + CanvasConfiguration.ICON_SIZE / 2}`);
+        if (this._iconElement) {
+            this._iconElement.setAttributeNS(null, 'x', `${position.x - CanvasConfiguration.ICON_SIZE / 2}`);
+            this._iconElement.setAttributeNS(null, 'y', `${position.y + CanvasConfiguration.ICON_SIZE / 2}`);
+        }
     }
 
     setEnabled(firing: boolean) {
@@ -68,7 +69,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
     }
 
     setDisabled(firing: boolean) {
-        this.canvasElement.setDisabled(firing);
+        this.canvasElement.setDisabled();
         this.setIconFiringClass(firing);
     }
 
@@ -110,31 +111,31 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this._cancelArrow = value;
     }
 
-    get iconElement(): SVGTextElement {
+    get iconElement(): SVGTextElement | undefined {
         return this._iconElement;
     }
 
-    set iconElement(value: SVGTextElement) {
+    set iconElement(value: SVGTextElement | undefined) {
         this._iconElement = value;
     }
 
-    get icon(): Text {
+    get icon(): Text | undefined {
         return this._icon;
     }
 
-    set icon(value: Text) {
+    set icon(value: Text | undefined) {
         this._icon = value;
     }
 
     clone(): PetriflowTransition {
-        const cloned = new PetriflowTransition(this.canvasElement.clone());
+        const cloned = new PetriflowTransition(this.canvasElement.clone() as Transition);
         cloned.canvasElement.element.onclick = () => this.onClickEvent(cloned);
         cloned.setOnClick((clone) => this.onClickEvent(clone));
         cloned.changeId(`t${++PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`);
         return cloned;
     }
 
-    changeId(id: string) {
+    changeId(id: string): void {
         this.canvasElement.id = `svg_transition_${id}`;
         this.canvasElement.label.textContent = id;
     }

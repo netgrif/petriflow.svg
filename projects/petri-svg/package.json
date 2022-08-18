@@ -2,9 +2,9 @@
     "name": "@netgrif/petri.svg",
     "version": "1.0.0",
     "description": "Javascript/Typescript library of SVG object of Petri Net",
-    "main": "../../dist/petri-svg/petri.svg.js",
-    "module": "../../dist/petri-svg/petri.svg.esm.js",
-    "types": "../../dist/petri-svg/petri.svg.d.ts",
+    "main": "./petri.svg.js",
+    "module": "./petri.svg.esm.js",
+    "types": "./petri.svg.d.ts",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/netgrif/petriflow.svg.git"
@@ -23,9 +23,10 @@
         "workflow"
     ],
     "files": [
-        "../../dist/petri-svg",
-        "../../LICENSE",
-        "../../CHANGELOG.md",
+        "./*.js*",
+        "./*.d.ts",
+        "LICENSE",
+        "CHANGELOG.md",
         "README.md",
         "package.json",
         "!**/*.spec.*",
@@ -49,7 +50,8 @@
         "rollup-plugin-delete": "~2.0.0",
         "rollup-plugin-dts": "~4.2.2",
         "rollup-plugin-terser": "~7.0.2",
-        "typescript": "~4.7.4"
+        "rollup-plugin-copy": "~3.4.0",
+        "typescript": "~4.6.4"
     },
     "jest": {
         "verbose": true,

@@ -1,11 +1,11 @@
-import {PetriflowCanvasElement} from './petriflowCanvasElement';
-import {Arc} from '../../../../petri-svg/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
-import {NodeElement} from '../../../../petri-svg/src/lib/canvas/svg-elements/svg-objects/node-element';
+import {PetriflowCanvasElement} from './petriflow-canvas-element';
+import {Arc, NodeElement} from '@netgrif/petri.svg';
+import {PetriflowNodeClickEventFunction, EMPTY_FUNCTION} from "../common";
 
 export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElement {
 
     protected _element: T;
-    protected _onClickEvent;
+    protected _onClickEvent: PetriflowNodeClickEventFunction
 
     protected constructor(element: T) {
         this._element = element;
@@ -17,15 +17,16 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
                 this._element.deactivate();
             }
         };
+        this._onClickEvent = EMPTY_FUNCTION;
     }
 
     cloneArc(start: NodeElement, end: NodeElement): PetriflowArc<Arc> {
-        const newLinePoints = [];
+        const newLinePoints: Array<DOMPoint> = [];
         this.element.linePoints.forEach(point => newLinePoints.push(Object.assign({}, {
             x: point.x,
             y: point.y
         } as DOMPoint)));
-        const cloned = this.createClonedInstanceOfArc(start, end, newLinePoints, this._element.multiplicity?.textContent);
+        const cloned = this.createClonedInstanceOfArc(start, end, newLinePoints, this._element.multiplicity?.textContent ?? '');
         cloned.element.arcLine.onclick = () => this._onClickEvent(cloned);
         cloned.setOnClick((clone) => this._onClickEvent(clone));
         return cloned;
@@ -38,7 +39,7 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
     }
 
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
-        return this._element.isEnclosedByRectangle(rectangle);
+        return this._element.isEnclosedByRectangle(rectangle); // TODO
     }
 
     isSelected(): boolean {
@@ -79,10 +80,10 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
         this.element.start = source;
     }
 
-    setOnClick(event: (e, element) => void): void {
-        this._onClickEvent = event;
+    setOnClick(eventFunction: PetriflowNodeClickEventFunction): void {
+        this._onClickEvent = eventFunction;
         this.element.arcLine.onclick = (e) => {
-            event(e, this);
+            eventFunction(this, e);
         };
     }
 }

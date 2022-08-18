@@ -11,15 +11,25 @@
         "lib": [
             "dom",
             "es2018"
-        ]
+        ],
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true
     },
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,
         "strictMetadataEmit": true,
-        "enableResourceInlining": true
+        "enableResourceInlining": true,
+        "fullTemplateTypeCheck": true,
+        "enableIvy": true
     },
     "exclude": [
         "src/test.ts",
         "**/*.spec.ts"
-    ]
+    ],
+    "typedocOptions": {
+        "exclude": "**/*.spec.*",
+        "out": "./docs/typedoc",
+        "theme": "default"
+    }
 }

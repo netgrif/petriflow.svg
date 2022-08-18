@@ -1,8 +1,19 @@
 import {Injectable} from '@angular/core';
-import {Place} from 'projects/petri-svg/src/lib/canvas/svg-elements/place/place';
+import {
+    Arc,
+    CanvasConfiguration,
+    InhibitorArc,
+    NodeElement,
+    Place,
+    ReadArc,
+    RegularPlaceTransitionArc,
+    RegularTransitionPlaceArc,
+    ResetArc,
+    StaticPlace,
+    Transition
+} from '@netgrif/petri.svg';
 import {PetriflowCanvasService} from '../petriflow-canvas.service';
 import {PetriflowPlace} from '../svg-elements/petriflow-place';
-import {CanvasConfiguration} from '../../../../petri-svg/src/lib/canvas/canvas-configuration';
 import {PetriflowTransition} from '../svg-elements/petriflow-transition';
 import {PetriflowPlaceTransitionArc} from '../svg-elements/arcs/petriflow-place-transition-arc';
 import {PetriflowTransitionPlaceArc} from '../svg-elements/arcs/petriflow-transition-place-arc';
@@ -10,16 +21,7 @@ import {PetriflowResetArc} from '../svg-elements/arcs/petriflow-reset-arc';
 import {PetriflowReadArc} from '../svg-elements/arcs/petriflow-read-arc';
 import {PetriflowInhibitorArc} from '../svg-elements/arcs/petriflow-inhibitor-arc';
 import {PetriflowNode} from '../svg-elements/petriflow-node';
-import {NodeElement} from '../../../../petri-svg/src/lib/canvas/svg-elements/svg-objects/node-element';
-import {StaticPlace} from '../../../../petri-svg/src/lib/canvas/svg-elements/place/static-place';
-import {Transition} from '../../../../petri-svg/src/lib/canvas/svg-elements/transition/transition';
 import {PetriflowArc} from '../svg-elements/petriflow-arc';
-import {Arc} from 'projects/petri-svg/src/lib/canvas/svg-elements/arc/abstract-arc/arc';
-import {InhibitorArc} from '../../../../petri-svg/src/lib/canvas/svg-elements/arc/inhibitor-arc';
-import {ResetArc} from '../../../../petri-svg/src/lib/canvas/svg-elements/arc/reset-arc';
-import {RegularPlaceTransitionArc} from '../../../../petri-svg/src/lib/canvas/svg-elements/arc/regular-place-transition-arc';
-import {ReadArc} from '../../../../petri-svg/src/lib/canvas/svg-elements/arc/read-arc';
-import {RegularTransitionPlaceArc} from '../../../../petri-svg/src/lib/canvas/svg-elements/arc/regular-transition-place-arc';
 import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
 
 @Injectable({
@@ -27,8 +29,8 @@ import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
 })
 export class PetriflowCanvasFactoryService {
 
-    private _source: PetriflowNode<NodeElement>;
-    private _arcLine: SVGElement;
+    private _source: PetriflowNode<NodeElement> | undefined;
+    private _arcLine: SVGElement | undefined;
 
     constructor(private _petriflowCanvasService: PetriflowCanvasService) {
     }
@@ -36,6 +38,8 @@ export class PetriflowCanvasFactoryService {
     createPlace(marking: number, position: DOMPoint): PetriflowPlace {
         const place = new Place(`p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, `p${PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, marking, position);
         const petriflowPlace = new PetriflowPlace(place);
+        if (!this._petriflowCanvasService.canvas)
+            throw new Error("SVG canvas for petriflow objects doesn't exists!");
         this._petriflowCanvasService.canvas.add(place);
         this._petriflowCanvasService.petriflowElementsCollection.places.push(petriflowPlace);
         return petriflowPlace;
@@ -44,6 +48,8 @@ export class PetriflowCanvasFactoryService {
     createStaticPlace(marking: number, position: DOMPoint): PetriflowPlace {
         const place = new StaticPlace(`p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, `p${PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`, marking, position);
         const petriflowPlace = new PetriflowPlace(place);
+        if (!this._petriflowCanvasService.canvas)
+            throw new Error("SVG canvas for petriflow objects doesn't exists!");
         this._petriflowCanvasService.canvas.add(place);
         this._petriflowCanvasService.petriflowElementsCollection.places.push(petriflowPlace);
         return petriflowPlace;
@@ -52,12 +58,15 @@ export class PetriflowCanvasFactoryService {
     createTransition(position: DOMPoint, icon?: string): PetriflowTransition {
         const transition = new Transition(`t${++PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`, `t${PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`, position);
         const petriflowTransition = new PetriflowTransition(transition, icon);
+        if (!this._petriflowCanvasService.canvas)
+            throw new Error("SVG canvas for petriflow objects doesn't exists!");
         this._petriflowCanvasService.canvas.add(transition);
         this._petriflowCanvasService.petriflowElementsCollection.transitions.push(petriflowTransition);
         return petriflowTransition;
     }
 
-    addArc(element: PetriflowNode<NodeElement>, type: string): PetriflowArc<Arc> | SVGElement {
+    addArc(element: PetriflowNode<NodeElement>, type: string): PetriflowArc<Arc> | SVGElement | undefined {
+        if (!this._source) return undefined;
         if (this._source.canvasElement instanceof Place) {
             switch (type) {
                 case 'arc': {
@@ -72,20 +81,29 @@ export class PetriflowCanvasFactoryService {
                 case 'read': {
                     return this.createArcByGenericType(element, PetriflowReadArc, ReadArc, ReadArc.ID);
                 }
+                default: {
+                    return undefined;
+                }
             }
         } else if (type === 'arc') {
             return this.createArcByGenericType(element, PetriflowTransitionPlaceArc, RegularTransitionPlaceArc, RegularTransitionPlaceArc.ID);
+        } else {
+            return undefined;
         }
     }
 
-    private createArcByGenericType<T extends PetriflowArc<Arc>, A extends Arc>(element: PetriflowNode<NodeElement>, type: new(...args) => T, typeArc: new(...args) => A, arrow: string): PetriflowArc<Arc> | SVGElement {
+    // @ts-ignore
+    private createArcByGenericType<T extends PetriflowArc<Arc>, A extends Arc>(element: PetriflowNode<NodeElement>, type: new(...args) => T, typeArc: new(...args) => A, arrow: string): PetriflowArc<Arc> | SVGElement | undefined {
         if (!this._arcLine) {
             this._source = element;
             return this.createSvgArc(element, arrow);
-        } else if (element.constructor !== this._source.constructor) {
+        } else if (element.constructor !== this._source?.constructor) {
+            if (!this._petriflowCanvasService.canvas)
+                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if(!this.arcLine) return undefined;
             this._petriflowCanvasService.canvas.container.removeChild(this.arcLine);
             this.arcLine = undefined;
-            const arc: A = this.createArc(typeArc, this._source.canvasElement, element.canvasElement, []);
+            const arc: A = this.createArc(typeArc, this._source?.canvasElement, element.canvasElement, []);
             const petriflowArc: T = this.createArc(type, arc);
 
             this._petriflowCanvasService.canvas.container.appendChild(arc.container);
@@ -93,14 +111,19 @@ export class PetriflowCanvasFactoryService {
             this._source = undefined;
             this._arcLine = undefined;
             return petriflowArc;
+        } else {
+            return undefined;
         }
     }
 
+    // @ts-ignore
     createArc<T>(type: new(...args) => T, ...params): T {
         return new type(...params);
     }
 
     createSvgArc(element: PetriflowNode<NodeElement>, arrowUrl: string): SVGElement {
+        if (!this._petriflowCanvasService.canvas)
+            throw new Error("SVG canvas for petriflow objects doesn't exists!");
         const arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
         arcLine.setAttributeNS(null, 'fill', 'none');
         arcLine.setAttributeNS(null, 'stroke', 'black');
@@ -112,19 +135,19 @@ export class PetriflowCanvasFactoryService {
         return arcLine;
     }
 
-    get arcLine(): SVGElement {
+    get arcLine(): SVGElement | undefined {
         return this._arcLine;
     }
 
-    set arcLine(value: SVGElement) {
+    set arcLine(value: SVGElement | undefined) {
         this._arcLine = value;
     }
 
-    get source(): PetriflowNode<NodeElement> {
+    get source(): PetriflowNode<NodeElement> | undefined {
         return this._source;
     }
 
-    set source(value: PetriflowNode<NodeElement>) {
+    set source(value: PetriflowNode<NodeElement> | undefined) {
         this._source = value;
     }
 }

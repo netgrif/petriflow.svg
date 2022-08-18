@@ -17,10 +17,10 @@
             "jszip": [
                 "./node_modules/jszip/dist/jszip.min.js"
             ],
-            "petriflow-canvas": [
+            "petriflow-svg": [
                 "dist/petriflow-svg"
             ],
-            "canvas": [
+            "petri-svg": [
                 "dist/petri-svg"
             ]
         },
@@ -50,7 +50,7 @@
         "pretty": true
     },
     "exclude": [
-        "node_modules/**",
+        "**/node_modules/**",
         "**/*.spec.*"
     ],
     "angularCompilerOptions": {
@@ -58,6 +58,6 @@
         "strictInjectionParameters": true,
         "structMetadataEmit": true,
         "enableResourceInlining": true,
-        "enableIvy": false
+        "enableIvy": true
     }
 }

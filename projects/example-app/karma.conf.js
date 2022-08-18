@@ -6,7 +6,7 @@ process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 module.exports = function (config) {
     config.set({
-        basePath: '',
+        basePath: '../..',
         frameworks: ['jasmine', '@angular-devkit/build-angular'],
         plugins: [
             require('karma-jasmine'),
