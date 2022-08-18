@@ -1,5 +1,5 @@
 import {CanvasElement} from './canvas-element';
-import {Arc} from '../arc/abstract-arc/arc';
+import {Arc} from '../arc';
 import {CanvasConfiguration} from "../../canvas-configuration";
 
 export abstract class NodeElement extends CanvasElement {

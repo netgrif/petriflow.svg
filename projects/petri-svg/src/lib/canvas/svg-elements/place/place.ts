@@ -177,19 +177,19 @@ export class Place extends LabeledObject {
         this._markingTokens = value;
     }
 
-    get markingElement(): any {
+    get markingElement(): SVGTextElement {
         return this._markingElement;
     }
 
-    set markingElement(value: any) {
+    set markingElement(value: SVGTextElement) {
         this._markingElement = value;
     }
 
-    get marking(): any {
+    get marking(): Text {
         return this._marking;
     }
 
-    set marking(value: any) {
+    set marking(value: Text) {
         this._marking = value;
     }
 

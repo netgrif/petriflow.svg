@@ -1,6 +1,5 @@
 import {CanvasConfiguration} from '../../canvas-configuration';
-import {LabeledObject} from '../svg-objects/labeled-object';
-import {CanvasElement} from '../svg-objects/canvas-element';
+import {CanvasElement, LabeledObject} from '../svg-objects';
 
 export class Transition extends LabeledObject {
 

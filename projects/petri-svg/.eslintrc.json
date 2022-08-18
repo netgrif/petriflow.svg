@@ -37,7 +37,7 @@
         ],
         "eslint-comments/no-unused-disable": "error",
         "import/order": [
-            "error",
+            "warn",
             {
                 "alphabetize": {
                     "order": "asc"

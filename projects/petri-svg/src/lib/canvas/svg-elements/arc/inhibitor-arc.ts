@@ -1,7 +1,6 @@
-import {PlaceTransitionArc} from './abstract-arc/place-transition-arc';
-import {ArcEnd} from './arc-end/arc-end';
-import {EmptyCircleArcEnd} from './arc-end/empty-circle-arc-end';
-import {NodeElement} from '../svg-objects/node-element';
+import {PlaceTransitionArc} from './abstract-arc';
+import {ArcEnd, EmptyCircleArcEnd} from './arc-end';
+import {NodeElement} from '../svg-objects';
 
 export class InhibitorArc extends PlaceTransitionArc {
 

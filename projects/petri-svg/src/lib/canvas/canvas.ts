@@ -1,7 +1,5 @@
-import {CanvasElement} from './svg-elements/svg-objects/canvas-element';
+import {ArcEnd, CanvasElement, Container} from './svg-elements';
 import {CanvasConfiguration} from './canvas-configuration';
-import {ArcEnd} from './svg-elements/arc/arc-end/arc-end';
-import {Container} from './svg-elements/svg-objects/container';
 
 export class Canvas extends Container {
 

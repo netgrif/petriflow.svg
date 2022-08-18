@@ -4,9 +4,11 @@ import {CanvasElement} from './canvas-element';
 export class EmptyNode extends NodeElement {
 
     activate(): void {
+        // ignore
     }
 
     deactivate(): void {
+        // ignore
     }
 
     getEdgeIntersection(): DOMPoint {

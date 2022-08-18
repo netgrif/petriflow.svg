@@ -1,13 +1,13 @@
+import {test} from "@jest/globals";
 
-let debug=false;
 
 describe('Petri Nets SVG tests', () => {
 
-    beforeEach(()=> {
+    beforeEach(() => {
         console.log("Before each test this will be run")
     });
 
-    test('should start',()=>{
+    test('should start', () => {
         expect(1).toEqual(1);
     });
 

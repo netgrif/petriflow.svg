@@ -1,7 +1,6 @@
-import {TransitionPlaceArc} from './abstract-arc/transition-place-arc';
-import {ArrowArcEnd} from './arc-end/arrow-arc-end';
-import {ArcEnd} from './arc-end/arc-end';
-import {NodeElement} from '../svg-objects/node-element';
+import {TransitionPlaceArc} from './abstract-arc';
+import {ArcEnd, ArrowArcEnd} from './arc-end';
+import {NodeElement} from '../svg-objects';
 
 export class RegularTransitionPlaceArc extends TransitionPlaceArc {
 
