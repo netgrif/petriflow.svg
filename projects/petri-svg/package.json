@@ -34,8 +34,8 @@
     ],
     "scripts": {
         "build": "tsc -p ./tsconfig.lib.dts.json && rollup -c",
-        "build:test": "npm run build && npm run test:unit",
-        "test:unit": "jest"
+        "build:test": "npm run build && npm run test",
+        "test": "jest"
     },
     "dependencies": {
         "tslib": "^2.3.1"
