@@ -19,6 +19,9 @@ jobs:
             -   run: npm i --legacy-peer-deps
             -   name: Build & test petri.svg
                 run: |
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
                     npm run petrisvg:build
                     npm run petrisvg:test:full
                     npm run petrisvg:doc
@@ -29,11 +32,11 @@ jobs:
                     npm run petriflowsvg:test:full
                     npm run petriflowsvg:doc
                     npm i ./dist/petriflow-svg --save-optional --legacy-peer-deps
-            -   name: SonarCloud scan
-                uses: SonarSource/sonarcloud-github-action@master
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#            -   name: SonarCloud scan
+#                uses: SonarSource/sonarcloud-github-action@master
+#                env:
+#                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             -   name: Build example app
                 run: npm run example:build
             -   name: Build documentations

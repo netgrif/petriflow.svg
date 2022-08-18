@@ -17,7 +17,6 @@ jobs:
                     npm i ./dist/petri-svg --save-optional --legacy-peer-deps
                     npm run petriflowsvg:build
                     npm run petriflowsvg:test:full
-                    npm run petriflowsvg:doc
                     npm i ./dist/petriflow-svg --save-optional --legacy-peer-deps
                     npm run example:build
     publish-npm:
