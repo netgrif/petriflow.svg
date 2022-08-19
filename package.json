@@ -25,6 +25,7 @@
     ],
     "scripts": {
         "ng": "ng",
+        "petrisvg:init:setup": "cd projects/petri-svg && npm install && npm run build",
         "petrisvg:build": "cd projects/petri-svg && npm run build",
         "petrisvg:build:local": "cd projects/petri-svg && npm run build && cd ../../ && npm i ./dist/petri-svg --save-optional --legacy-peer-deps",
         "petrisvg:test": "cd projects/petri-svg && npm run test",
