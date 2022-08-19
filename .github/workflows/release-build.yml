@@ -11,7 +11,7 @@ jobs:
                 with:
                     node-version: 16
             -   name: Build & test libraries
-            -   run: |
+                run: |
                     npm i --legacy-peer-deps
                     cd projects/petri-svg
                     npm i
