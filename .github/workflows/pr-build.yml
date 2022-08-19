@@ -1,0 +1,42 @@
+name: Pull Request Build & Test
+on:
+    pull_request:
+        types: [ opened, synchronize, reopened ]
+jobs:
+    test:
+        name: Test
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v2
+                with:
+                    fetch-depth: 0
+            -   uses: actions/setup-node@v2
+                name: Use Node.js 16
+                with:
+                    node-version: 16
+            -   run: |
+                    npm i --legacy-peer-deps
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
+            -   name: Build & test petri.svg
+                run: |
+                    npm run petrisvg:build
+                    npm run petrisvg:test:full
+                    npm i ./dist/petri-svg --save-optional --legacy-peer-deps
+            -   name: Build & test petriflow.svg
+                run: |
+                    npm run petriflowsvg:build
+                    npm run petriflowsvg:test:full
+                    npm i ./dist/petriflow-svg --save-optional --legacy-peer-deps
+            -   name: Edit Path in lcov.info
+                run: |
+                    sed -i 's/SF:.*.projects/SF:projects/g' coverage/petri-svg/lcov.info
+                    sed -i 's/SF:.*.projects/SF:projects/g' coverage/petriflow-svg/lcov.info
+#            -   name: SonarCloud scan
+#                uses: SonarSource/sonarcloud-github-action@master
+#                env:
+#                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            -   name: Build example app
+                run: npm run example:build

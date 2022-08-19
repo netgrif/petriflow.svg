@@ -1,0 +1,86 @@
+name: Publish package to GitHub Packages
+on:
+    release:
+        types: [ published ]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v2
+            -   uses: actions/setup-node@v2
+                with:
+                    node-version: 16
+            -   name: Build & test libraries
+            -   run: |
+                    npm i --legacy-peer-deps
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
+                    npm run petrisvg:build
+                    npm run petrisvg:test:full
+                    npm i ./dist/petri-svg --save-optional --legacy-peer-deps
+                    npm run petriflowsvg:build
+                    npm run petriflowsvg:test:full
+                    npm i ./dist/petriflow-svg --save-optional --legacy-peer-deps
+                    npm run example:build
+    publish-npm:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v2
+            -   uses: actions/setup-node@v2
+                with:
+                    node-version: 16
+                    registry-url: https://registry.npmjs.org/
+            -   run: |
+                    npm i --legacy-peer-deps
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
+            -   name: Publish petri.svg
+                run: |
+                    npm run petrisvg:build
+                    npm i ./dist/petri-svg --save-optional --legacy-peer-deps
+                    cd dist/petri-svg
+                    npm publish --access public
+                env:
+                    NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            -   name: Publish petriflow.svg
+                run: |
+                    npm run petriflowsvg:build
+                    cd dist/petriflow-svg
+                    npm publish --access public
+                env:
+                    NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+    publish-gpr:
+        needs: build
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            -   uses: actions/checkout@v2
+            -   uses: actions/setup-node@v2
+                with:
+                    node-version: 16
+                    registry-url: https://npm.pkg.github.com
+            -   run: |
+                    npm i --legacy-peer-deps
+                    cd projects/petri-svg
+                    npm i
+                    cd ../..
+            -   name: Publish petri.svg
+                run: |
+                    npm run petrisvg:build
+                    npm i ./dist/petri-svg --save-optional --legacy-peer-deps
+                    cd dist/petri-svg
+                    npm publish --access public
+                env:
+                    NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+            -   name: Publish petriflow.svg
+                run: |
+                    npm run petriflowsvg:build
+                    cd dist/petriflow-svg
+                    npm publish --access public
+                env:
+                    NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

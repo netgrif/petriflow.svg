@@ -1,0 +1,66 @@
+{
+    "name": "@netgrif/petriflow.svg",
+    "version": "1.0.0",
+    "description": "Petriflow library of SVG object",
+    "homepage": "https://netgrif.github.io/petriflow.svg",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/netgrif/petriflow.svg.git"
+    },
+    "bugs": {
+        "url": "https://github.com/netgrif/petriflow.svg/issues"
+    },
+    "author": {
+        "name": "NETGRIF, s.r.o.",
+        "email": "oss@netgrif.com",
+        "url": "https://netgrif.com"
+    },
+    "keywords": [
+        "netgrif",
+        "petriflow",
+        "pf",
+        "workflow",
+        "petri nets",
+        "svg"
+    ],
+    "dependencies": {
+        "tslib": "~2.4.0"
+    },
+    "peerDependencies": {
+        "@netgrif/petri.svg": "1.0.0",
+        "@angular/animations": "~13.3.11",
+        "@angular/cdk": "~13.3.9",
+        "@angular/common": "~13.3.11",
+        "@angular/compiler": "~13.3.11",
+        "@angular/core": "~13.3.11",
+        "@angular/flex-layout": "~13.0.0-beta.38",
+        "@angular/forms": "~13.3.11",
+        "@angular/material": "~13.3.9",
+        "@angular/material-moment-adapter": "~13.3.9",
+        "@angular/platform-browser": "~13.3.11",
+        "@angular/platform-browser-dynamic": "~13.3.11",
+        "@angular/router": "~13.3.11",
+        "@mdi/angular-material": "~7.0.96",
+        "@mdi/font": "~7.0.96",
+        "@ngx-translate/core": "~13.0.0",
+        "@ngx-translate/http-loader": "~6.0.0",
+        "@types/mousetrap": "1.6.3",
+        "angular-gridster2": "~14.1.1",
+        "angular-resizable-element": "~6.0.0",
+        "angular-resize-event": "~3.2.0",
+        "angular2-hotkeys": "~13.1.0",
+        "browserify": "~16.5.0",
+        "escape-string-regexp": "~5.0.0",
+        "hammerjs": "~2.0.8",
+        "moment": "~2.29.4",
+        "natural-orderby": "~2.0.3",
+        "ngx-joyride": "~2.5.0",
+        "ngx-monaco-editor": "~12.0.0",
+        "ngx-quill": "~18.0.0",
+        "panzoom": "~9.4.3",
+        "quill": "~1.3.7",
+        "rxjs": "~7.5.6",
+        "zone.js": "~0.11.8"
+    }
+}

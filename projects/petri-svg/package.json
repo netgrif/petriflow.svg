@@ -1,0 +1,73 @@
+{
+    "name": "@netgrif/petri.svg",
+    "version": "1.0.0",
+    "description": "Javascript/Typescript library of SVG object of Petri Net",
+    "main": "petri.svg.js",
+    "module": "petri.svg.esm.js",
+    "types": "petri.svg.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/netgrif/petriflow.svg.git"
+    },
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/netgrif/petriflow.svg.git/issues"
+    },
+    "homepage": "https://netgrif.github.io/petriflow.svg",
+    "keywords": [
+        "petriflow",
+        "petri nets",
+        "pf",
+        "petri net",
+        "petri",
+        "workflow"
+    ],
+    "files": [
+        "./*.js*",
+        "./*.d.ts",
+        "LICENSE",
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "!**/*.spec.*",
+        "!**/test"
+    ],
+    "scripts": {
+        "build": "tsc -p ./tsconfig.lib.dts.json && rollup -c",
+        "build:test": "npm run build && npm run test",
+        "test": "jest"
+    },
+    "dependencies": {
+        "tslib": "^2.3.1"
+    },
+    "devDependencies": {
+        "@rollup/plugin-typescript": "~8.3.4",
+        "jest": "~28.1.3",
+        "jest-sonar-reporter": "~2.0.0",
+        "jest-environment-jsdom": "~28.1.3",
+        "jest-junit": "~14.0.0",
+        "rollup": "~2.78.0",
+        "rollup-plugin-delete": "~2.0.0",
+        "rollup-plugin-dts": "~4.2.2",
+        "rollup-plugin-terser": "~7.0.2",
+        "rollup-plugin-copy": "~3.4.0",
+        "typescript": "~4.6.4"
+    },
+    "jest": {
+        "verbose": true,
+        "collectCoverage": true,
+        "coverageDirectory": "../../coverage/petri-svg",
+        "reporters": [
+            "default",
+            [
+                "jest-junit",
+                {
+                    "outputDirectory": "../../coverage/petri-svg",
+                    "outputName": "sonarqube-unit-report.xml"
+                }
+            ]
+        ],
+        "testEnvironment": "jsdom",
+        "testResultsProcessor": "jest-sonar-reporter"
+    }
+}
