@@ -7,7 +7,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {JoyrideModule} from 'ngx-joyride';
 import {PetriflowCanvasModule} from 'petriflow-svg';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
-import { PetriflowInfoDialogComponent } from './petriflow-info-dialog/petriflow-info-dialog.component';
+import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -48,20 +48,20 @@ const appRoutes: Routes = [
 })
 export class AppModule {
     constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
-        matIconRegistry.addSvgIcon('data', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/data.svg`));
-        matIconRegistry.addSvgIcon('cursor-default-outline', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/cursor-default-outline.svg`));
-        matIconRegistry.addSvgIcon('transition', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/transition.svg`));
-        matIconRegistry.addSvgIcon('place', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/place.svg`));
-        matIconRegistry.addSvgIcon('marking', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/marking.svg`));
-        matIconRegistry.addSvgIcon('arc', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/arc.svg`));
-        matIconRegistry.addSvgIcon('arcweight', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/arcweight.svg`));
-        matIconRegistry.addSvgIcon('arcdataref', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/arcdataref.svg`));
-        matIconRegistry.addSvgIcon('arcplaceref', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/arcplaceref.svg`));
-        matIconRegistry.addSvgIcon('resetarc', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/resetarc.svg`));
-        matIconRegistry.addSvgIcon('inhibitor', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/inhibitor.svg`));
-        matIconRegistry.addSvgIcon('read', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/read.svg`));
-        matIconRegistry.addSvgIcon('properties', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/modeler/icons/properties.svg`));
-        matIconRegistry.addSvgIcon('github', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/github.svg`));
-        matIconRegistry.addSvgIcon('netgrif_logo', domSanitizer.bypassSecurityTrustResourceUrl(`../assets/netgrif_logo.svg`));
+        matIconRegistry.addSvgIcon('data', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/data.svg`));
+        matIconRegistry.addSvgIcon('cursor-default-outline', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/cursor-default-outline.svg`));
+        matIconRegistry.addSvgIcon('transition', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/transition.svg`));
+        matIconRegistry.addSvgIcon('place', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/place.svg`));
+        matIconRegistry.addSvgIcon('marking', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/marking.svg`));
+        matIconRegistry.addSvgIcon('arc', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/arc.svg`));
+        matIconRegistry.addSvgIcon('arcweight', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/arcweight.svg`));
+        matIconRegistry.addSvgIcon('arcdataref', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/arcdataref.svg`));
+        matIconRegistry.addSvgIcon('arcplaceref', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/arcplaceref.svg`));
+        matIconRegistry.addSvgIcon('resetarc', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/resetarc.svg`));
+        matIconRegistry.addSvgIcon('inhibitor', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/inhibitor.svg`));
+        matIconRegistry.addSvgIcon('read', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/read.svg`));
+        matIconRegistry.addSvgIcon('properties', domSanitizer.bypassSecurityTrustResourceUrl(`assets/modeler/icons/properties.svg`));
+        matIconRegistry.addSvgIcon('github', domSanitizer.bypassSecurityTrustResourceUrl(`assets/github.svg`));
+        matIconRegistry.addSvgIcon('netgrif_logo', domSanitizer.bypassSecurityTrustResourceUrl(`assets/netgrif_logo.svg`));
     }
 }
