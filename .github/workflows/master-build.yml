@@ -37,9 +37,9 @@ jobs:
                 run: npm run example:build
             -   name: Build documentations
                 run: |
-                    cp projects/petri-svg/docs docs/petri.svg
-                    cp projects/petriflow-svg/docs docs/petriflow.svg
-                    cp dist/example-app docs
+                    cp -r projects/petri-svg/docs docs/petri.svg
+                    cp -r projects/petriflow-svg/docs docs/petriflow.svg
+                    cp -r dist/example-app docs
             -   uses: EndBug/add-and-commit@v8
                 with:
                     add: docs
