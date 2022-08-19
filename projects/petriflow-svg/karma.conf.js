@@ -17,7 +17,7 @@ module.exports = function (config) {
             require('karma-mocha-reporter'),
             require('karma-nyan-reporter'),
             require('karma-junit-reporter'),
-            // require('karma-sonarqube-unit-reporter'), // TODO install
+            require('karma-sonarqube-unit-reporter'),
             require('@angular-devkit/build-angular/plugins/karma')
         ],
 
@@ -51,7 +51,7 @@ module.exports = function (config) {
         },
         sonarQubeUnitReporter: {
             sonarQubeVersion: 'LATEST',
-            outputFile: '../../coverage/petriflow-svg/sonarqube-unit-report.xml',
+            outputFile: '../../coverage/petriflow-svg/sonarqube-report.xml',
             useBrowserName: false
         },
 
@@ -69,7 +69,7 @@ module.exports = function (config) {
             }
         },
 
-        reporters: ['progress', 'kjhtml', 'coverage-istanbul', 'nyan', 'junit'],
+        reporters: ['progress', 'kjhtml', 'coverage-istanbul', 'nyan', 'junit', 'sonarqubeUnit'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,

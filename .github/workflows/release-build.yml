@@ -22,7 +22,7 @@ jobs:
                     npm run petriflowsvg:build
                     npm run petriflowsvg:test:full
                     npm i ./dist/petriflow-svg --save-optional --legacy-peer-deps
-                    npm run example:build
+                    npm run example:build:prod
     publish-npm:
         needs: build
         runs-on: ubuntu-latest

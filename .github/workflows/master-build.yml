@@ -39,9 +39,13 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             -   name: Build example app
-                run: npm run example:build
+                run: npm run example:build:prod
             -   name: Build documentations
                 run: |
+                    rm -rf docs/*
+                    mkdir -p docs/petri.svg
+                    mkdir -p docs/petriflow.svg
+                    touch docs/.nojekyll
                     cp -r projects/petri-svg/docs/* docs/petri.svg/
                     cp -r projects/petriflow-svg/docs/* docs/petriflow.svg/
                     cp -r dist/example-app/* docs/
