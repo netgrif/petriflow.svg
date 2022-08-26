@@ -46,17 +46,25 @@
                 <mat-icon>clear</mat-icon>
             </mat-button-toggle>
         </mat-button-toggle-group>
-        <div flex></div>
-        <button mat-raised-button id="source-button" (click)="goToLink('https://github.com/netgrif/petriflow.svg')">
-            <mat-icon svgIcon="github"></mat-icon>
-            Source
-        </button>
-        <button mat-raised-button id="petriflow-svg-docs-button" (click)="goToLink('https://netgrif.github.io/petriflow.svg/petriflow.svg')">
-            Petriflow.SVG Docs
-        </button>
-        <button mat-raised-button id="petri-svg-docs-button" (click)="goToLink('https://netgrif.github.io/petriflow.svg/petri.svg')">
-            Petri.SVG Docs
-        </button>
+        <div fxFlex></div>
+        <div fxLayout="row" fxLayoutAlign="end center">
+            <button mat-icon-button id="source-button" class="link-icon-button"
+                    aria-label="Source code hosted in GitHub"
+                    (click)="goToLink('https://github.com/netgrif/petriflow.svg')"
+                    matTooltip="Got to Repository" matTooltipPosition="below">
+                <mat-icon svgIcon="github">github</mat-icon>
+            </button>
+            <button mat-icon-button id="petriflow-svg-docs-button" class="link-icon-button"
+                    (click)="goToLink('https://netgrif.github.io/petriflow.svg/petriflow.svg')"
+                    matTooltip="Petriflow.SVG Documentation" matTooltipPosition="below">
+                <mat-icon>description</mat-icon>
+            </button>
+            <button mat-icon-button id="petri-svg-docs-button" class="link-icon-button"
+                    (click)="goToLink('https://netgrif.github.io/petriflow.svg/petri.svg')"
+                    matTooltip="Petri.SVG Documentation" matTooltipPosition="below">
+                <mat-icon>article</mat-icon>
+            </button>
+        </div>
     </mat-toolbar-row>
 </mat-toolbar>
 <div class="outer">

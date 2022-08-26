@@ -14,6 +14,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {HttpClientModule} from '@angular/common/http';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const appRoutes: Routes = [
     {path: 'app', component: AppComponent},
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
         MatDialogModule,
         MatSnackBarModule,
         MatButtonModule,
-        HttpClientModule
+        HttpClientModule,
+        MatTooltipModule
     ],
     entryComponents: [PetriflowInfoDialogComponent],
     bootstrap: [
