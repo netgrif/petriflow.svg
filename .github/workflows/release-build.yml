@@ -43,6 +43,7 @@ jobs:
                     npm i ./dist/petri-svg --save-optional --legacy-peer-deps
                     cd dist/petri-svg
                     npm publish --access public
+                    cd ../..
                 env:
                     NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
             -   name: Publish petriflow.svg
@@ -75,6 +76,7 @@ jobs:
                     npm i ./dist/petri-svg --save-optional --legacy-peer-deps
                     cd dist/petri-svg
                     npm publish --access public
+                    cd ../..
                 env:
                     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
             -   name: Publish petriflow.svg

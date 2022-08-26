@@ -14,6 +14,11 @@
         "url": "https://github.com/netgrif/petriflow.svg.git/issues"
     },
     "homepage": "https://netgrif.github.io/petriflow.svg",
+    "author": {
+        "name": "NETGRIF, s.r.o.",
+        "email": "oss@netgrif.com",
+        "url": "https://netgrif.com"
+    },
     "keywords": [
         "petriflow",
         "petri nets",
@@ -57,7 +62,9 @@
         "collectCoverage": true,
         "coverageDirectory": "../../coverage/petri-svg",
         "testEnvironment": "jsdom",
-        "reporters": ["default"],
+        "reporters": [
+            "default"
+        ],
         "testResultsProcessor": "jest-sonar-reporter"
     },
     "jestSonar": {
