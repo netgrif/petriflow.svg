@@ -21,15 +21,19 @@ export class Transition extends LabeledObject {
     }
 
     activate(): void {
-        super.activate();
-        this.element.setAttributeNS(null, 'class', 'svg-active-stroke');
+        if (this.changable) {
+            super.activate();
+            this.element.setAttributeNS(null, 'class', 'svg-active-stroke');
+        }
     }
 
     deactivate(): void {
-        super.deactivate();
-        this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
-        this.element.setAttributeNS(null, 'fill', 'white');
-        this.element.setAttributeNS(null, 'stroke-width', '2');
+        if (this.changable) {
+            super.deactivate();
+            this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
+            this.element.setAttributeNS(null, 'fill', 'white');
+            this.element.setAttributeNS(null, 'stroke-width', '2');
+        }
     }
 
     /**
@@ -59,15 +63,19 @@ export class Transition extends LabeledObject {
     }
 
     setEnabled(firing: boolean) {
-        if (firing) {
-            this.element.setAttributeNS(null, 'class', 'svg-transition-firing');
-        } else {
-            this.element.setAttributeNS(null, 'class', 'svg-transition-enabled');
+        if (this.changable) {
+            if (firing) {
+                this.element.setAttributeNS(null, 'class', 'svg-transition-firing');
+            } else {
+                this.element.setAttributeNS(null, 'class', 'svg-transition-enabled');
+            }
         }
     }
 
     setDisabled() {
-        this.element.setAttributeNS(null, 'class', 'svg-transition-disabled');
+        if (this.changable) {
+            this.element.setAttributeNS(null, 'class', 'svg-transition-disabled');
+        }
     }
 
     cancelArrowPoints(position: DOMPoint): string {

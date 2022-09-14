@@ -4,6 +4,7 @@ import {Container} from './container';
 export abstract class CanvasElement extends Container implements Activable {
 
     private _isSelected = false;
+    protected changable = true;
 
     public static pointsToString(...points: Array<DOMPoint>): string {
         return points.map(p => `${p.x},${p.y}`).join(' ') + ' ';

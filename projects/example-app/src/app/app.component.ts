@@ -4,7 +4,7 @@ import {
     PetriflowCanvasConfigurationService,
     PetriflowCanvasFactoryService,
     PetriflowCanvasService
-} from 'petriflow-svg';
+} from '@netgrif/petriflow.svg';
 import {MatToolbar} from '@angular/material/toolbar';
 import {MatDialog} from '@angular/material/dialog';
 import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
