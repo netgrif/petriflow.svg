@@ -2,7 +2,7 @@
     "root": true,
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": "./tsconfig.lib.json"
+        "project": "./tsconfig.json"
     },
     "env": {
         "es6": true
