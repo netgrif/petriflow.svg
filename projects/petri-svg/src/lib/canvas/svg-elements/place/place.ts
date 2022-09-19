@@ -64,14 +64,14 @@ export class Place extends LabeledObject {
     }
 
     activate(): void {
-        if (this.changable) {
+        if (this.changeable) {
             super.activate();
             this.element.setAttributeNS(null, 'class', 'svg-active-stroke');
         }
     }
 
     deactivate(): void {
-        if (this.changable) {
+        if (this.changeable) {
             super.deactivate();
             this.element.setAttributeNS(null, 'stroke', 'black');
             this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');

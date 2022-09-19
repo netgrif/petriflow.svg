@@ -21,14 +21,14 @@ export class Transition extends LabeledObject {
     }
 
     activate(): void {
-        if (this.changable) {
+        if (this.changeable) {
             super.activate();
             this.element.setAttributeNS(null, 'class', 'svg-active-stroke');
         }
     }
 
     deactivate(): void {
-        if (this.changable) {
+        if (this.changeable) {
             super.deactivate();
             this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
             this.element.setAttributeNS(null, 'fill', 'white');
@@ -63,7 +63,7 @@ export class Transition extends LabeledObject {
     }
 
     setEnabled(firing: boolean) {
-        if (this.changable) {
+        if (this.changeable) {
             if (firing) {
                 this.element.setAttributeNS(null, 'class', 'svg-transition-firing');
             } else {
@@ -73,7 +73,7 @@ export class Transition extends LabeledObject {
     }
 
     setDisabled() {
-        if (this.changable) {
+        if (this.changeable) {
             this.element.setAttributeNS(null, 'class', 'svg-transition-disabled');
         }
     }

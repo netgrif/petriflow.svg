@@ -30,7 +30,7 @@
         "petrisvg:build:local": "cd projects/petri-svg && npm run build && cd ../../ && npm i ./dist/petri-svg --save-optional --legacy-peer-deps",
         "petrisvg:test": "cd projects/petri-svg && npm run test",
         "petrisvg:lint": "eslint -c projects/petri-svg/.eslintrc.json projects/petri-svg/src --ext .ts",
-        "petrisvg:spell": "cspell --gitignore -s \"projects/petri-svg/**/*.{md,ts}\"",
+        "petrisvg:spell": "cspell --gitignore \"projects/petri-svg/**/*.{md,ts}\"",
         "petrisvg:test:full": "npm run petrisvg:lint && npm run petrisvg:spell && npm run petrisvg:test",
         "petrisvg:doc": "typedoc --tsconfig projects/petri-svg/tsconfig.lib.json --entryPoints projects/petri-svg/src/lib/index.ts --exclude **/*.spec.* --out projects/petri-svg/docs --theme default",
         "petriflowsvg:build": "ng build petriflow-svg --configuration production",

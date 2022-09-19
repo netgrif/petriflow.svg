@@ -39,20 +39,20 @@ export abstract class LabeledObject extends NodeElement implements Movable {
     }
 
     activate() {
-        if (this.changable) {
+        if (this.changeable) {
             this._labelElement.setAttributeNS(null, 'class', 'svg-active-fill');
         }
     }
 
     deactivate() {
-        if (this.changable) {
+        if (this.changeable) {
             this._labelElement.setAttributeNS(null, 'class', 'svg-inactive-fill');
         }
     }
 
-    fullActivate(changable: boolean): void {
+    fullActivate(changeable: boolean): void {
         this.activate();
-        this.changable = changable;
+        this.changeable = changeable;
     }
 
     move(position: DOMPoint): void {
