@@ -58,17 +58,18 @@ export class PetriflowCanvasConfigurationService {
             this.moveElement(e);
             this.moveBreakpoint(e);
             if (this.mouseDown && this.mode === CanvasMode.LASSO) {
-                if (!this._petriflowCanvasService.canvas)
-                    throw new Error("SVG canvas for petriflow objects doesn't exists!");
+                if (!this._petriflowCanvasService.canvas) {
+                    throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+                }
                 this._petriflowCanvasService.deselectAll();
                 this._petriflowCanvasService.canvas.svg.deselectAll();
-                const offset = this._petriflowCanvasService.getPanZoomOffset();
-                const width = (e.offsetX - (offset?.x ?? 0)) / (offset?.scale ?? 1) - this.mouseX;
-                const height = (e.offsetY - (offset?.y ?? 0)) / (offset?.scale ?? 1) - this.mouseY;
+                const width = e.offsetX - this.mouseX;
+                const height = e.offsetY - this.mouseY;
                 const newX = width > 0 ? this.mouseX : this.mouseX + width;
                 const newY = height > 0 ? this.mouseY : this.mouseY + height;
-                if (!this.rectangle)
-                    throw new Error("SVGElement is not set");
+                if (!this.rectangle) {
+                    throw new Error('SVGElement is not set');
+                }
                 this.rectangle.setAttributeNS(null, 'width', `${Math.abs(width)}`);
                 this.rectangle.setAttributeNS(null, 'height', `${Math.abs(height)}`);
                 this.rectangle.setAttributeNS(null, 'x', `${newX}`);
@@ -81,19 +82,19 @@ export class PetriflowCanvasConfigurationService {
             if (this.mode === CanvasMode.LASSO) {
                 this._petriflowCanvasService.deselectAll();
                 this.mouseDown = true;
-                const offset = this._petriflowCanvasService.getPanZoomOffset();
                 this.rectangle = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGElement;
                 this.rectangle.setAttributeNS(null, 'fill', 'none');
                 this.rectangle.setAttributeNS(null, 'class', 'path');
                 this.rectangle.setAttributeNS(null, 'stroke', 'black');
                 this.rectangle.setAttributeNS(null, 'stroke-width', '1');
                 this.rectangle.setAttributeNS(null, 'animation', 'dash 5s linear');
-                this.mouseX = (e.offsetX - (offset?.x ?? 0)) / (offset?.scale ?? 1);
-                this.mouseY = (e.offsetY - (offset?.y ?? 0)) / (offset?.scale ?? 1);
+                this.mouseX = e.offsetX;
+                this.mouseY = e.offsetY;
                 this.rectangle.setAttributeNS(null, 'x', `${this.mouseX}`);
                 this.rectangle.setAttributeNS(null, 'y', `${this.mouseY}`);
-                if (!this._petriflowCanvasService.canvas)
-                    throw new Error("SVG canvas for petriflow objects doesn't exists!");
+                if (!this._petriflowCanvasService.canvas) {
+                    throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+                }
                 this._petriflowCanvasService.canvas.container.appendChild(this.rectangle);
             }
             this.onMouseMoveDownDestroyClipboard();
@@ -103,8 +104,9 @@ export class PetriflowCanvasConfigurationService {
             if (this.mode === CanvasMode.LASSO && this.rectangle) {
                 this._petriflowCanvasService.setSelectedByRectangleEnclosure(this.rectangle);
                 this.mouseDown = false;
-                if (!this._petriflowCanvasService.canvas)
-                    throw new Error("SVG canvas for petriflow objects doesn't exists!");
+                if (!this._petriflowCanvasService.canvas) {
+                    throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+                }
                 this._petriflowCanvasService.canvas.container.removeChild(this.rectangle);
                 this.rectangle = undefined;
             }
@@ -183,8 +185,9 @@ export class PetriflowCanvasConfigurationService {
                 this._petriflowCanvasService.petriflowElementsCollection.arcs.filter(arc => arc.isSelected()).forEach(selectedElement => {
                     this.clipboard?.appendChild(selectedElement.element.container);
                 });
-                if (!this._petriflowCanvasService.canvas)
-                    throw new Error("SVG canvas for petriflow objects doesn't exists!");
+                if (!this._petriflowCanvasService.canvas) {
+                    throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+                }
                 if (this.clipboard) {
                     this._petriflowCanvasService.canvas.container.appendChild(this.clipboard);
                     this._clipboardBox = this.clipboard.getBoundingClientRect();
@@ -195,36 +198,34 @@ export class PetriflowCanvasConfigurationService {
 
     private moveElement(e: MouseEvent) {
         if (this._mode === CanvasMode.MOVE && this._petriflowCanvasFactory.source && !this.clipboard) {
-            const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
-            this._petriflowCanvasFactory.source.canvasElement.move(
-                new DOMPoint((e.offsetX - (offsetPanZoom?.x ?? 0)) / (offsetPanZoom?.scale ?? 1),
-                    (e.offsetY - (offsetPanZoom?.y ?? 0)) / (offsetPanZoom?.scale ?? 1)));
+            this._petriflowCanvasFactory.source.canvasElement.move(new DOMPoint(e.offsetX, e.offsetY));
         }
     }
 
     private moveArc(e: MouseEvent) {
-        const offsetPanZoom = this._petriflowCanvasService.getPanZoomOffset();
-        if (!this._source) return;
-        const intersect = this._source.canvasElement.getEdgeIntersection(
-            new DOMPoint((e.offsetX - (offsetPanZoom?.x ?? 0)) / (offsetPanZoom?.scale ?? 1),
-                (e.offsetY - (offsetPanZoom?.y ?? 0)) / (offsetPanZoom?.scale ?? 1)), 0);
-        const xLineLength = ((e.offsetX - (offsetPanZoom?.x ?? 0)) / (offsetPanZoom?.scale ?? 1)) - intersect.x;
-        const yLineLength = ((e.offsetY - (offsetPanZoom?.y ?? 0)) / (offsetPanZoom?.scale ?? 1)) - intersect.y;
+        if (!this._source) {
+            return;
+        }
+        const intersect = this._source.canvasElement.getEdgeIntersection(new DOMPoint(e.offsetX, e.offsetY), 0);
+        const xLineLength = e.offsetX - intersect.x;
+        const yLineLength = e.offsetY - intersect.y;
         const arcLength = Math.sqrt(xLineLength * xLineLength + yLineLength * yLineLength);
         const arcLengthOffset = arcLength - CanvasConfiguration.ARROW_HEAD_SIZE;
         const arcRatio = arcLengthOffset / arcLength;
         const finalX = intersect.x + xLineLength * arcRatio;
         const finalY = intersect.y + yLineLength * arcRatio;
-        if (!this._arcLine)
-            throw new Error("Arc line is not set!");
+        if (!this._arcLine) {
+            throw new Error('Arc line is not set!');
+        }
         this._arcLine.setAttributeNS(null, 'points', `${intersect.x},${intersect.y} ${finalX},${finalY}`);
     }
 
     private deleteElement(element: PetriflowNode<NodeElement>) {
         if (this._mode === CanvasMode.REMOVE) {
             const removedArcs: Array<Arc> = [];
-            if (!this._petriflowCanvasService.canvas)
-                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if (!this._petriflowCanvasService.canvas) {
+                throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+            }
             element.canvasElement.arcs.forEach(arc => {
                     this._petriflowCanvasService?.canvas?.remove(arc);
                     removedArcs.push(arc);
@@ -239,8 +240,9 @@ export class PetriflowCanvasConfigurationService {
 
     private deleteArc(petriflowElement: PetriflowArc<Arc>) {
         if (this._mode === CanvasMode.REMOVE) {
-            if (!this._petriflowCanvasService.canvas)
-                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if (!this._petriflowCanvasService.canvas) {
+                throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+            }
             this._petriflowCanvasService.canvas.remove(petriflowElement.element);
         }
     }
@@ -260,8 +262,9 @@ export class PetriflowCanvasConfigurationService {
             arcsCollection.push(newElement);
         });
         arcsCollection.splice(0, length);
-        if (!this._petriflowCanvasService.canvas)
-            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        if (!this._petriflowCanvasService.canvas) {
+            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+        }
         clipboardContent = [];
         if (this.clipboard) {
             this._petriflowCanvasService.canvas.container.appendChild(this.clipboard);
@@ -302,9 +305,11 @@ export class PetriflowCanvasConfigurationService {
 
     private onCanvasMouseMoveClipboard(event: MouseEvent) {
         if (this.clipboard && this._clipboardBox) {
-            const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const mouseX = (event.x - (offset?.x ?? 0)) / (offset?.scale ?? 1) - (this._clipboardBox.x + this._clipboardBox.width / 2 - (offset?.x ?? 0)) / (offset?.scale ?? 1);
-            const mouseY = (event.y - (offset?.y ?? 0)) / (offset?.scale ?? 1) - (this._clipboardBox.y + this._clipboardBox.height / 2 - (offset?.y ?? 0)) / (offset?.scale ?? 1);
+            const x = this._petriflowCanvasService.xOffset;
+            const y = this._petriflowCanvasService.yOffset;
+            const scale = this._petriflowCanvasService.scale;
+            const mouseX = (event.x - (x ?? 0)) / (scale ?? 1) - (this._clipboardBox.x + this._clipboardBox.width / 2 - (x ?? 0)) / (scale ?? 1);
+            const mouseY = (event.y - (y ?? 0)) / (scale ?? 1) - (this._clipboardBox.y + this._clipboardBox.height / 2 - (y ?? 0)) / (scale ?? 1);
             this.clipboard.setAttribute('transform', `matrix(1,0,0,1,${mouseX},${mouseY})`);
         }
     }
@@ -317,8 +322,9 @@ export class PetriflowCanvasConfigurationService {
     deleteSelectedCollection(collection: Array<PetriflowNode<NodeElement>>) {
         let removedArcs: Array<Arc> = [];
         collection.filter(element => element.isSelected()).forEach(selectedElement => {
-            if (!this._petriflowCanvasService.canvas)
-                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if (!this._petriflowCanvasService.canvas) {
+                throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+            }
             selectedElement.canvasElement.arcs.forEach(arc => {
                 this._petriflowCanvasService?.canvas?.remove(arc);
                 removedArcs.push(arc);
@@ -347,8 +353,9 @@ export class PetriflowCanvasConfigurationService {
             this._petriflowCanvasService.petriflowElementsCollection.transitions);
         this._petriflowCanvasService.petriflowClipboardElementsCollection.arcs.forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);
-            if (!this._petriflowCanvasService.canvas)
-                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if (!this._petriflowCanvasService.canvas) {
+                throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+            }
             this._petriflowCanvasService.canvas.container.appendChild(copyElement.element.container);
             this._petriflowCanvasService.petriflowElementsCollection.arcs.push(copyElement);
         });
@@ -358,8 +365,9 @@ export class PetriflowCanvasConfigurationService {
     private copyFromClipboardToCollection(matrix: SVGMatrix, collectionFrom: Array<PetriflowNode<NodeElement>>, collectionTo: Array<PetriflowNode<NodeElement>>) {
         collectionFrom.forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);
-            if (!this._petriflowCanvasService.canvas)
-                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if (!this._petriflowCanvasService.canvas) {
+                throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+            }
             this._petriflowCanvasService.canvas.add(copyElement.canvasElement);
             collectionTo.push(copyElement);
         });
@@ -369,22 +377,25 @@ export class PetriflowCanvasConfigurationService {
         const matrix = (this.clipboard as SVGSVGElement).transform?.baseVal[0]?.matrix;
         this._petriflowCanvasService.petriflowElementsCollection.selected.forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);
-            if (!this._petriflowCanvasService.canvas)
-                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if (!this._petriflowCanvasService.canvas) {
+                throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+            }
             this._petriflowCanvasService.canvas.add(copyElement.canvasElement);
         });
         this._petriflowCanvasService.petriflowElementsCollection.arcs.filter(arc => arc.isSelected()).forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);
-            if (!this._petriflowCanvasService.canvas)
-                throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            if (!this._petriflowCanvasService.canvas) {
+                throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+            }
             this._petriflowCanvasService.canvas.container.appendChild(copyElement.element.container);
         });
         this.deleteClipboard();
     }
 
     deleteClipboard() {
-        if (!this._petriflowCanvasService.canvas)
-            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        if (!this._petriflowCanvasService.canvas) {
+            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+        }
         if (this.clipboard) {
             this._petriflowCanvasService.canvas.container.removeChild(this.clipboard);
             this.clipboard = undefined;
@@ -413,9 +424,8 @@ export class PetriflowCanvasConfigurationService {
 
     private createBreakpoint(e: MouseEvent, arc: PetriflowArc<Arc>) {
         if (this.mode === CanvasMode.MOVE && !this._selectedArc) {
-            const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const mouseX = (e.offsetX - (offset?.x ?? 0)) / (offset?.scale ?? 1);
-            const mouseY = (e.offsetY - (offset?.y ?? 0)) / (offset?.scale ?? 1);
+            const mouseX = e.offsetX;
+            const mouseY = e.offsetY;
             const newBreakpoint = new DOMPoint(mouseX, mouseY);
             arc.element.linePoints.splice(this.getBreakpointIndex(newBreakpoint, arc.element), 0, newBreakpoint);
             arc.element.move(arc.element.start, arc.element.end);
@@ -449,9 +459,8 @@ export class PetriflowCanvasConfigurationService {
 
     private moveBreakpoint(e: MouseEvent) {
         if (this.mode === CanvasMode.MOVE && this._breakpoint) {
-            const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const mouseX = (e.offsetX - (offset?.x ?? 0)) / (offset?.scale ?? 1);
-            const mouseY = (e.offsetY - (offset?.y ?? 0)) / (offset?.scale ?? 1);
+            const mouseX = e.offsetX;
+            const mouseY = e.offsetY;
             this._breakpoint.x = mouseX;
             this._breakpoint.y = mouseY;
             this._selectedArc?.element.move(this._selectedArc.element.start, this._selectedArc.element.end);

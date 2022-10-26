@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {PanZoom, Transform} from 'panzoom';
 import {PetriflowCanvas} from './petriflow-canvas';
 import {CanvasElementCollection} from './domain/canvas-element-collection';
+import {PanzoomObject} from '@panzoom/panzoom';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +11,7 @@ export class PetriflowCanvasService {
     private _canvas: PetriflowCanvas | undefined;
     private readonly _petriflowElementsCollection: CanvasElementCollection;
     private _petriflowClipboardElementsCollection: CanvasElementCollection;
-    private _panzoom: PanZoom | undefined;
+    private _panzoom: PanzoomObject | undefined;
 
     constructor() {
         this._petriflowElementsCollection = new CanvasElementCollection();
@@ -19,7 +19,9 @@ export class PetriflowCanvasService {
     }
 
     setSelectedByRectangleEnclosure(rectangle: SVGElement) {
-        if (!this._canvas) return;
+        if (!this._canvas) {
+            return;
+        }
         const newRect = this._canvas.svg.createSVGRect();
         newRect.x = +(rectangle.getAttribute('x') ?? 0);
         newRect.y = +(rectangle.getAttribute('y') ?? 0);
@@ -47,16 +49,24 @@ export class PetriflowCanvasService {
         return to;
     }
 
-    get panzoom(): PanZoom | undefined {
+    get panzoom(): PanzoomObject | undefined {
         return this._panzoom;
     }
 
-    set panzoom(value: PanZoom | undefined) {
+    set panzoom(value: PanzoomObject | undefined) {
         this._panzoom = value;
     }
 
-    getPanZoomOffset(): Transform | undefined {
-        return this?._panzoom?.getTransform();
+    get xOffset(): number | undefined {
+        return this?._panzoom?.getPan()?.x;
+    }
+
+    get yOffset(): number | undefined {
+        return this?._panzoom?.getPan()?.y;
+    }
+
+    get scale(): number | undefined {
+        return this?._panzoom?.getScale();
     }
 
     selectAll() {

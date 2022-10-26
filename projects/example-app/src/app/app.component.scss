@@ -9,8 +9,6 @@
 }
 
 .canvas {
-    width: 100%;
-    height: 100%;
 }
 
 .inner {
@@ -19,9 +17,8 @@
 
 .outer {
     display: flex;
-    overflow: scroll;
-    min-height: 100%;
-
+    height: inherit;
+    width: inherit;
 }
 
 .link-icon-button {

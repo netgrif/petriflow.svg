@@ -28,14 +28,16 @@ export class AppComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (!this._petriflowCanvasService.canvas)
-            throw new Error("Petriflow SVG canvas does not exists!");
+        if (!this._petriflowCanvasService.canvas) {
+            throw new Error('Petriflow SVG canvas does not exists!');
+        }
         this._petriflowCanvasService.canvas.svg.onclick = (e) => {
             this.addTransition(e);
             this.addPlace(e);
         };
-        if (!this.toolbar)
-            throw new Error("MatToolbar could not be found!");
+        if (!this.toolbar) {
+            throw new Error('MatToolbar could not be found!');
+        }
         this._petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg, this.toolbar);
         this.toolbar._elementRef.nativeElement.onmouseenter = () => {
             this._petriflowConfigService.deleteClipboard();
@@ -44,18 +46,15 @@ export class AppComponent implements AfterViewInit {
 
     private addTransition($event: MouseEvent): void {
         if (this._petriflowConfigService.mode === CanvasMode.CREATE_TRANSITION) {
-            const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const transition = this._petriflowFactoryService.createTransition(new DOMPoint(($event.offsetX - (offset?.x ?? 0)) / (offset?.scale ?? 1),
-                ($event.offsetY - (offset?.y ?? 0)) / (offset?.scale ?? 1)));
+            const transition = this._petriflowFactoryService.createTransition(new DOMPoint($event.offsetX, $event.offsetY));
             this._petriflowConfigService.addTransitionEvents(transition);
 
         }
     }
 
-    private addPlace(e: MouseEvent) {
+    private addPlace($event: MouseEvent) {
         if (this._petriflowConfigService.mode === CanvasMode.CREATE_PLACE) {
-            const offset = this._petriflowCanvasService.getPanZoomOffset();
-            const place = this._petriflowFactoryService.createPlace(0, new DOMPoint((e.offsetX - (offset?.x ?? 0)) / (offset?.scale ?? 1), (e.offsetY - (offset?.y ?? 0)) / (offset?.scale ?? 1)));
+            const place = this._petriflowFactoryService.createPlace(0, new DOMPoint($event.offsetX, $event.offsetY));
             this._petriflowConfigService.addPlaceEvents(place);
         }
     }
@@ -71,11 +70,14 @@ export class AppComponent implements AfterViewInit {
     changeCanvasMode(mode: CanvasMode, panzoomEnabled = true) {
         this.disablePreviousArcMode();
         this._petriflowConfigService.mode = mode;
-        if (panzoomEnabled && this._petriflowCanvasService.panzoom?.isPaused()) {
-            this._petriflowCanvasService.panzoom.resume();
-        } else if (!panzoomEnabled && !this._petriflowCanvasService.panzoom?.isPaused()) {
-            this._petriflowCanvasService.panzoom?.pause();
+        if (panzoomEnabled) {
+            console.log();//TODO: fix
         }
+        // if (panzoomEnabled && ) {
+        //     this._petriflowCanvasService.panzoom.resume();
+        // } else if (!panzoomEnabled && !this._petriflowCanvasService.panzoom?.isPaused()) {
+        //     this._petriflowCanvasService.panzoom?.pause();
+        // }
     }
 
     goToLink(url: string) {
@@ -83,8 +85,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     resetPanZoom() {
-        this._petriflowCanvasService.panzoom?.moveTo(0, 0);
-        this._petriflowCanvasService.panzoom?.zoomAbs(0, 0, 1);
+        this._petriflowCanvasService.panzoom?.reset();
     }
 
     public get canvasMode(): typeof CanvasMode {
