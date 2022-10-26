@@ -6,11 +6,15 @@ export class Canvas extends Container {
     private _svg: SVGSVGElement;
     private readonly _defs: SVGDefsElement;
 
-    constructor(svg: SVGSVGElement) {
+    constructor(svg: SVGSVGElement, defs?: SVGDefsElement) {
         super();
         this._svg = svg;
-        this._defs = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'defs') as SVGDefsElement;
-        this.svg.appendChild(this._defs);
+        if (!defs) {
+            defs = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'defs') as SVGDefsElement;
+        }
+        this._defs = defs;
+        // this.svg.appendChild(this._defs);
+        this.container.appendChild(this._defs);
         this.svg.appendChild(this.container);
     }
 

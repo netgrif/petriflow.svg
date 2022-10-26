@@ -1,10 +1,11 @@
-import {AfterViewInit, Component, ElementRef, HostListener, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import {PetriflowCanvasService} from './petriflow-canvas.service';
 import createPanZoom from 'panzoom';
 import {PetriflowCanvasConfigurationService} from './services/petriflow-canvas-configuration.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {PetriflowCanvas} from './petriflow-canvas';
 import {PetriflowCanvasConfiguration} from './petriflow-canvas-configuration';
+import {GridConfiguration} from './grid-configuration';
 
 @Component({
     selector: 'petriflow-svg-canvas',
@@ -15,15 +16,21 @@ import {PetriflowCanvasConfiguration} from './petriflow-canvas-configuration';
 export class PetriflowCanvasComponent implements AfterViewInit {
 
     @ViewChild('canvas') canvasElement: ElementRef | undefined;
+    @ViewChild('canvasDefs') canvasDefsElement: ElementRef | undefined;
+    @ViewChild('canvasGrid') canvasGridElement: ElementRef | undefined;
+    @Input() gridConfiguration: GridConfiguration = new GridConfiguration();
     private _canvas: PetriflowCanvas | undefined;
     private _mouseEvent: MouseEvent | undefined;
 
-    constructor(private _canvasService: PetriflowCanvasService, private _canvasConfig: PetriflowCanvasConfigurationService,
-                private _snackBar: MatSnackBar) {
+    constructor(private _canvasService: PetriflowCanvasService,
+                private _canvasConfig: PetriflowCanvasConfigurationService,
+                private _snackBar: MatSnackBar
+    ) {
     }
 
     ngAfterViewInit() {
-        this._canvas = new PetriflowCanvas(this.canvasElement?.nativeElement);
+        this._canvas = new PetriflowCanvas(this.canvasElement?.nativeElement, this.canvasDefsElement?.nativeElement);
+        this._canvas.container.appendChild(this.canvasGridElement?.nativeElement);
         this._canvasService.canvas = this._canvas;
         this._canvasService.panzoom = createPanZoom(this._canvas.container);
     }
@@ -63,6 +70,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     onEscape() {
         this._canvasService.deselectAll();
         this._canvasConfig.deleteClipboard();
+        this._canvasService.panzoom?.moveTo(0,0);
     }
 
     @HostListener('window:keydown.+', ['$event'])

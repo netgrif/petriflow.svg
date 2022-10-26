@@ -42,6 +42,9 @@
             <mat-button-toggle mat-button (click)="openDialog()">
                 <mat-icon>info</mat-icon>
             </mat-button-toggle>
+            <mat-button-toggle mat-button  (click)="gridOnOff()">
+                <mat-icon>clear</mat-icon>
+            </mat-button-toggle>
             <mat-button-toggle mat-button id="reset-zoom-button" (click)="resetPanZoom()">
                 <mat-icon>clear</mat-icon>
             </mat-button-toggle>
@@ -68,5 +71,5 @@
     </mat-toolbar-row>
 </mat-toolbar>
 <div class="outer">
-    <petriflow-svg-canvas class="canvas"></petriflow-svg-canvas>
+    <petriflow-svg-canvas class="canvas" [gridConfiguration]="gridConfiguration"></petriflow-svg-canvas>
 </div>

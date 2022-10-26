@@ -8,6 +8,7 @@ import {
 import {MatToolbar} from '@angular/material/toolbar';
 import {MatDialog} from '@angular/material/dialog';
 import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
+import {GridConfiguration} from '../../../petriflow-svg/src/lib/grid-configuration';
 
 @Component({
     selector: 'pf-app-root',
@@ -19,6 +20,7 @@ export class AppComponent implements AfterViewInit {
     @ViewChild(MatToolbar) toolbar: MatToolbar | undefined;
     @ViewChild('canvasComponent') canvasComponent: ElementRef | undefined;
     public _mode: CanvasMode | undefined;
+    public gridConfiguration = new GridConfiguration();
 
     constructor(private _petriflowCanvasService: PetriflowCanvasService, private _petriflowFactoryService: PetriflowCanvasFactoryService,
                 private _petriflowConfigService: PetriflowCanvasConfigurationService, public dialog: MatDialog) {
@@ -91,5 +93,9 @@ export class AppComponent implements AfterViewInit {
 
     openDialog() {
         this.dialog.open(PetriflowInfoDialogComponent);
+    }
+
+    gridOnOff() {
+        this.gridConfiguration.enabled = !this.gridConfiguration.enabled;
     }
 }
