@@ -1,4 +1,4 @@
-import {CanvasConfiguration} from 'petri-svg';
+import {CanvasConfiguration} from '@netgrif/petri.svg';
 
 export class GridConfiguration {
     public size: number = CanvasConfiguration.SIZE;

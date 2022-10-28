@@ -34,6 +34,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
         this._canvasService.panzoom = Panzoom(this.canvasElement?.nativeElement, {
             canvas: true,
             contain: 'outside',
+            cursor: 'auto',
             maxScale: 10,
             minScale: 0.5
         });
