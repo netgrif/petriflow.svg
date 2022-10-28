@@ -63,13 +63,13 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         }
     }
 
-    setEnabled(firing: boolean) {
-        this.canvasElement.setEnabled(firing);
+    public enable(firing: boolean) {
+        this.canvasElement.enable(firing);
         this.setIconFiringClass(firing);
     }
 
-    setDisabled(firing: boolean) {
-        this.canvasElement.setDisabled();
+    public disable(firing: boolean) {
+        this.canvasElement.disable();
         this.setIconFiringClass(firing);
     }
 
