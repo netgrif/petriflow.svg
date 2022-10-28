@@ -39,10 +39,12 @@ export abstract class LabeledObject extends NodeElement implements Movable {
     }
 
     activate() {
+        super.activate();
         this._labelElement.setAttributeNS(null, 'class', 'svg-active-fill');
     }
 
     deactivate() {
+        super.deactivate();
         this._labelElement.setAttributeNS(null, 'class', 'svg-inactive-fill');
     }
 

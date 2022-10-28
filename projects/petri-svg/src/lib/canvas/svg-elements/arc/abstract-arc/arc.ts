@@ -48,11 +48,13 @@ export abstract class Arc extends CanvasElement {
     }
 
     activate() {
+        super.activate();
         this.arcLine.setAttributeNS(null, 'class', 'svg-active-stroke');
         this.multiplicityElement.setAttributeNS(null, 'class', 'svg-active-fill');
     }
 
     deactivate() {
+        super.deactivate();
         this.arcLine.setAttributeNS(null, 'class', 'svg-inactive-stroke');
         this.multiplicityElement.setAttributeNS(null, 'class', 'svg-inactive-fill');
     }
