@@ -38,7 +38,7 @@ export class AppComponent implements AfterViewInit {
         if (!this.toolbar) {
             throw new Error('MatToolbar could not be found!');
         }
-        this._petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg, this.toolbar);
+        this._petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg, this.toolbar, this._petriflowCanvasService.panzoom);
         this.toolbar._elementRef.nativeElement.onmouseenter = () => {
             this._petriflowConfigService.deleteClipboard();
         };
