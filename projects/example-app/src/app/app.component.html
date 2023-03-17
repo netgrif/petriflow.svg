@@ -3,10 +3,13 @@
         <mat-icon id="netgrif-icon" svgIcon="netgrif_logo"></mat-icon>
         <mat-button-toggle-group [value]="_mode" fxLayoutAlign="start end">
             <mat-button-toggle mat-button [value]="canvasMode.SELECT" (click)="changeCanvasMode(canvasMode.SELECT)">
+                <mat-icon svgIcon="cursor-default-outline"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.PANNING" (click)="changeCanvasMode(canvasMode.PANNING)">
                 <mat-icon>open_with</mat-icon>
             </mat-button-toggle>
             <mat-button-toggle mat-button [value]="canvasMode.LASSO"
-                               (click)="changeCanvasMode(canvasMode.LASSO, false)">
+                               (click)="changeCanvasMode(canvasMode.LASSO)">
                 <mat-icon>tab_unselected</mat-icon>
             </mat-button-toggle>
             <mat-button-toggle mat-button [value]="canvasMode.CREATE_TRANSITION"

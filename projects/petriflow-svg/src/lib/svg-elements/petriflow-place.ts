@@ -48,7 +48,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
     }
 
     changeId(id: string): void {
-        this.canvasElement.id = `svg_place_${id}`;
+        this.canvasElement.id = id;
         this.canvasElement.label.textContent = id;
     }
 }

@@ -1,5 +1,6 @@
 export enum CanvasMode {
     SELECT = 'select',
+    PANNING = 'panning',
     LASSO = 'lasso',
     CREATE_TRANSITION = 'transition',
     CREATE_PLACE = 'place',

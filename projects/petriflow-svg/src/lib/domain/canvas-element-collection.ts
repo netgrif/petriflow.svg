@@ -4,6 +4,9 @@ import {PetriflowPlace} from '../svg-elements/petriflow-place';
 import {PetriflowTransition} from '../svg-elements/petriflow-transition';
 import {PetriflowNode} from '../svg-elements/petriflow-node';
 import {PetriflowCanvasElement} from '../svg-elements/petriflow-canvas-element';
+import {Subject} from "rxjs";
+import {CanvasEventWrapper} from "./canvas-event-wrapper";
+import {CanvasEventType} from "./canvas-event-type";
 
 export class CanvasElementCollection {
 
@@ -11,10 +14,13 @@ export class CanvasElementCollection {
     private _transitions: Array<PetriflowTransition>;
     private _arcs: Array<PetriflowArc<Arc>>;
 
+    private _eventEmitter$: Subject<CanvasEventWrapper>;
+
     constructor() {
         this._places = [];
         this._transitions = [];
         this._arcs = [];
+        this._eventEmitter$ = new Subject<CanvasEventWrapper>();
     }
 
     get places(): Array<PetriflowPlace> {
@@ -51,5 +57,13 @@ export class CanvasElementCollection {
 
     get all(): Array<PetriflowCanvasElement> {
         return [...this.nodes, ...this.arcs];
+    }
+
+    get eventEmitter(): Subject<CanvasEventWrapper> {
+        return this._eventEmitter$;
+    }
+
+    pushEvent(element: PetriflowCanvasElement, eventType: CanvasEventType): void {
+        this._eventEmitter$.next({element, eventType});
     }
 }

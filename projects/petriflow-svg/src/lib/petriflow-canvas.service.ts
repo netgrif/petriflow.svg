@@ -2,6 +2,10 @@ import {Injectable} from '@angular/core';
 import {PetriflowCanvas} from './petriflow-canvas';
 import {CanvasElementCollection} from './domain/canvas-element-collection';
 import {PanzoomObject} from '@panzoom/panzoom';
+import {Subject} from "rxjs";
+import {PetriflowNode} from "./svg-elements/petriflow-node";
+import {CanvasEventType} from "./domain/canvas-event-type";
+import {CanvasEventWrapper} from "./domain/canvas-event-wrapper";
 
 @Injectable({
     providedIn: 'root',
@@ -99,5 +103,9 @@ export class PetriflowCanvasService {
 
     set petriflowClipboardElementsCollection(value: CanvasElementCollection) {
         this._petriflowClipboardElementsCollection = value;
+    }
+
+    public petriflowElementsCollectionEventEmitter(): Subject<CanvasEventWrapper> {
+        return this._petriflowElementsCollection.eventEmitter;
     }
 }

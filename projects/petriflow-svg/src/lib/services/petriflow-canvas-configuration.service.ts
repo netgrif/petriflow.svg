@@ -11,6 +11,7 @@ import {PetriflowTransition} from '../svg-elements/petriflow-transition';
 import {PetriflowArc} from '../svg-elements/petriflow-arc';
 import {PetriflowCanvasElement} from '../svg-elements/petriflow-canvas-element';
 import {PanzoomObject} from "@panzoom/panzoom";
+import {CanvasEventType} from "../domain/canvas-event-type";
 
 @Injectable({
     providedIn: 'root'
@@ -87,7 +88,7 @@ export class PetriflowCanvasConfigurationService {
 
     private mouseDownEvent(e: PointerEvent, panzoom: PanzoomObject | undefined) {
         e.preventDefault();
-        if (this.mode !== CanvasMode.SELECT && !!panzoom) {
+        if (this.mode !== CanvasMode.PANNING && !!panzoom) {
             panzoom.setOptions({disablePan: true});
         }
         if (this.mode === CanvasMode.LASSO) {
@@ -171,6 +172,7 @@ export class PetriflowCanvasConfigurationService {
             this._arcLine = this._petriflowCanvasFactory.addArc(element, this._mode as string) as SVGElement;
         } else if (this._arcLine) {
             const arc = this._petriflowCanvasFactory.addArc(element, this._mode as string) as PetriflowArc<Arc>;
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(arc, CanvasEventType.CREATE);
             if (arc) {
                 this._source = undefined;
                 this._arcLine = undefined;
@@ -186,6 +188,9 @@ export class PetriflowCanvasConfigurationService {
             } else {
                 this._petriflowCanvasFactory.source = undefined;
             }
+        }
+        if (this._mode === CanvasMode.SELECT) {
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(element, CanvasEventType.SELECT);
         }
     }
 
@@ -250,6 +255,11 @@ export class PetriflowCanvasConfigurationService {
                 petriflowElement.canvasElement.deleteArcs(removedArcs);
             });
             this._petriflowCanvasService.canvas.remove(element.canvasElement);
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(element, CanvasEventType.DELETE);
+            // TODO: arc removal
+            // removedArcs.forEach(removedArc => {
+            //     this._petriflowCanvasService.petriflowElementsCollection.pushEvent(removedArc, CanvasEventType.DELETE);
+            // });
         }
     }
 
@@ -259,6 +269,7 @@ export class PetriflowCanvasConfigurationService {
                 throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
             }
             this._petriflowCanvasService.canvas.remove(petriflowElement.element);
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(petriflowElement, CanvasEventType.DELETE);
         }
     }
 

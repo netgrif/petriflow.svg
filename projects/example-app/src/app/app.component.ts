@@ -9,6 +9,7 @@ import {MatToolbar} from '@angular/material/toolbar';
 import {MatDialog} from '@angular/material/dialog';
 import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
 import {GridConfiguration} from '../../../petriflow-svg/src/lib/grid-configuration';
+import {CanvasEventType} from "../../../petriflow-svg/src/lib/domain/canvas-event-type";
 
 @Component({
     selector: 'pf-app-root',
@@ -42,13 +43,16 @@ export class AppComponent implements AfterViewInit {
         this.toolbar._elementRef.nativeElement.onmouseenter = () => {
             this._petriflowConfigService.deleteClipboard();
         };
+        this._petriflowCanvasService.petriflowElementsCollectionEventEmitter().subscribe((element) => {
+            console.log(element);
+        });
     }
 
     private addTransition($event: MouseEvent): void {
         if (this._petriflowConfigService.mode === CanvasMode.CREATE_TRANSITION) {
             const transition = this._petriflowFactoryService.createTransition(new DOMPoint($event.offsetX, $event.offsetY));
             this._petriflowConfigService.addTransitionEvents(transition);
-
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(transition, CanvasEventType.CREATE);
         }
     }
 
@@ -56,6 +60,7 @@ export class AppComponent implements AfterViewInit {
         if (this._petriflowConfigService.mode === CanvasMode.CREATE_PLACE) {
             const place = this._petriflowFactoryService.createPlace(0, new DOMPoint($event.offsetX, $event.offsetY));
             this._petriflowConfigService.addPlaceEvents(place);
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(place, CanvasEventType.CREATE);
         }
     }
 
@@ -67,17 +72,9 @@ export class AppComponent implements AfterViewInit {
         }
     }
 
-    changeCanvasMode(mode: CanvasMode, panzoomEnabled = true) {
+    changeCanvasMode(mode: CanvasMode) {
         this.disablePreviousArcMode();
         this._petriflowConfigService.mode = mode;
-        if (panzoomEnabled) {
-            console.log();//TODO: fix
-        }
-        // if (panzoomEnabled && ) {
-        //     this._petriflowCanvasService.panzoom.resume();
-        // } else if (!panzoomEnabled && !this._petriflowCanvasService.panzoom?.isPaused()) {
-        //     this._petriflowCanvasService.panzoom?.pause();
-        // }
     }
 
     goToLink(url: string) {
