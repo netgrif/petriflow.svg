@@ -254,22 +254,28 @@ export class PetriflowCanvasConfigurationService {
             this._petriflowCanvasService.petriflowElementsCollection.nodes.forEach(petriflowElement => {
                 petriflowElement.canvasElement.deleteArcs(removedArcs);
             });
+            removedArcs.forEach(arc => {
+                let arcIndex = this._petriflowCanvasService.petriflowElementsCollection.arcs.findIndex(petriflowArc => petriflowArc.element === arc);
+                this._petriflowCanvasService.petriflowElementsCollection.pushEvent(this._petriflowCanvasService.petriflowElementsCollection.arcs[arcIndex], CanvasEventType.DELETE);
+                this._petriflowCanvasService.petriflowElementsCollection.arcs.splice(arcIndex, 1);
+            });
             this._petriflowCanvasService.canvas.remove(element.canvasElement);
             this._petriflowCanvasService.petriflowElementsCollection.pushEvent(element, CanvasEventType.DELETE);
-            // TODO: arc removal
-            // removedArcs.forEach(removedArc => {
-            //     this._petriflowCanvasService.petriflowElementsCollection.pushEvent(removedArc, CanvasEventType.DELETE);
-            // });
         }
     }
 
-    private deleteArc(petriflowElement: PetriflowArc<Arc>) {
+    private deleteArc(petriflowArc: PetriflowArc<Arc>) {
         if (this._mode === CanvasMode.REMOVE) {
             if (!this._petriflowCanvasService.canvas) {
                 throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
             }
-            this._petriflowCanvasService.canvas.remove(petriflowElement.element);
-            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(petriflowElement, CanvasEventType.DELETE);
+            this._petriflowCanvasService.petriflowElementsCollection.nodes.forEach(petriflowElement => {
+                petriflowElement.canvasElement.deleteArcs([petriflowArc.element]);
+            });
+            this._petriflowCanvasService.petriflowElementsCollection.arcs.splice(
+                this._petriflowCanvasService.petriflowElementsCollection.arcs.findIndex(collectionArc => petriflowArc === collectionArc), 1);
+            this._petriflowCanvasService.canvas.remove(petriflowArc.element);
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(petriflowArc, CanvasEventType.DELETE);
         }
     }
 
@@ -346,8 +352,8 @@ export class PetriflowCanvasConfigurationService {
     }
 
     deleteSelectedCollection(collection: Array<PetriflowNode<NodeElement>>) {
-        let removedArcs: Array<Arc> = [];
         collection.filter(element => element.isSelected()).forEach(selectedElement => {
+            let removedArcs: Array<Arc> = [];
             if (!this._petriflowCanvasService.canvas) {
                 throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
             }
@@ -357,11 +363,12 @@ export class PetriflowCanvasConfigurationService {
             });
             this._petriflowCanvasService.petriflowElementsCollection.nodes.forEach(petriflowElement => petriflowElement.canvasElement.deleteArcs(removedArcs));
             removedArcs.forEach(arc => {
-                this._petriflowCanvasService.petriflowElementsCollection.arcs.splice(
-                    this._petriflowCanvasService.petriflowElementsCollection.arcs.findIndex(petriflowArc => petriflowArc.element === arc), 1);
+                let arcIndex = this._petriflowCanvasService.petriflowElementsCollection.arcs.findIndex(petriflowArc => petriflowArc.element === arc);
+                this._petriflowCanvasService.petriflowElementsCollection.pushEvent(this._petriflowCanvasService.petriflowElementsCollection.arcs[arcIndex], CanvasEventType.DELETE);
+                this._petriflowCanvasService.petriflowElementsCollection.arcs.splice(arcIndex, 1);
             });
-            removedArcs = [];
             this._petriflowCanvasService.canvas.remove(selectedElement.canvasElement);
+            this._petriflowCanvasService.petriflowElementsCollection.pushEvent(selectedElement, CanvasEventType.DELETE);
             collection.splice(collection.indexOf(selectedElement), 1);
         });
     }
