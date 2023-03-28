@@ -21,8 +21,8 @@ import {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     providers: [
-        {provide: PetriflowCanvasService, useClass: ControlPetriflowCanvasService},
-        {provide: PetriflowCanvasConfiguration, useClass: ControlPetriflowCanvasConfigurationService}
+        {provide: PetriflowCanvasService, useExisting: ControlPetriflowCanvasService},
+        {provide: PetriflowCanvasConfiguration, useExisting: ControlPetriflowCanvasConfigurationService}
     ]
 })
 export class AppComponent implements AfterViewInit {
@@ -47,9 +47,6 @@ export class AppComponent implements AfterViewInit {
             this.addPlace(e);
         };
         this._petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg);
-        // this._petriflowCanvasService.petriflowElementsCollectionEventEmitter().subscribe((element) => {
-        //     console.log(element);
-        // });
     }
 
     private addTransition($event: MouseEvent): void {
@@ -63,7 +60,6 @@ export class AppComponent implements AfterViewInit {
             this._petriflowCanvasService.createTransition(transition);
             this._petriflowCanvasService.petriflowElementsCollection.transitions.push(petriflowTransition);
             this._petriflowConfigService.addTransitionEvents(petriflowTransition);
-            // this._petriflowCanvasService.petriflowElementsCollection.pushEvent(petriflowTransition, CanvasEventType.CREATE);
         }
     }
 
@@ -79,7 +75,6 @@ export class AppComponent implements AfterViewInit {
             this._petriflowCanvasService.createPlace(place);
             this._petriflowCanvasService.petriflowElementsCollection.places.push(petriflowPlace);
             this._petriflowConfigService.addPlaceEvents(petriflowPlace);
-            // this._petriflowCanvasService.petriflowElementsCollection.pushEvent(petriflowPlace, CanvasEventType.CREATE);
         }
     }
 
@@ -87,10 +82,7 @@ export class AppComponent implements AfterViewInit {
     onControlC($event: KeyboardEvent) {
         $event.preventDefault();
         this.openSnackBar('Canvas elements copied to clipboard');
-        this._petriflowCanvasService.petriflowClipboardElementsCollection = this._petriflowCanvasService.copyElements(
-            this._petriflowCanvasService.petriflowElementsCollection,
-            this._petriflowCanvasService.petriflowClipboardElementsCollection
-        );
+        this._petriflowConfigService.copyElements();
     }
 
     @HostListener('window:keydown.control.v', ['$event'])
@@ -154,16 +146,8 @@ export class AppComponent implements AfterViewInit {
         this._snackBar.open(message, undefined, {duration: 1000});
     }
 
-    disablePreviousArcMode() {
-        if (this._petriflowConfigService.arcLine) {
-            this._petriflowCanvasService.canvas?.container.removeChild(this._petriflowConfigService.arcLine);
-            this._petriflowConfigService.source = undefined;
-            this._petriflowConfigService.arcLine = undefined;
-        }
-    }
-
     changeCanvasMode(mode: CanvasMode) {
-        this.disablePreviousArcMode();
+        this._petriflowConfigService.disablePreviousArcMode();
         this._petriflowConfigService.mode = mode;
     }
 

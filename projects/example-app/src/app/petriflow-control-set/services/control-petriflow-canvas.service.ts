@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {CanvasElementCollection, CanvasEventWrapper, PetriflowCanvasService} from "@netgrif/petriflow.svg";
-import {Subject} from "rxjs";
+import {PetriflowCanvasService} from "@netgrif/petriflow.svg";
+import {CanvasElementCollection} from "../domain/canvas-element-collection";
 
 @Injectable({
     providedIn: 'root'

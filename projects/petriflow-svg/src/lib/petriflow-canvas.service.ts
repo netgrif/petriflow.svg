@@ -1,44 +1,44 @@
 import {Injectable} from '@angular/core';
 import {PetriflowCanvas} from './petriflow-canvas';
 import {PanzoomObject} from '@panzoom/panzoom';
-import {CanvasConfiguration, Place, StaticPlace, Transition} from "petri-svg";
-import {CanvasMode} from "./canvas-mode";
+import {CanvasConfiguration, NodeElement, Place, StaticPlace, Transition} from "petri-svg";
+import {PetriflowNode} from "./svg-elements/petriflow-node";
 
 @Injectable({
     providedIn: 'root',
 })
 export abstract class PetriflowCanvasService {
 
-    private _canvas: PetriflowCanvas | undefined;
-    private _panzoom: PanzoomObject | undefined;
+    protected _canvas: PetriflowCanvas | undefined;
+    protected _panzoom: PanzoomObject | undefined;
 
     protected constructor() {}
 
-    get panzoom(): PanzoomObject | undefined {
+    public get panzoom(): PanzoomObject | undefined {
         return this._panzoom;
     }
 
-    set panzoom(value: PanzoomObject | undefined) {
+    public set panzoom(value: PanzoomObject | undefined) {
         this._panzoom = value;
     }
 
-    get xOffset(): number | undefined {
+    public get xOffset(): number | undefined {
         return this?._panzoom?.getPan()?.x;
     }
 
-    get yOffset(): number | undefined {
+    public get yOffset(): number | undefined {
         return this?._panzoom?.getPan()?.y;
     }
 
-    get scale(): number | undefined {
+    public get scale(): number | undefined {
         return this?._panzoom?.getScale();
     }
 
-    get canvas(): PetriflowCanvas | undefined {
+    public get canvas(): PetriflowCanvas | undefined {
         return this._canvas;
     }
 
-    set canvas(value: PetriflowCanvas | undefined) {
+    public set canvas(value: PetriflowCanvas | undefined) {
         this._canvas = value;
     }
 
@@ -67,6 +67,9 @@ export abstract class PetriflowCanvasService {
     }
 
     public createRectangle(mouseX: number, mouseY: number): SVGElement {
+        if (!this.canvas) {
+            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+        }
         const rectangle = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGElement;
         rectangle.setAttributeNS(null, 'fill', 'none');
         rectangle.setAttributeNS(null, 'class', 'path');
@@ -75,10 +78,20 @@ export abstract class PetriflowCanvasService {
         rectangle.setAttributeNS(null, 'animation', 'dash 5s linear');
         rectangle.setAttributeNS(null, 'x', `${mouseX}`);
         rectangle.setAttributeNS(null, 'y', `${mouseY}`);
-        if (!this.canvas) {
-            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
-        }
         this.canvas.container.appendChild(rectangle);
         return rectangle;
+    }
+
+    public createSvgArc(element: PetriflowNode<NodeElement>, arrowUrl: string): SVGPolygonElement {
+        if (!this.canvas)
+            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        const arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
+        arcLine.setAttributeNS(null, 'fill', 'none');
+        arcLine.setAttributeNS(null, 'stroke', 'black');
+        arcLine.setAttributeNS(null, 'stroke-width', '2');
+        arcLine.setAttributeNS(null, 'marker-end', `url(#${arrowUrl})`);
+        arcLine.setAttributeNS(null, 'points', `${element.getPosition().x},${element.getPosition().y} ${element.getPosition().x},${element.getPosition().y}`);
+        this.canvas.container.appendChild(arcLine);
+        return arcLine;
     }
 }
