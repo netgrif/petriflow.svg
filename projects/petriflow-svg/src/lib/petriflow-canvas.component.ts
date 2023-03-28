@@ -21,10 +21,7 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     @Input() gridConfiguration: GridConfiguration = new GridConfiguration();
     private _canvas: PetriflowCanvas | undefined;
 
-    constructor(private _canvasService: PetriflowCanvasService,
-                private _canvasConfig: PetriflowCanvasConfigurationService,
-                private _snackBar: MatSnackBar
-    ) {
+    constructor(private _canvasService: PetriflowCanvasService) {
     }
 
     ngAfterViewInit() {
@@ -45,72 +42,72 @@ export class PetriflowCanvasComponent implements AfterViewInit {
         return this._canvas;
     }
 
-    @HostListener('window:keydown.control.c', ['$event'])
-    onControlC($event: KeyboardEvent) {
-        $event.preventDefault();
-        this.openSnackBar('Canvas elements copied to clipboard');
-        this._canvasService.petriflowClipboardElementsCollection = this._canvasService.copyElements(this._canvasService.petriflowElementsCollection,
-            this._canvasService.petriflowClipboardElementsCollection);
-    }
-
-    @HostListener('window:keydown.control.v', ['$event'])
-    onControlV($event: KeyboardEvent) {
-        $event.preventDefault();
-        this._canvasConfig.pasteElements();
-    }
-
-    @HostListener('window:keydown.control.a', ['$event'])
-    onControlA($event: KeyboardEvent) {
-        $event.preventDefault();
-        this.openSnackBar('Selected all petri-svg elements');
-        this._canvasService.selectAll();
-    }
-
-    @HostListener('window:keydown.delete', ['$event'])
-    onDelete() {
-        this.openSnackBar('All selected petri-svg elements deleted');
-        this._canvasConfig.deleteSelectedElements();
-    }
-
-    @HostListener('window:keydown.escape', ['$event'])
-    onEscape() {
-        this._canvasService.deselectAll();
-        this._canvasConfig.deleteClipboard();
-        this._canvasService.panzoom?.reset();
-    }
-
-    @HostListener('window:keydown.+', ['$event'])
-    onPlusButton() {
-        this._canvasService.panzoom?.zoomIn();
-    }
-
-    // TODO: fix move on zoom
-    @HostListener('window:keydown.-', ['$event'])
-    onMinusButton() {
-        this._canvasService.panzoom?.zoomOut();
-    }
-
-    @HostListener('window:keydown.ArrowUp', ['$event'])
-    onUpButton() {
-        this._canvasService.panzoom?.pan(0, PetriflowCanvasConfiguration.PANZOOM_MOVE, {relative: true});
-    }
-
-    @HostListener('window:keydown.ArrowRight', ['$event'])
-    onRightButton() {
-        this._canvasService.panzoom?.pan(-PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, {relative: true});
-    }
-
-    @HostListener('window:keydown.ArrowDown', ['$event'])
-    onDownButton() {
-        this._canvasService.panzoom?.pan(0, -PetriflowCanvasConfiguration.PANZOOM_MOVE, {relative: true});
-    }
-
-    @HostListener('window:keydown.ArrowLeft', ['$event'])
-    onLeftButton() {
-        this._canvasService.panzoom?.pan(PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, {relative: true});
-    }
-
-    openSnackBar(message: string) {
-        this._snackBar.open(message, undefined, {duration: 1000});
-    }
+    // @HostListener('window:keydown.control.c', ['$event'])
+    // onControlC($event: KeyboardEvent) {
+    //     $event.preventDefault();
+    //     this.openSnackBar('Canvas elements copied to clipboard');
+    //     this._canvasService.petriflowClipboardElementsCollection = this._canvasService.copyElements(this._canvasService.petriflowElementsCollection,
+    //         this._canvasService.petriflowClipboardElementsCollection);
+    // }
+    //
+    // @HostListener('window:keydown.control.v', ['$event'])
+    // onControlV($event: KeyboardEvent) {
+    //     $event.preventDefault();
+    //     this._canvasConfig.pasteElements();
+    // }
+    //
+    // @HostListener('window:keydown.control.a', ['$event'])
+    // onControlA($event: KeyboardEvent) {
+    //     $event.preventDefault();
+    //     this.openSnackBar('Selected all petri-svg elements');
+    //     this._canvasService.selectAll();
+    // }
+    //
+    // @HostListener('window:keydown.delete', ['$event'])
+    // onDelete() {
+    //     this.openSnackBar('All selected petri-svg elements deleted');
+    //     this._canvasConfig.deleteSelectedElements();
+    // }
+    //
+    // @HostListener('window:keydown.escape', ['$event'])
+    // onEscape() {
+    //     this._canvasService.deselectAll();
+    //     this._canvasConfig.deleteClipboard();
+    //     this._canvasService.panzoom?.reset();
+    // }
+    //
+    // @HostListener('window:keydown.+', ['$event'])
+    // onPlusButton() {
+    //     this._canvasService.panzoom?.zoomIn();
+    // }
+    //
+    // // TODO: fix move on zoom
+    // @HostListener('window:keydown.-', ['$event'])
+    // onMinusButton() {
+    //     this._canvasService.panzoom?.zoomOut();
+    // }
+    //
+    // @HostListener('window:keydown.ArrowUp', ['$event'])
+    // onUpButton() {
+    //     this._canvasService.panzoom?.pan(0, PetriflowCanvasConfiguration.PANZOOM_MOVE, {relative: true});
+    // }
+    //
+    // @HostListener('window:keydown.ArrowRight', ['$event'])
+    // onRightButton() {
+    //     this._canvasService.panzoom?.pan(-PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, {relative: true});
+    // }
+    //
+    // @HostListener('window:keydown.ArrowDown', ['$event'])
+    // onDownButton() {
+    //     this._canvasService.panzoom?.pan(0, -PetriflowCanvasConfiguration.PANZOOM_MOVE, {relative: true});
+    // }
+    //
+    // @HostListener('window:keydown.ArrowLeft', ['$event'])
+    // onLeftButton() {
+    //     this._canvasService.panzoom?.pan(PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, {relative: true});
+    // }
+    //
+    // openSnackBar(message: string) {
+    //     this._snackBar.open(message, undefined, {duration: 1000});
+    // }
 }

@@ -1,57 +1,18 @@
 import {Injectable} from '@angular/core';
 import {PetriflowCanvas} from './petriflow-canvas';
-import {CanvasElementCollection} from './domain/canvas-element-collection';
 import {PanzoomObject} from '@panzoom/panzoom';
-import {Subject} from "rxjs";
-import {PetriflowNode} from "./svg-elements/petriflow-node";
-import {CanvasEventType} from "./domain/canvas-event-type";
-import {CanvasEventWrapper} from "./domain/canvas-event-wrapper";
+import {CanvasConfiguration, Place, StaticPlace, Transition} from "petri-svg";
+import {CanvasMode} from "./canvas-mode";
 
 @Injectable({
     providedIn: 'root',
 })
-export class PetriflowCanvasService {
+export abstract class PetriflowCanvasService {
 
     private _canvas: PetriflowCanvas | undefined;
-    private readonly _petriflowElementsCollection: CanvasElementCollection;
-    private _petriflowClipboardElementsCollection: CanvasElementCollection;
     private _panzoom: PanzoomObject | undefined;
 
-    constructor() {
-        this._petriflowElementsCollection = new CanvasElementCollection();
-        this._petriflowClipboardElementsCollection = new CanvasElementCollection();
-    }
-
-    setSelectedByRectangleEnclosure(rectangle: SVGElement) {
-        if (!this._canvas) {
-            return;
-        }
-        const newRect = this._canvas.svg.createSVGRect();
-        newRect.x = +(rectangle.getAttribute('x') ?? 0);
-        newRect.y = +(rectangle.getAttribute('y') ?? 0);
-        newRect.width = +(rectangle.getAttribute('width') ?? 0);
-        newRect.height = +(rectangle.getAttribute('height') ?? 0);
-        this._petriflowElementsCollection.all.forEach(petriflowElement => {
-            if (petriflowElement.isEnclosedByRectangle(newRect)) {
-                petriflowElement.setSelected(true);
-                petriflowElement.activate();
-            }
-        });
-    }
-
-    copyElements(from: CanvasElementCollection, to: CanvasElementCollection, append = false): CanvasElementCollection {
-        if (!append) {
-            to = new CanvasElementCollection();
-            to.places = from.places.filter(place => place.isSelected());
-            to.transitions = from.transitions.filter(place => place.isSelected());
-            to.arcs = from.arcs.filter(place => place.isSelected());
-        } else {
-            from.places.forEach(place => to.places.push(place));
-            from.transitions.forEach(place => to.transitions.push(place));
-            from.arcs.forEach(place => to.arcs.push(place));
-        }
-        return to;
-    }
+    protected constructor() {}
 
     get panzoom(): PanzoomObject | undefined {
         return this._panzoom;
@@ -73,18 +34,6 @@ export class PetriflowCanvasService {
         return this?._panzoom?.getScale();
     }
 
-    selectAll() {
-        this.petriflowElementsCollection.all.forEach(element => {
-            element.select();
-        });
-    }
-
-    deselectAll() {
-        this.petriflowElementsCollection.all.forEach(element => {
-            element.deselect();
-        });
-    }
-
     get canvas(): PetriflowCanvas | undefined {
         return this._canvas;
     }
@@ -93,19 +42,43 @@ export class PetriflowCanvasService {
         this._canvas = value;
     }
 
-    get petriflowElementsCollection(): CanvasElementCollection {
-        return this._petriflowElementsCollection;
+    public disablePanning() {
+        if (!!this.panzoom) {
+            this.panzoom.setOptions({disablePan: true});
+        }
     }
 
-    get petriflowClipboardElementsCollection(): CanvasElementCollection {
-        return this._petriflowClipboardElementsCollection;
+    public enablePanning() {
+        if (!!this.panzoom) {
+            this.panzoom.setOptions({disablePan: false});
+        }
     }
 
-    set petriflowClipboardElementsCollection(value: CanvasElementCollection) {
-        this._petriflowClipboardElementsCollection = value;
+    public createPlace(place: Place | StaticPlace): void {
+        if (!this.canvas)
+            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        this.canvas.add(place);
     }
 
-    public petriflowElementsCollectionEventEmitter(): Subject<CanvasEventWrapper> {
-        return this._petriflowElementsCollection.eventEmitter;
+    public createTransition(transition: Transition): void {
+        if (!this.canvas)
+            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        this.canvas.add(transition);
+    }
+
+    public createRectangle(mouseX: number, mouseY: number): SVGElement {
+        const rectangle = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGElement;
+        rectangle.setAttributeNS(null, 'fill', 'none');
+        rectangle.setAttributeNS(null, 'class', 'path');
+        rectangle.setAttributeNS(null, 'stroke', 'black');
+        rectangle.setAttributeNS(null, 'stroke-width', '1');
+        rectangle.setAttributeNS(null, 'animation', 'dash 5s linear');
+        rectangle.setAttributeNS(null, 'x', `${mouseX}`);
+        rectangle.setAttributeNS(null, 'y', `${mouseY}`);
+        if (!this.canvas) {
+            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
+        }
+        this.canvas.container.appendChild(rectangle);
+        return rectangle;
     }
 }
