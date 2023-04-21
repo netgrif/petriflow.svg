@@ -4,6 +4,7 @@ import {CanvasMode} from '../canvas-mode';
 import {Arc, CanvasConfiguration, NodeElement} from '@netgrif/petri.svg';
 import {PetriflowNode} from '../svg-elements/petriflow-node';
 import {PetriflowArc} from '../svg-elements/petriflow-arc';
+import {GridConfiguration} from '../grid-configuration';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,7 @@ export abstract class PetriflowCanvasConfigurationService {
     protected rectangle: SVGElement | undefined;
     private _breakpoint: DOMPoint;
     private _selectedArc: PetriflowArc<Arc> | undefined;
+    private _gridConfiguration = new GridConfiguration();
 
     protected mouseDown = false;
     protected mouseX = 0;
@@ -65,6 +67,14 @@ export abstract class PetriflowCanvasConfigurationService {
 
     public set clipboardBox(value: DOMRect | undefined) {
         this._clipboardBox = value;
+    }
+
+    public get gridConfiguration(): GridConfiguration {
+        return this._gridConfiguration;
+    }
+
+    public gridOnOff() {
+        this._gridConfiguration.enabled = !this._gridConfiguration.enabled;
     }
 
     protected copyFromClipboardToCollection(matrix: SVGMatrix, collectionFrom: Array<PetriflowNode<NodeElement>>, collectionTo: Array<PetriflowNode<NodeElement>>) {
@@ -158,7 +168,8 @@ export abstract class PetriflowCanvasConfigurationService {
 
     protected moveElement(e: MouseEvent) {
         if (this._mode === CanvasMode.MOVE && this._source && !this.clipboard) {
-            this._source.canvasElement.move(new DOMPoint(e.offsetX, e.offsetY));
+            // this._source.canvasElement.move(new DOMPoint(e.offsetX, e.offsetY));
+            this._source.move(new DOMPoint(e.offsetX, e.offsetY));
         }
     }
 

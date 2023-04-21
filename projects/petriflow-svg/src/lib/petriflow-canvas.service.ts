@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {PetriflowCanvas} from './petriflow-canvas';
 import {PanzoomObject} from '@panzoom/panzoom';
-import {CanvasConfiguration, NodeElement, Place, StaticPlace, Transition} from "petri-svg";
+import {CanvasConfiguration, NodeElement, Place, StaticPlace, Transition} from "@netgrif/petri.svg";
 import {PetriflowNode} from "./svg-elements/petriflow-node";
 
 @Injectable({
@@ -12,7 +12,8 @@ export abstract class PetriflowCanvasService {
     protected _canvas: PetriflowCanvas | undefined;
     protected _panzoom: PanzoomObject | undefined;
 
-    protected constructor() {}
+    protected constructor() {
+    }
 
     public get panzoom(): PanzoomObject | undefined {
         return this._panzoom;

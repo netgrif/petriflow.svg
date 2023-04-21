@@ -7,8 +7,8 @@ export class ReadArc extends PlaceTransitionArc {
 
     public static readonly ID = 'read_arc_end';
 
-    constructor(start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string | null) {
-        super(start, end, ReadArc.ID, linePoints, multiplicityLabel ?? '');
+    constructor(id: string, start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string | null) {
+        super(id, start, end, ReadArc.ID, linePoints, multiplicityLabel ?? '');
     }
 
     createArcEnd(): ArcEnd {
@@ -16,6 +16,6 @@ export class ReadArc extends PlaceTransitionArc {
     }
 
     clone(): ReadArc | undefined {
-        return new ReadArc(this.start, this.end, this.linePoints, this.multiplicity?.textContent);
+        return new ReadArc(this.id, this.start, this.end, this.linePoints, this.multiplicity?.textContent);
     }
 }

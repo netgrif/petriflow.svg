@@ -28,11 +28,11 @@ export class PetriflowPlace extends PetriflowNode<Place> {
 
     clone(): PetriflowPlace {
         const cloned = new PetriflowPlace(this.canvasElement.clone() ?? defaultPlace());
-        cloned.canvasElement.element.onclick = () => this.onClickEvent(cloned);
         cloned.canvasElement.markingTokens.forEach(token => {
             token.onclick = () => this._onTokenClickEvent(cloned);
         });
         cloned.setOnClick((clone) => this.onClickEvent(clone));
+        cloned.setOnContext((clone) => this.onContextEvent(clone));
         cloned.setOnTokenClickEvent((clone) => this._onTokenClickEvent(clone));
         cloned.changeId(`p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`);
         return cloned;
@@ -50,5 +50,9 @@ export class PetriflowPlace extends PetriflowNode<Place> {
     changeId(id: string): void {
         this.canvasElement.id = id;
         this.canvasElement.label.textContent = id;
+    }
+
+    move(position: DOMPoint) {
+        this.canvasElement.move(position);
     }
 }

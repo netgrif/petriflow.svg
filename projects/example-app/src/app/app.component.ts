@@ -1,7 +1,6 @@
-import {AfterViewInit, Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, HostListener} from '@angular/core';
 import {
     CanvasMode,
-    GridConfiguration,
     PetriflowCanvasConfiguration,
     PetriflowCanvasService,
     PetriflowPlace,
@@ -27,15 +26,29 @@ import {
 })
 export class AppComponent implements AfterViewInit {
 
-    @ViewChild('canvasComponent') canvasComponent: ElementRef | undefined;
     public _mode: CanvasMode | undefined;
-    public gridConfiguration = new GridConfiguration();
+
+    private _mouseEvent: MouseEvent | undefined;
+
+    private readonly stepSize: number = 0.2;
+
+    private readonly maxScale: number = 10;
+
+    private readonly minScale: number = 0.5;
+
+    public panzoomConfiguration = {
+        canvas: true,
+        contain: 'outside',
+        cursor: 'auto',
+        maxScale: this.maxScale,
+        minScale: this.minScale
+    };
 
     constructor(private _petriflowCanvasService: ControlPetriflowCanvasService,
-                private _petriflowConfigService: ControlPetriflowCanvasConfigurationService,
+                public petriflowConfigService: ControlPetriflowCanvasConfigurationService,
                 public dialog: MatDialog,
                 private _snackBar: MatSnackBar) {
-        this._mode = _petriflowConfigService.mode;
+        this._mode = petriflowConfigService.mode;
     }
 
     ngAfterViewInit(): void {
@@ -46,11 +59,11 @@ export class AppComponent implements AfterViewInit {
             this.addTransition(e);
             this.addPlace(e);
         };
-        this._petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg);
+        this.petriflowConfigService.addCanvasEvent(this._petriflowCanvasService.canvas.svg);
     }
 
     private addTransition($event: MouseEvent): void {
-        if (this._petriflowConfigService.mode === CanvasMode.CREATE_TRANSITION) {
+        if (this.petriflowConfigService.mode === CanvasMode.CREATE_TRANSITION) {
             const transition = new Transition(
                 `t${++PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`,
                 `t${PetriflowCanvasConfiguration.TRANSITION_ID_COUNTER}`,
@@ -59,12 +72,12 @@ export class AppComponent implements AfterViewInit {
             const petriflowTransition = new PetriflowTransition(transition, undefined);
             this._petriflowCanvasService.createTransition(transition);
             this._petriflowCanvasService.petriflowElementsCollection.transitions.push(petriflowTransition);
-            this._petriflowConfigService.addTransitionEvents(petriflowTransition);
+            this.petriflowConfigService.addTransitionEvents(petriflowTransition);
         }
     }
 
     private addPlace($event: MouseEvent) {
-        if (this._petriflowConfigService.mode === CanvasMode.CREATE_PLACE) {
+        if (this.petriflowConfigService.mode === CanvasMode.CREATE_PLACE) {
             const place = new Place(
                 `p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`,
                 `p${PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`,
@@ -74,7 +87,17 @@ export class AppComponent implements AfterViewInit {
             const petriflowPlace = new PetriflowPlace(place);
             this._petriflowCanvasService.createPlace(place);
             this._petriflowCanvasService.petriflowElementsCollection.places.push(petriflowPlace);
-            this._petriflowConfigService.addPlaceEvents(petriflowPlace);
+            this.petriflowConfigService.addPlaceEvents(petriflowPlace);
+
+            if (place.id === 'p1') {
+                this._petriflowCanvasService.petriflowElementsCollection.transitions.find(transition =>
+                    transition.canvasElement.id === 't1'
+                )?.setIcon('home');
+            } else if (place.id === 'p2') {
+                this._petriflowCanvasService.petriflowElementsCollection.transitions.find(transition =>
+                    transition.canvasElement.id === 't1'
+                )?.setIcon('add');
+            }
         }
     }
 
@@ -82,13 +105,13 @@ export class AppComponent implements AfterViewInit {
     onControlC($event: KeyboardEvent) {
         $event.preventDefault();
         this.openSnackBar('Canvas elements copied to clipboard');
-        this._petriflowConfigService.copyElements();
+        this.petriflowConfigService.copyElements();
     }
 
     @HostListener('window:keydown.control.v', ['$event'])
     onControlV($event: KeyboardEvent) {
         $event.preventDefault();
-        this._petriflowConfigService.pasteElements();
+        this.petriflowConfigService.pasteElements();
     }
 
     @HostListener('window:keydown.control.a', ['$event'])
@@ -101,25 +124,41 @@ export class AppComponent implements AfterViewInit {
     @HostListener('window:keydown.delete', ['$event'])
     onDelete() {
         this.openSnackBar('All selected petri-svg elements deleted');
-        this._petriflowConfigService.deleteSelectedElements();
+        this.petriflowConfigService.deleteSelectedElements();
     }
 
     @HostListener('window:keydown.escape', ['$event'])
     onEscape() {
         this._petriflowCanvasService.deselectAll();
-        this._petriflowConfigService.deleteClipboard();
+        this.petriflowConfigService.deleteClipboard();
         this._petriflowCanvasService.panzoom?.reset();
     }
 
     @HostListener('window:keydown.+', ['$event'])
     onPlusButton() {
-        this._petriflowCanvasService.panzoom?.zoomIn();
+        const newScale = !!this._petriflowCanvasService.panzoom?.getScale() ?
+            this._petriflowCanvasService.panzoom?.getScale() + this.stepSize : 1.2;
+        this._petriflowCanvasService.panzoom?.zoomToPoint(
+            newScale > this.maxScale ? this.maxScale : newScale,
+            {
+                clientX: this._mouseEvent?.x ?? 0,
+                clientY: this._mouseEvent?.y ?? 0
+            }
+        );
     }
 
     // TODO: fix move on zoom
     @HostListener('window:keydown.-', ['$event'])
     onMinusButton() {
-        this._petriflowCanvasService.panzoom?.zoomOut();
+        const newScale = !!this._petriflowCanvasService.panzoom?.getScale() ?
+            this._petriflowCanvasService.panzoom?.getScale() - this.stepSize : 1.2;
+        this._petriflowCanvasService.panzoom?.zoomToPoint(
+            newScale < this.minScale ? this.minScale : newScale,
+            {
+                clientX: this._mouseEvent?.x ?? 0,
+                clientY: this._mouseEvent?.y ?? 0
+            }
+        );
     }
 
     @HostListener('window:keydown.ArrowUp', ['$event'])
@@ -142,32 +181,33 @@ export class AppComponent implements AfterViewInit {
         this._petriflowCanvasService.panzoom?.pan(PetriflowCanvasConfiguration.PANZOOM_MOVE, 0, {relative: true});
     }
 
+    @HostListener('mousemove', ['$event'])
+    onMouseMove($event: MouseEvent) {
+        this._mouseEvent = $event;
+    }
+
     openSnackBar(message: string) {
         this._snackBar.open(message, undefined, {duration: 1000});
     }
 
     changeCanvasMode(mode: CanvasMode) {
-        this._petriflowConfigService.disablePreviousArcMode();
-        this._petriflowConfigService.mode = mode;
+        this.petriflowConfigService.disablePreviousArcMode();
+        this.petriflowConfigService.mode = mode;
     }
 
     goToLink(url: string) {
         window.open(url, '_blank');
     }
 
-    resetPanZoom() {
-        this._petriflowCanvasService.panzoom?.reset();
-    }
-
     public get canvasMode(): typeof CanvasMode {
         return CanvasMode;
     }
 
-    openDialog() {
-        this.dialog.open(PetriflowInfoDialogComponent);
+    resetPanZoom() {
+        this._petriflowCanvasService.panzoom?.reset();
     }
 
-    gridOnOff() {
-        this.gridConfiguration.enabled = !this.gridConfiguration.enabled;
+    openDialog() {
+        this.dialog.open(PetriflowInfoDialogComponent);
     }
 }

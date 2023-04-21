@@ -5,7 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {RouterModule, Routes} from '@angular/router';
 import {JoyrideModule} from 'ngx-joyride';
-import {PetriflowCanvasModule} from 'petriflow-svg';
+import {PetriflowCanvasModule} from '@netgrif/petriflow.svg';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
 import {MatButtonModule} from '@angular/material/button';

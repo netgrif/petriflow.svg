@@ -7,7 +7,7 @@ export class PetriflowInhibitorArc extends PetriflowArc<InhibitorArc> {
         super(arc);
     }
 
-    createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
-        return new PetriflowInhibitorArc(new InhibitorArc(start, end, points, multiplicity));
+    createClonedInstanceOfArc(id: string, start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
+        return new PetriflowInhibitorArc(new InhibitorArc(id, start, end, points, multiplicity));
     }
 }

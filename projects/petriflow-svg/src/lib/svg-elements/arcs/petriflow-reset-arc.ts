@@ -7,7 +7,7 @@ export class PetriflowResetArc extends PetriflowArc<ResetArc> {
         super(arc);
     }
 
-    createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
-        return new PetriflowResetArc(new ResetArc(start, end, points, multiplicity));
+    createClonedInstanceOfArc(id: string, start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
+        return new PetriflowResetArc(new ResetArc(id, start, end, points, multiplicity));
     }
 }

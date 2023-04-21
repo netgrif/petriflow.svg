@@ -3,6 +3,8 @@ import {CanvasElement} from '../../svg-objects/canvas-element';
 import {NodeElement} from '../../svg-objects/node-element';
 
 export abstract class Arc extends CanvasElement {
+
+    private _id: string;
     private _start: NodeElement;
     private _end: NodeElement;
     private _arcLineBackground: SVGPolylineElement;
@@ -11,8 +13,9 @@ export abstract class Arc extends CanvasElement {
     private _multiplicity: Text;
     private _linePoints: Array<DOMPoint>;
 
-    protected constructor(start: NodeElement, end: NodeElement, endId: string, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
+    protected constructor(id: string, start: NodeElement, end: NodeElement, endId: string, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
         super();
+        this._id = id;
         this._start = start;
         this._end = end;
         this._linePoints = [];
@@ -181,5 +184,13 @@ export abstract class Arc extends CanvasElement {
 
     set end(value: NodeElement) {
         this._end = value;
+    }
+
+    get id(): string {
+        return this._id;
+    }
+
+    set id(value: string) {
+        this._id = value;
     }
 }

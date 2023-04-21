@@ -1,11 +1,12 @@
 import {PetriflowCanvasElement} from './petriflow-canvas-element';
 import {NodeElement} from '@netgrif/petri.svg';
-import {PetriflowNodeClickEventFunction, EMPTY_FUNCTION} from "../common";
+import {EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from "../common";
 
 export abstract class PetriflowNode<T extends NodeElement> implements PetriflowCanvasElement {
 
     protected _canvasElement: T;
     protected _onClickEvent: PetriflowNodeClickEventFunction;
+    protected _onContextEvent: PetriflowNodeClickEventFunction;
 
     protected constructor(canvasElement: T) {
         this._canvasElement = canvasElement;
@@ -19,13 +20,21 @@ export abstract class PetriflowNode<T extends NodeElement> implements PetriflowC
             }
         };
         this._onClickEvent = EMPTY_FUNCTION;
+        this._onContextEvent = EMPTY_FUNCTION;
     }
 
     setOnClick(event: PetriflowNodeClickEventFunction): void {
         this.onClickEvent = event;
-        this.canvasElement.element.onclick = () => {
-            event(this);
+        this.canvasElement.element.onclick = (mouseEvent: Event | undefined) => {
+            event(this, mouseEvent);
         };
+    }
+
+    setOnContext(event: PetriflowNodeClickEventFunction): void {
+        this.onContextEvent = event;
+        this.canvasElement.element.oncontextmenu = (mouseEvent: Event | undefined) => {
+            event(this, mouseEvent);
+        }
     }
 
     isSelected(): boolean {
@@ -82,7 +91,17 @@ export abstract class PetriflowNode<T extends NodeElement> implements PetriflowC
         this._onClickEvent = value;
     }
 
+    get onContextEvent() {
+        return this._onContextEvent;
+    }
+
+    set onContextEvent(value) {
+        this._onContextEvent = value;
+    }
+
     abstract clone(): PetriflowNode<NodeElement>;
 
     abstract changeId(id: string): void;
+
+    abstract move(position: DOMPoint): void;
 }

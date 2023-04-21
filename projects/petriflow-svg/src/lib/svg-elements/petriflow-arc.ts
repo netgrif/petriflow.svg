@@ -1,6 +1,6 @@
 import {PetriflowCanvasElement} from './petriflow-canvas-element';
 import {Arc, NodeElement} from '@netgrif/petri.svg';
-import {PetriflowNodeClickEventFunction, EMPTY_FUNCTION} from "../common";
+import {EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from "../common";
 
 export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElement {
 
@@ -20,19 +20,19 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
         this._onClickEvent = EMPTY_FUNCTION;
     }
 
-    cloneArc(start: NodeElement, end: NodeElement): PetriflowArc<Arc> {
+    cloneArc(id: string, start: NodeElement, end: NodeElement): PetriflowArc<Arc> {
         const newLinePoints: Array<DOMPoint> = [];
         this.element.linePoints.forEach(point => newLinePoints.push(Object.assign({}, {
             x: point.x,
             y: point.y
         } as DOMPoint)));
-        const cloned = this.createClonedInstanceOfArc(start, end, newLinePoints, this._element.multiplicity?.textContent ?? '');
+        const cloned = this.createClonedInstanceOfArc(id, start, end, newLinePoints, this._element.multiplicity?.textContent ?? '');
         cloned.element.arcLine.onclick = () => this._onClickEvent(cloned);
         cloned.setOnClick((clone) => this._onClickEvent(clone));
         return cloned;
     }
 
-    abstract createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string): PetriflowArc<Arc>;
+    abstract createClonedInstanceOfArc(id: string, start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string): PetriflowArc<Arc>;
 
     activate(): void {
         this._element.activate();
