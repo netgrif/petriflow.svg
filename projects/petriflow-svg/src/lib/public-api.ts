@@ -1,7 +1,6 @@
 export * from './services/public-api';
 export * from './svg-elements/public-api';
 
-export * from './canvas-mode';
 export * from './petriflow-canvas-configuration';
 export * from './petriflow-canvas';
 export * from './petriflow-canvas.service';

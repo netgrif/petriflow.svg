@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {PetriflowCanvasService} from '../petriflow-canvas.service';
-import {CanvasMode} from '../canvas-mode';
 import {Arc, CanvasConfiguration, NodeElement} from '@netgrif/petri.svg';
 import {PetriflowNode} from '../svg-elements/petriflow-node';
 import {PetriflowArc} from '../svg-elements/petriflow-arc';
@@ -11,7 +10,6 @@ import {GridConfiguration} from '../grid-configuration';
 })
 export abstract class PetriflowCanvasConfigurationService {
 
-    protected _mode: CanvasMode | undefined;
     protected _arcLine: SVGElement | undefined;
     protected _source: PetriflowNode<NodeElement> | undefined;
     protected _clipboardBox: DOMRect | undefined;
@@ -27,14 +25,6 @@ export abstract class PetriflowCanvasConfigurationService {
 
     constructor(protected _petriflowCanvasService: PetriflowCanvasService) {
         this._breakpoint = new DOMPoint();
-    }
-
-    public get mode(): CanvasMode | undefined {
-        return this._mode;
-    }
-
-    public set mode(value: CanvasMode | undefined) {
-        this._mode = value;
     }
 
     public get arcLine(): SVGElement | undefined {
@@ -104,7 +94,7 @@ export abstract class PetriflowCanvasConfigurationService {
     }
 
     protected createBreakpoint(e: MouseEvent, arc: PetriflowArc<Arc>) {
-        if (this.mode === CanvasMode.MOVE && !this._selectedArc) {
+        if (!this._selectedArc) {
             const mouseX = e.offsetX;
             const mouseY = e.offsetY;
             const newBreakpoint = new DOMPoint(mouseX, mouseY);
@@ -112,7 +102,7 @@ export abstract class PetriflowCanvasConfigurationService {
             arc.element.move(arc.element.start, arc.element.end);
             this._breakpoint = newBreakpoint;
             this._selectedArc = arc;
-        } else if (this.mode === CanvasMode.MOVE && this._selectedArc) {
+        } else if (this._selectedArc) {
             this._breakpoint = new DOMPoint();
             this._selectedArc = undefined;
         }
@@ -139,7 +129,7 @@ export abstract class PetriflowCanvasConfigurationService {
     }
 
     protected moveBreakpoint(e: MouseEvent) {
-        if (this.mode === CanvasMode.MOVE && this._breakpoint) {
+        if (this._breakpoint) {
             const mouseX = e.offsetX;
             const mouseY = e.offsetY;
             this._breakpoint.x = mouseX;
@@ -167,8 +157,7 @@ export abstract class PetriflowCanvasConfigurationService {
     }
 
     protected moveElement(e: MouseEvent) {
-        if (this._mode === CanvasMode.MOVE && this._source && !this.clipboard) {
-            // this._source.canvasElement.move(new DOMPoint(e.offsetX, e.offsetY));
+        if (this._source && !this.clipboard) {
             this._source.move(new DOMPoint(e.offsetX, e.offsetY));
         }
     }

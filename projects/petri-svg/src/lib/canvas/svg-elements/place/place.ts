@@ -66,12 +66,32 @@ export class Place extends LabeledObject {
     activate(): void {
         super.activate();
         this.element.setAttributeNS(null, 'class', 'svg-active-stroke');
+
+        if (this.tokensVisible(this.tokensCount)) {
+            for (let i = 0; i < 9; i++) {
+                if (Place.TOKEN_LAYOUTS[this.tokensCount][i] === 1) {
+                    this._markingTokens[i].setAttributeNS(null, 'class', 'svg-active-fill');
+                } else {
+                    this._markingTokens[i].setAttributeNS(null, 'class', 'svg-invisible-fill');
+                }
+            }
+        }
     }
 
     deactivate(): void {
         super.deactivate();
         this.element.setAttributeNS(null, 'stroke', 'black');
         this.element.setAttributeNS(null, 'class', 'svg-inactive-stroke');
+
+        if (this.tokensVisible(this.tokensCount)) {
+            for (let i = 0; i < 9; i++) {
+                if (Place.TOKEN_LAYOUTS[this.tokensCount][i] === 1) {
+                    this._markingTokens[i].setAttributeNS(null, 'class', 'svg-inactive-fill');
+                } else {
+                    this._markingTokens[i].setAttributeNS(null, 'class', 'svg-invisible-fill');
+                }
+            }
+        }
     }
 
     move(position: DOMPoint): void {
@@ -157,14 +177,15 @@ export class Place extends LabeledObject {
 
     updateMarking(marking: number) {
         this._marking.nodeValue = this.markingToString(marking);
+        this.tokensCount = marking;
         for (let i = 0; i < 9; i++) {
             let fill;
-            if (this.tokensVisible(marking)) {
-                fill = Place.TOKEN_LAYOUTS[marking][i] === 1 ? 'black' : 'white';
+            if (this.tokensVisible(marking) && Place.TOKEN_LAYOUTS[marking][i] === 1) {
+                fill = this.isActive() ? 'svg-active-fill' : 'svg-inactive-fill';
             } else {
-                fill = 'white';
+                fill = 'svg-invisible-fill';
             }
-            this._markingTokens[i].setAttributeNS(null, 'fill', fill);
+            this._markingTokens[i].setAttributeNS(null, 'class', fill);
         }
         // TODO: setMarkingTokenPosition?
     }

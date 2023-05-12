@@ -12,6 +12,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
         this.canvasElement.markingTokens.forEach(markingToken => {
             this.setPlaceActions(markingToken);
         });
+        this.setPlaceActions(this.canvasElement.markingElement);
         this._onTokenClickEvent = EMPTY_FUNCTION;
     }
 
@@ -45,6 +46,9 @@ export class PetriflowPlace extends PetriflowNode<Place> {
                 event(this);
             };
         });
+        this.canvasElement.markingElement.onclick = () => {
+            event(this);
+        }
     }
 
     changeId(id: string): void {

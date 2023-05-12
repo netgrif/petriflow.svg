@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {
-    CanvasMode,
     PetriflowArc,
     PetriflowCanvasConfigurationService,
     PetriflowCanvasElement,
@@ -11,7 +10,8 @@ import {
     PetriflowReadArc,
     PetriflowResetArc,
     PetriflowTransition,
-    PetriflowTransitionPlaceArc
+    PetriflowTransitionPlaceArc,
+    PetriflowCanvasConfiguration
 } from "@netgrif/petriflow.svg";
 import {ControlPetriflowCanvasService} from "./control-petriflow-canvas.service";
 import {CanvasElementCollection} from "../domain/canvas-element-collection";
@@ -25,7 +25,7 @@ import {
     RegularTransitionPlaceArc,
     ResetArc
 } from "@netgrif/petri.svg";
-import {PetriflowCanvasConfiguration} from '../../../../../petriflow-svg/src/lib/petriflow-canvas-configuration';
+import {CanvasMode} from '../domain/canvas-mode';
 
 @Injectable({
     providedIn: 'root'
@@ -33,6 +33,16 @@ import {PetriflowCanvasConfiguration} from '../../../../../petriflow-svg/src/lib
 export class ControlPetriflowCanvasConfigurationService extends PetriflowCanvasConfigurationService {
 
     private arcTypes = ['regular', 'reset', 'inhibitor', 'read'];
+
+    protected _mode: CanvasMode | undefined;
+
+    public get mode(): CanvasMode | undefined {
+        return this._mode;
+    }
+
+    public set mode(value: CanvasMode | undefined) {
+        this._mode = value;
+    }
 
     constructor(protected _petriflowCanvasService: ControlPetriflowCanvasService) {
         super(_petriflowCanvasService);
@@ -433,6 +443,24 @@ export class ControlPetriflowCanvasConfigurationService extends PetriflowCanvasC
             this._petriflowCanvasService.canvas.container.removeChild(this._arcLine);
             this._arcLine = undefined;
             this.mouseDown = false;
+        }
+    }
+
+    protected createBreakpoint(e: MouseEvent, arc: PetriflowArc<Arc>) {
+        if (this.mode === CanvasMode.MOVE) {
+            super.createBreakpoint(e, arc);
+        }
+    }
+
+    protected moveBreakpoint(e: MouseEvent) {
+        if (this.mode === CanvasMode.MOVE) {
+            super.moveBreakpoint(e);
+        }
+    }
+
+    protected moveElement(e: MouseEvent) {
+        if (this._mode === CanvasMode.MOVE) {
+            super.moveElement(e);
         }
     }
 }

@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, HostListener} from '@angular/core';
 import {
-    CanvasMode,
     PetriflowCanvasConfiguration,
     PetriflowCanvasService,
     PetriflowPlace,
@@ -14,6 +13,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {
     ControlPetriflowCanvasConfigurationService
 } from "./petriflow-control-set/services/control-petriflow-canvas-configuration.service";
+import {CanvasMode} from './petriflow-control-set/domain/canvas-mode';
 
 @Component({
     selector: 'pf-app-root',
@@ -88,16 +88,6 @@ export class AppComponent implements AfterViewInit {
             this._petriflowCanvasService.createPlace(place);
             this._petriflowCanvasService.petriflowElementsCollection.places.push(petriflowPlace);
             this.petriflowConfigService.addPlaceEvents(petriflowPlace);
-
-            if (place.id === 'p1') {
-                this._petriflowCanvasService.petriflowElementsCollection.transitions.find(transition =>
-                    transition.canvasElement.id === 't1'
-                )?.setIcon('home');
-            } else if (place.id === 'p2') {
-                this._petriflowCanvasService.petriflowElementsCollection.transitions.find(transition =>
-                    transition.canvasElement.id === 't1'
-                )?.setIcon('add');
-            }
         }
     }
 
