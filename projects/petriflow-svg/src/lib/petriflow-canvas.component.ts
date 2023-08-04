@@ -40,4 +40,6 @@ export class PetriflowCanvasComponent implements AfterViewInit {
     get canvas(): PetriflowCanvas | undefined {
         return this._canvas;
     }
+
+    // TODO: PF-48 where hotkeys?
 }

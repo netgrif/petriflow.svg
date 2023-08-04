@@ -32,6 +32,7 @@ import {CanvasMode} from '../domain/canvas-mode';
 })
 export class ControlPetriflowCanvasConfigurationService extends PetriflowCanvasConfigurationService {
 
+    // TODO: PF-48 open for extension
     private arcTypes = ['regular', 'reset', 'inhibitor', 'read'];
 
     protected _mode: CanvasMode | undefined;
