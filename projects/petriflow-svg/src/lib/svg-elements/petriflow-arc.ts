@@ -39,7 +39,7 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
     }
 
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
-        return this._element.isEnclosedByRectangle(rectangle); // TODO
+        return this._element.isEnclosedByRectangle(rectangle); // TODO: PF-48
     }
 
     isSelected(): boolean {

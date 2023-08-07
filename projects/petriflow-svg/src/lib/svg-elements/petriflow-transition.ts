@@ -44,11 +44,9 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
     }
 
     setIcon(icon: string | undefined) {
+        this.removeIcon();
         if (!!icon) {
-            this.removeIcon();
             this.addIcon(icon);
-        } else {
-            this.removeIcon();
         }
     }
 
@@ -160,6 +158,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
             this._finishArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-finish-active');
             this._iconElement?.setAttributeNS(null, 'class', 'svg-icon-inactive');
         } else {
+            // TODO: PF-48 - global active/inactive static strings
             this._cancelArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-cancel-inactive');
             this._finishArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-finish-inactive');
             this._iconElement?.setAttributeNS(null, 'class', 'svg-icon-active');
@@ -219,7 +218,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
     }
 
     changeId(id: string): void {
-        this.canvasElement.id = id;
+        this.canvasElement.id = `svg_transition_${id}`;
         this.canvasElement.label.textContent = id;
     }
 }

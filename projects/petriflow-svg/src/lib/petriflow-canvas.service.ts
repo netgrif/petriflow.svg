@@ -9,6 +9,9 @@ import {PetriflowNode} from "./svg-elements/petriflow-node";
 })
 export abstract class PetriflowCanvasService {
 
+    // TODO: PF-48 - why removed collection?
+    // TODO: PF-48 add canvas and panzoom as constructor args and safeguard that
+    //  they are not undefined and remove checks on start of each function
     protected _canvas: PetriflowCanvas | undefined;
     protected _panzoom: PanzoomObject | undefined;
 
@@ -56,14 +59,17 @@ export abstract class PetriflowCanvasService {
     }
 
     public createPlace(place: Place | StaticPlace): void {
-        if (!this.canvas)
+        if (!this.canvas) {
             throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        }
         this.canvas.add(place);
     }
 
+    // TODO: PF-48 'add' not 'create'
     public createTransition(transition: Transition): void {
-        if (!this.canvas)
+        if (!this.canvas) {
             throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        }
         this.canvas.add(transition);
     }
 
@@ -84,8 +90,9 @@ export abstract class PetriflowCanvasService {
     }
 
     public createSvgArc(element: PetriflowNode<NodeElement>, arrowUrl: string): SVGPolygonElement {
-        if (!this.canvas)
+        if (!this.canvas) {
             throw new Error("SVG canvas for petriflow objects doesn't exists!");
+        }
         const arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
         arcLine.setAttributeNS(null, 'fill', 'none');
         arcLine.setAttributeNS(null, 'stroke', 'black');
