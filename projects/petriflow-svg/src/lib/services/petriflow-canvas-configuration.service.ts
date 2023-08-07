@@ -95,6 +95,13 @@ export abstract class PetriflowCanvasConfigurationService {
 
     protected createBreakpoint(e: MouseEvent, arc: PetriflowArc<Arc>) {
         if (!this._selectedArc) {
+            for (const linePoint of arc.element.linePoints) {
+                if (Math.abs(linePoint.x - e.offsetX) < 10 && Math.abs(linePoint.y - e.offsetY) < 10) {
+                    this._breakpoint = linePoint;
+                    this._selectedArc = arc;
+                    return;
+                }
+            }
             const mouseX = e.offsetX;
             const mouseY = e.offsetY;
             const newBreakpoint = new DOMPoint(mouseX, mouseY);

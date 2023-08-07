@@ -1,4 +1,4 @@
-<svg #canvas width="10000px" height="10000px">
+<svg #canvas [attr.width]="gridConfiguration.width" [attr.height]="gridConfiguration.height">
     <defs #canvasDefs>
         <pattern id="canvas-grid" [attr.width]="gridConfiguration.size" [attr.height]="gridConfiguration.size"
                  patternUnits="userSpaceOnUse">

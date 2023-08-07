@@ -27,6 +27,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this._cancelArrow.setAttributeNS(null, 'fill', 'white');
         this._cancelArrow.setAttributeNS(null, 'stroke', 'white');
         this._cancelArrow.setAttributeNS(null, 'stroke-width', '2');
+        this._cancelArrow.setAttributeNS(null, 'points', this.canvasElement.cancelArrowPoints(transition.position));
         this.canvasElement.container.appendChild(this._cancelArrow);
 
         this._finishArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
@@ -34,6 +35,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this._finishArrow.setAttributeNS(null, 'fill', 'white');
         this._finishArrow.setAttributeNS(null, 'stroke', 'white');
         this._finishArrow.setAttributeNS(null, 'stroke-width', '2');
+        this._finishArrow.setAttributeNS(null, 'points', this.canvasElement.finishArrowPoints(transition.position));
         this.canvasElement.container.appendChild(this._finishArrow);
 
         this.setIcon(icon);
@@ -108,6 +110,8 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         super.moveBy(x, y);
         this._iconElement?.setAttributeNS(null, 'x', String(this.canvasElement.position.x - CanvasConfiguration.ICON_SIZE / 2));
         this._iconElement?.setAttributeNS(null, 'y', String(this.canvasElement.position.y + CanvasConfiguration.ICON_SIZE / 2));
+        this._cancelArrow.setAttributeNS(null, 'points', this.canvasElement.cancelArrowPoints(this.canvasElement.position));
+        this._finishArrow.setAttributeNS(null, 'points', this.canvasElement.finishArrowPoints(this.canvasElement.position));
     }
 
     move(position: DOMPoint) {

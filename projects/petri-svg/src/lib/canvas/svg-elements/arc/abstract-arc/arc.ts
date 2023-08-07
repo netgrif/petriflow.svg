@@ -65,21 +65,33 @@ export abstract class Arc extends CanvasElement {
     move(start: NodeElement, end: NodeElement) {
         const points = [start.position].concat(this._linePoints).concat(end.position);
         const backgroundPoints = Object.assign([] as DOMPoint[], points);
-        points[0] = start.getEdgeIntersection(points[1], 0);
-        points[points.length - 1] = end.getEdgeIntersection(points[points.length - 2], 1);
-        const arcLinePoints = points.map(p => `${p.x},${p.y}`).join(' ');
 
-        backgroundPoints[0] = start.getEdgeIntersection(points[1], 2);
-        backgroundPoints[points.length - 1] = end.getEdgeIntersection(points[points.length - 2], 2);
+        points[0] = this.sanitizeForNanValues(start.getEdgeIntersection(points[1], 0), start.position);
+        points[points.length - 1] = this.sanitizeForNanValues(end.getEdgeIntersection(points[points.length - 2], 1), end.position);
+        const arcLinePoints = points.map(p => `${p.x},${p.y}`).join(' ');
         this._arcLine.setAttributeNS(null, 'points', arcLinePoints);
+
+        backgroundPoints[0] = this.sanitizeForNanValues(start.getEdgeIntersection(points[1], 2), start.position);
+        backgroundPoints[points.length - 1] = this.sanitizeForNanValues(end.getEdgeIntersection(points[points.length - 2], 2), end.position);
         const arcLinePointsTest = backgroundPoints.map(p => `${p.x},${p.y}`).join(' ');
         this._arcLineBackground.setAttributeNS(null, 'points', arcLinePointsTest);
+
         const lastElement = this.arcLine.points.length - 1;
         const middleElement = parseInt(String(lastElement / 2), 10);
 
         const position = this.getArcWeightPosition(this.arcLine.points[middleElement], this.arcLine.points[middleElement + 1]);
         this._multiplicityElement.setAttributeNS(null, 'x', `${position.x}`);
         this._multiplicityElement.setAttributeNS(null, 'y', `${position.y}`);
+    }
+
+    sanitizeForNanValues(newPoint: DOMPoint, objectPosition: DOMPoint): DOMPoint {
+        if (isNaN(newPoint.x)) {
+            newPoint.x = objectPosition.x;
+        }
+        if (isNaN(newPoint.y)) {
+            newPoint.y = objectPosition.y;
+        }
+        return newPoint;
     }
 
     getArcWeightPosition(startElement: SVGPoint, endElement: SVGPoint): DOMPoint {

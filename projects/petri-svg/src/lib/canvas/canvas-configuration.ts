@@ -16,4 +16,6 @@ export class CanvasConfiguration {
     };
     public static ARROW_HEAD_SIZE = 5;
     public static WEIGHT_OFFSET = 10;
+    public static WIDTH = 10000;
+    public static HEIGHT = 10000;
 }
