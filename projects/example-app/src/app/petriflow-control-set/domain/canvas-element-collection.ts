@@ -4,8 +4,8 @@ import {
     PetriflowNode,
     PetriflowPlace,
     PetriflowTransition
-} from "@netgrif/petriflow.svg";
-import {Arc, NodeElement} from "@netgrif/petri.svg";
+} from '@netgrif/petriflow.svg';
+import {Arc, NodeElement} from '@netgrif/petri.svg';
 
 export class CanvasElementCollection {
 

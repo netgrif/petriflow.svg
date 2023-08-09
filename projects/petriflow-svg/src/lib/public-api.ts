@@ -1,4 +1,3 @@
-export * from './services/public-api';
 export * from './svg-elements/public-api';
 
 export * from './petriflow-canvas-configuration';
