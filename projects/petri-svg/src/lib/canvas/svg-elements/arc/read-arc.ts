@@ -1,6 +1,4 @@
 import {PlaceTransitionArc} from './abstract-arc/place-transition-arc';
-import {ArcEnd} from './arc-end/arc-end';
-import {FullCircleArcEnd} from './arc-end/full-circle-arc-end';
 import {NodeElement} from '../svg-objects/node-element';
 
 export class ReadArc extends PlaceTransitionArc {
@@ -9,10 +7,6 @@ export class ReadArc extends PlaceTransitionArc {
 
     constructor(id: string, start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string | null) {
         super(id, start, end, ReadArc.ID, linePoints, multiplicityLabel ?? '');
-    }
-
-    createArcEnd(): ArcEnd {
-        return new FullCircleArcEnd();
     }
 
     clone(): ReadArc | undefined {

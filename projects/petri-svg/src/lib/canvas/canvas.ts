@@ -31,7 +31,8 @@ export class Canvas extends Container {
     }
 
     public register(arcEnd: ArcEnd): void {
-        this._defs.appendChild(arcEnd.arrow);
+        this._defs.appendChild(arcEnd.arrow());
+        this._defs.appendChild(arcEnd.activeArrow());
     }
 
     get svg(): SVGSVGElement {

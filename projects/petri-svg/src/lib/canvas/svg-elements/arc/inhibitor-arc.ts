@@ -1,5 +1,4 @@
 import {PlaceTransitionArc} from './abstract-arc';
-import {ArcEnd, EmptyCircleArcEnd} from './arc-end';
 import {NodeElement} from '../svg-objects';
 
 export class InhibitorArc extends PlaceTransitionArc {
@@ -8,10 +7,6 @@ export class InhibitorArc extends PlaceTransitionArc {
 
     constructor(id: string, start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string | null) {
         super(id, start, end, InhibitorArc.ID, linePoints, multiplicityLabel ?? '');
-    }
-
-    createArcEnd(): ArcEnd {
-        return new EmptyCircleArcEnd();
     }
 
     clone(): InhibitorArc | undefined {

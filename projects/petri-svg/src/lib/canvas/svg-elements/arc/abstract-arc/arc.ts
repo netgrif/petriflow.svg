@@ -12,6 +12,7 @@ export abstract class Arc extends CanvasElement {
     private _multiplicityElement: SVGTextElement;
     private _multiplicity: Text;
     private _linePoints: Array<DOMPoint>;
+    private _endId: string;
 
     protected constructor(id: string, start: NodeElement, end: NodeElement, endId: string, linePoints?: Array<DOMPoint>, multiplicityLabel?: string) {
         super();
@@ -19,6 +20,7 @@ export abstract class Arc extends CanvasElement {
         this._start = start;
         this._end = end;
         this._linePoints = [];
+        this._endId = endId;
 
         this._arcLineBackground = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
         this._arcLineBackground.setAttributeNS(null, 'fill', 'none');
@@ -53,12 +55,14 @@ export abstract class Arc extends CanvasElement {
     activate() {
         super.activate();
         this.arcLine.setAttributeNS(null, 'class', 'svg-active-stroke');
+        this.arcLine.setAttributeNS(null, 'marker-end', `url(#${this._endId}-active)`);
         this.multiplicityElement.setAttributeNS(null, 'class', 'svg-active-fill');
     }
 
     deactivate() {
         super.deactivate();
         this.arcLine.setAttributeNS(null, 'class', 'svg-inactive-stroke');
+        this.arcLine.setAttributeNS(null, 'marker-end', `url(#${this._endId})`);
         this.multiplicityElement.setAttributeNS(null, 'class', 'svg-inactive-fill');
     }
 
