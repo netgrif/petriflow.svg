@@ -31,6 +31,13 @@ export abstract class LabeledObject extends NodeElement implements Movable {
         this.setLabelElementPosition(position);
     }
 
+    getElements(): Array<SVGElement> {
+        const elements = super.getElements();
+        elements.push(this.labelElement);
+        elements.push(this.labelBackground);
+        return elements;
+    }
+
     private setLabelElementPosition(position: DOMPoint) {
         this._labelElement.setAttributeNS(null, 'x', `${position.x}`);
         this._labelElement.setAttributeNS(null, 'y', `${position.y + CanvasConfiguration.SIZE}`);

@@ -41,4 +41,6 @@ export abstract class CanvasElement extends Container implements Activable {
     setSelected(value: boolean) {
         this._isSelected = value;
     }
+
+    public abstract getElements(): Array<SVGElement>;
 }

@@ -52,6 +52,14 @@ export abstract class Arc extends CanvasElement {
         this.move(start, end);
     }
 
+    public getElements(): Array<SVGElement> {
+        const elements = new Array<SVGElement>();
+        elements.push(this.arcLine);
+        elements.push(this.arcLineBackground);
+        elements.push(this.multiplicityElement);
+        return elements;
+    }
+
     activate() {
         super.activate();
         this.arcLine.setAttributeNS(null, 'class', 'svg-active-stroke');

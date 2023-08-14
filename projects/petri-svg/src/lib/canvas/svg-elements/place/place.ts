@@ -51,6 +51,13 @@ export class Place extends LabeledObject {
         this.deactivate();
     }
 
+    public getElements(): Array<SVGElement> {
+        const elements = super.getElements();
+        elements.push(this.markingElement);
+        this.markingTokens.forEach(m => elements.push(m));
+        return elements;
+    }
+
     markingToString(marking: number): string {
         if (this.tokensVisible(marking)) {
             return '';
