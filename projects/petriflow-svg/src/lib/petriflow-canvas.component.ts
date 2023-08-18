@@ -31,7 +31,6 @@ export class PetriflowCanvasComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this._canvas = new PetriflowCanvas(this.canvasElement?.nativeElement, this.canvasDefsElement?.nativeElement);
-        this._canvas.container.appendChild(this.canvasGridElement?.nativeElement);
         this._canvasService.canvas = this._canvas;
         this._canvasService.panzoom = Panzoom(this.canvasElement?.nativeElement, this.panzoomConfiguration);
         this.canvasElement?.nativeElement.parentElement.addEventListener('wheel', this._canvasService.panzoom.zoomWithWheel);
