@@ -13,10 +13,10 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
     constructor(transition: Transition, icon?: string) {
         super(transition);
 
-        this.canvasElement.element.onmouseenter = () => {
+        this.canvasElement.element.onmouseover = () => {
             this.activate();
         };
-        this.canvasElement.element.onmouseleave = () => {
+        this.canvasElement.element.onmouseout = () => {
             if (!this.isSelected()) {
                 this.deactivate();
             }
@@ -41,6 +41,10 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this.setIcon(icon);
 
         this.deactivate();
+    }
+
+    public static of(id: string, label: string, position: DOMPoint, icon?: string): PetriflowTransition {
+        return new PetriflowTransition(new Transition(id, label, position), icon);
     }
 
     setIcon(icon: string | undefined) {
@@ -88,7 +92,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         if (!!this._iconElement) {
             this._iconElement.onclick = (mouseEvent: Event | undefined) => {
                 event(this, mouseEvent);
-            }
+            };
         }
     }
 
@@ -96,11 +100,11 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this.onContextEvent = event;
         this.canvasElement.element.oncontextmenu = (mouseEvent: Event | undefined) => {
             event(this, mouseEvent);
-        }
+        };
         if (!!this._iconElement) {
             this._iconElement.oncontextmenu = (mouseEvent: Event | undefined) => {
                 event(this, mouseEvent);
-            }
+            };
         }
     }
 

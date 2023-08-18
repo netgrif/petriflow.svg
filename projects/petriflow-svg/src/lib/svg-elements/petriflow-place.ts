@@ -1,7 +1,7 @@
 import {Place} from '@netgrif/petri.svg';
 import {PetriflowNode} from './petriflow-node';
 import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
-import {defaultPlace, EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from "../common";
+import {defaultPlace, EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from '../common';
 
 export class PetriflowPlace extends PetriflowNode<Place> {
 
@@ -16,11 +16,15 @@ export class PetriflowPlace extends PetriflowNode<Place> {
         this._onTokenClickEvent = EMPTY_FUNCTION;
     }
 
+    public static of(id: string, label: string, marking: number, position: DOMPoint): PetriflowPlace {
+        return new PetriflowPlace(new Place(id, label, marking, position));
+    }
+
     private setPlaceActions(svgElement: SVGElement) {
-        svgElement.onmouseenter = () => {
+        svgElement.onmouseover = () => {
             this.canvasElement.activate();
         };
-        svgElement.onmouseleave = () => {
+        svgElement.onmouseout = () => {
             if (!this.isSelected()) {
                 this.canvasElement.deactivate();
             }
@@ -48,7 +52,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
         });
         this.canvasElement.markingElement.onclick = () => {
             event(this);
-        }
+        };
     }
 
     changeId(id: string): void {

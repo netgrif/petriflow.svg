@@ -9,10 +9,10 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
 
     protected constructor(element: T) {
         this._element = element;
-        this._element.arcLine.onmouseenter = () => {
+        this._element.arcLine.onmouseover = () => {
             this.activate();
         };
-        this._element.arcLine.onmouseleave = () => {
+        this._element.arcLine.onmouseout = () => {
             if (!this.isSelected()) {
                 this._element.deactivate();
             }
@@ -32,6 +32,7 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
         return cloned;
     }
 
+    // TODO: PF-48 remove and use static of?
     abstract createClonedInstanceOfArc(id: string, start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string): PetriflowArc<Arc>;
 
     activate(): void {

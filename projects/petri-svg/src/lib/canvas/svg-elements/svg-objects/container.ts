@@ -1,6 +1,6 @@
 import {CanvasConfiguration} from '../../canvas-configuration';
 
-export abstract class Container {
+export class Container {
 
     private _container: SVGGElement;
 
