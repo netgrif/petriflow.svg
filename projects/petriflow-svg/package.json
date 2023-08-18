@@ -1,6 +1,6 @@
 {
     "name": "@netgrif/petriflow.svg",
-    "version": "1.2.0-rc3",
+    "version": "1.2.0-rc4",
     "description": "Petriflow library of SVG object",
     "homepage": "https://netgrif.github.io/petriflow.svg",
     "license": "Apache-2.0",
@@ -44,7 +44,7 @@
         "@angular/router": "~13.3.11",
         "@mdi/angular-material": "~7.0.96",
         "@mdi/font": "~7.0.96",
-        "@netgrif/petri.svg": "1.2.0-rc3",
+        "@netgrif/petri.svg": "1.2.0-rc4",
         "@ngx-translate/core": "~13.0.0",
         "@ngx-translate/http-loader": "~6.0.0",
         "@types/mousetrap": "1.6.3",

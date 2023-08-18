@@ -11,24 +11,30 @@ export abstract class LabeledObject extends NodeElement implements Movable {
 
     protected constructor(id: string, label: string, position: DOMPoint) {
         super(position);
-        this._labelBackground = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGRectElement;
-        this._labelBackground.setAttributeNS(null, 'width', '0');
-        this._labelBackground.setAttributeNS(null, 'height', `${CanvasConfiguration.FONT.SIZE}`);
-        this._labelBackground.setAttributeNS(null, 'fill-opacity', '0.7');
-        this._labelBackground.setAttributeNS(null, 'fill', 'white');
-        this.container.appendChild(this._labelBackground);
+        this._id = id;
+        this._label = document.createTextNode(label);
 
         this._labelElement = (document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as unknown) as SVGTextElement;
         this._labelElement.setAttributeNS(null, 'font-size', String(CanvasConfiguration.FONT.SIZE));
         this._labelElement.setAttributeNS(null, 'font-family', CanvasConfiguration.FONT.FAMILY);
         this._labelElement.setAttributeNS(null, 'text-anchor', 'middle');
-        this._label = document.createTextNode(label);
         this._labelElement.appendChild(this._label);
 
-        this._id = id;
+        this._labelBackground = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGRectElement;
+        this._labelBackground.setAttributeNS(null, 'width', `${this._labelElement.getComputedTextLength()}`);
+        this._labelBackground.setAttributeNS(null, 'height', `${CanvasConfiguration.FONT.SIZE}`);
+        this._labelBackground.setAttributeNS(null, 'fill-opacity', '0.7');
+        this._labelBackground.setAttributeNS(null, 'fill', 'white');
+
+        this.container.appendChild(this._labelBackground);
         this.container.appendChild(this._labelElement);
 
         this.setLabelElementPosition(position);
+    }
+
+    public setLabelText(newLabel: string): void {
+        this._label.textContent = newLabel;
+        this._labelBackground.setAttributeNS(null, 'width', `${this._labelElement.getComputedTextLength()}`);
     }
 
     getElements(): Array<SVGElement> {
