@@ -1,4 +1,4 @@
-import { CanvasConfiguration } from '../../canvas-configuration';
+import {CanvasConfiguration} from '../../canvas-configuration';
 import {Movable} from '../movable';
 import {NodeElement} from './node-element';
 
@@ -15,15 +15,15 @@ export abstract class LabeledObject extends NodeElement implements Movable {
         this._label = document.createTextNode(label);
 
         this._labelElement = (document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as unknown) as SVGTextElement;
-        this._labelElement.setAttributeNS(null, 'font-size', String(CanvasConfiguration.FONT.SIZE));
+        this._labelElement.setAttributeNS(null, 'font-size', `${CanvasConfiguration.FONT.SIZE}`);
         this._labelElement.setAttributeNS(null, 'font-family', CanvasConfiguration.FONT.FAMILY);
         this._labelElement.setAttributeNS(null, 'text-anchor', 'middle');
         this._labelElement.appendChild(this._label);
 
         this._labelBackground = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGRectElement;
-        this._labelBackground.setAttributeNS(null, 'width', `${this._labelElement.getComputedTextLength()}`);
-        this._labelBackground.setAttributeNS(null, 'height', `${CanvasConfiguration.FONT.SIZE}`);
-        this._labelBackground.setAttributeNS(null, 'fill-opacity', '0.7');
+        this._labelBackground.setAttributeNS(null, 'width', `${this.labelBackgroundWidth()}`);
+        this._labelBackground.setAttributeNS(null, 'height', `${CanvasConfiguration.FONT.SIZE + 2 * CanvasConfiguration.FONT.BACKGROUND.OVERLAP}`);
+        this._labelBackground.setAttributeNS(null, 'fill-opacity', `${CanvasConfiguration.FONT.BACKGROUND.OPACITY}`);
         this._labelBackground.setAttributeNS(null, 'fill', 'white');
 
         this.container.appendChild(this._labelBackground);
@@ -34,7 +34,16 @@ export abstract class LabeledObject extends NodeElement implements Movable {
 
     public setLabelText(newLabel: string): void {
         this._label.textContent = newLabel;
-        this._labelBackground.setAttributeNS(null, 'width', `${this._labelElement.getComputedTextLength()}`);
+        this.updateLabelBackground();
+    }
+
+    private updateLabelBackground(): void {
+        this._labelBackground.setAttributeNS(null, 'width', `${this.labelBackgroundWidth()}`);
+        this._labelBackground.setAttributeNS(null, 'x', `${this.position.x - this._labelElement.getComputedTextLength() / 2 - CanvasConfiguration.FONT.BACKGROUND.OVERLAP}`);
+    }
+
+    private labelBackgroundWidth(): number {
+        return this._labelElement.getComputedTextLength() + 2 * CanvasConfiguration.FONT.BACKGROUND.OVERLAP;
     }
 
     getElements(): Array<SVGElement> {
@@ -47,8 +56,8 @@ export abstract class LabeledObject extends NodeElement implements Movable {
     private setLabelElementPosition(position: DOMPoint) {
         this._labelElement.setAttributeNS(null, 'x', `${position.x}`);
         this._labelElement.setAttributeNS(null, 'y', `${position.y + CanvasConfiguration.SIZE}`);
-        this._labelBackground.setAttributeNS(null, 'x', `${position.x}`);
-        this._labelBackground.setAttributeNS(null, 'y', `${position.y + CanvasConfiguration.SIZE}`);
+        this._labelBackground.setAttributeNS(null, 'x', `${position.x - this._labelElement.getComputedTextLength() / 2 - CanvasConfiguration.FONT.BACKGROUND.OVERLAP}`);
+        this._labelBackground.setAttributeNS(null, 'y', `${position.y + CanvasConfiguration.SIZE - CanvasConfiguration.FONT.SIZE}`);
     }
 
     activate() {

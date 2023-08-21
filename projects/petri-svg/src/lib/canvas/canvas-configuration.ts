@@ -12,7 +12,10 @@ export class CanvasConfiguration {
     public static FONT = {
         FAMILY: 'verdana',
         SIZE: 12,
-        SIZE_OFFSET: 18
+        BACKGROUND: {
+            OVERLAP: 3,
+            OPACITY: 0.7
+        }
     };
     public static ARROW_HEAD_SIZE = 5;
     public static WEIGHT_OFFSET = 10;

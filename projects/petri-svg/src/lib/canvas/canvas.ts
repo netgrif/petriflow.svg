@@ -48,6 +48,7 @@ export class Canvas extends Container {
 
     public addTransition(transition: Transition): void {
         this._transitions.container.appendChild(transition.container);
+        transition.setLabelText(transition.label.wholeText);
     }
 
     public remove(element: CanvasElement): SVGGElement {
