@@ -49,7 +49,7 @@ export abstract class Arc extends CanvasElement {
             this._linePoints.push(...linePoints);
         }
 
-        this.move(start, end);
+        this.updateLine();
     }
 
     public getElements(): Array<SVGElement> {
@@ -72,6 +72,10 @@ export abstract class Arc extends CanvasElement {
         this.arcLine.setAttributeNS(null, 'class', 'svg-inactive-stroke');
         this.arcLine.setAttributeNS(null, 'marker-end', `url(#${this._endId})`);
         this.multiplicityElement.setAttributeNS(null, 'class', 'svg-inactive-fill');
+    }
+
+    updateLine() {
+        this.move(this.start, this.end);
     }
 
     move(start: NodeElement, end: NodeElement) {

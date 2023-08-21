@@ -43,7 +43,14 @@ export abstract class LabeledObject extends NodeElement implements Movable {
     }
 
     private labelBackgroundWidth(): number {
+        if (this.hasEmptyLabel()) {
+            return 0;
+        }
         return this._labelElement.getComputedTextLength() + 2 * CanvasConfiguration.FONT.BACKGROUND.OVERLAP;
+    }
+
+    private hasEmptyLabel() {
+        return !this._label.data || this._label.data.trim().length === 0;
     }
 
     getElements(): Array<SVGElement> {
