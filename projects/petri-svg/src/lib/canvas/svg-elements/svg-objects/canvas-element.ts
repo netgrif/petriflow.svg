@@ -4,7 +4,7 @@ import {Container} from './container';
 export abstract class CanvasElement extends Container implements Activable {
 
     private _isActive = false;
-    private _isSelected = false;
+    private _isSelected = false; // TODO: PF-48 remove
 
     public static pointsToString(...points: Array<DOMPoint>): string {
         return points.map(p => `${p.x},${p.y}`).join(' ') + ' ';

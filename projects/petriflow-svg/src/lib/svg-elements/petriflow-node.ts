@@ -10,15 +10,7 @@ export abstract class PetriflowNode<T extends NodeElement> implements PetriflowC
 
     protected constructor(canvasElement: T) {
         this._canvasElement = canvasElement;
-
-        canvasElement.element.onmouseenter = () => {
-            this.canvasElement.activate();
-        };
-        canvasElement.element.onmouseleave = () => {
-            if (!this.isSelected()) {
-                this.canvasElement.deactivate();
-            }
-        };
+        // TODO: PF-48 remove events
         this._onClickEvent = EMPTY_FUNCTION;
         this._onContextEvent = EMPTY_FUNCTION;
     }

@@ -13,15 +13,6 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
     constructor(transition: Transition, icon?: string) {
         super(transition);
 
-        this.canvasElement.element.onmouseover = () => {
-            this.activate();
-        };
-        this.canvasElement.element.onmouseout = () => {
-            if (!this.isSelected()) {
-                this.deactivate();
-            }
-        };
-
         this._cancelArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
         this._cancelArrow.id = `svg_transition_start_${transition.id}`;
         this._cancelArrow.setAttributeNS(null, 'fill', 'white');

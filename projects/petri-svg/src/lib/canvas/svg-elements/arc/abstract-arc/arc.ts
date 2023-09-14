@@ -35,6 +35,7 @@ export abstract class Arc extends CanvasElement {
         this._arcLine.setAttributeNS(null, 'marker-end', `url(#${endId})`);
         this.container.appendChild(this._arcLine);
 
+        // TODO: PF-48 should multiplicity have background?
         this._multiplicityElement = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as SVGTextElement;
         this._multiplicityElement.setAttributeNS(null, 'font-size', `${CanvasConfiguration.FONT.SIZE}`);
         this._multiplicityElement.setAttributeNS(null, 'font-family', CanvasConfiguration.FONT.FAMILY);

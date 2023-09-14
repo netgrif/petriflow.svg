@@ -9,14 +9,6 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
 
     protected constructor(element: T) {
         this._element = element;
-        this._element.arcLine.onmouseover = () => {
-            this.activate();
-        };
-        this._element.arcLine.onmouseout = () => {
-            if (!this.isSelected()) {
-                this._element.deactivate();
-            }
-        };
         this._onClickEvent = EMPTY_FUNCTION;
     }
 
@@ -63,6 +55,10 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
 
     setSelected(value: boolean): void {
         this._element.setSelected(value);
+    }
+
+    setMultiplicity(multiplicity: string): void {
+        this._element.multiplicity.textContent = multiplicity;
     }
 
     get element(): T {

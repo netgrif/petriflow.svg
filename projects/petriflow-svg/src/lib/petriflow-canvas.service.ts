@@ -2,9 +2,11 @@ import {Injectable} from '@angular/core';
 import {PetriflowCanvas} from './petriflow-canvas';
 import {PanzoomObject} from '@panzoom/panzoom';
 import {Arc, CanvasConfiguration, NodeElement, Place, StaticPlace, Transition} from '@netgrif/petri.svg';
-import {PetriflowNode} from "./svg-elements/petriflow-node";
+import {PetriflowNode} from './svg-elements/petriflow-node';
 import {PetriflowArc} from './svg-elements/petriflow-arc';
 import {GridConfiguration} from './grid-configuration';
+import {PetriflowPlace} from './svg-elements/petriflow-place';
+import {PetriflowTransition} from './svg-elements/petriflow-transition';
 
 @Injectable({
     providedIn: 'root',
@@ -74,17 +76,17 @@ export abstract class PetriflowCanvasService {
 
     public createPlace(place: Place | StaticPlace): void {
         if (!this.canvas) {
-            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
         }
-        this.canvas.add(place);
+        this.canvas.addPlace(place);
     }
 
     // TODO: PF-48 'add' not 'create'
     public createTransition(transition: Transition): void {
         if (!this.canvas) {
-            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
         }
-        this.canvas.add(transition);
+        this.canvas.addTransition(transition);
     }
 
     public createRectangle(mouseX: number, mouseY: number): SVGElement {
@@ -105,7 +107,7 @@ export abstract class PetriflowCanvasService {
 
     public createSvgArc(element: PetriflowNode<NodeElement>, arrowUrl: string): SVGPolygonElement {
         if (!this.canvas) {
-            throw new Error("SVG canvas for petriflow objects doesn't exists!");
+            throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
         }
         const arcLine = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polyline') as SVGPolylineElement;
         arcLine.setAttributeNS(null, 'fill', 'none');
@@ -164,7 +166,11 @@ export abstract class PetriflowCanvasService {
             if (!this.canvas) {
                 throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
             }
-            this.canvas.add(copyElement.canvasElement);
+            if (copyElement instanceof PetriflowPlace) {
+                this.canvas.addPlace(copyElement.canvasElement);
+            } else if (copyElement instanceof PetriflowTransition) {
+                this.canvas.addTransition(copyElement.canvasElement);
+            }
             collectionTo.push(copyElement);
         });
     }

@@ -9,26 +9,11 @@ export class PetriflowPlace extends PetriflowNode<Place> {
 
     constructor(place: Place) {
         super(place);
-        this.canvasElement.markingTokens.forEach(markingToken => {
-            this.setPlaceActions(markingToken);
-        });
-        this.setPlaceActions(this.canvasElement.markingElement);
         this._onTokenClickEvent = EMPTY_FUNCTION;
     }
 
     public static of(id: string, label: string, marking: number, position: DOMPoint): PetriflowPlace {
         return new PetriflowPlace(new Place(id, label, marking, position));
-    }
-
-    private setPlaceActions(svgElement: SVGElement) {
-        svgElement.onmouseover = () => {
-            this.canvasElement.activate();
-        };
-        svgElement.onmouseout = () => {
-            if (!this.isSelected()) {
-                this.canvasElement.deactivate();
-            }
-        };
     }
 
     clone(): PetriflowPlace {

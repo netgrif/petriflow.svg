@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {
-    PetriflowCanvasElement,
-    PetriflowTransitionPlaceArc,
-    PetriflowReadArc,
-    PetriflowCanvasConfiguration,
-    PetriflowInhibitorArc,
     PetriflowArc,
-    PetriflowResetArc,
-    PetriflowPlaceTransitionArc,
+    PetriflowCanvasConfiguration,
+    PetriflowCanvasElement,
     PetriflowCanvasService,
+    PetriflowInhibitorArc,
     PetriflowNode,
     PetriflowPlace,
-    PetriflowTransition
+    PetriflowPlaceTransitionArc,
+    PetriflowReadArc,
+    PetriflowResetArc,
+    PetriflowTransition,
+    PetriflowTransitionPlaceArc
 } from '@netgrif/petriflow.svg';
 import {CanvasElementCollection} from '../domain/canvas-element-collection';
 import {CanvasMode} from '../domain/canvas-mode';
@@ -314,7 +314,7 @@ export class ControlPetriflowCanvasService extends PetriflowCanvasService {
                 throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
             }
             element.canvasElement.arcs.forEach((arc: Arc) => {
-                    this?.canvas?.remove(arc);
+                    this?.canvas?.removeArc(arc);
                     removedArcs.push(arc);
                 }
             );
@@ -325,7 +325,11 @@ export class ControlPetriflowCanvasService extends PetriflowCanvasService {
                 let arcIndex = this.petriflowElementsCollection.arcs.findIndex(petriflowArc => petriflowArc.element === arc);
                 this.petriflowElementsCollection.arcs.splice(arcIndex, 1);
             });
-            this.canvas.remove(element.canvasElement);
+            if (element instanceof PetriflowPlace) {
+                this.canvas.removePlace(element.canvasElement);
+            } else if (element instanceof PetriflowTransition) {
+                this.canvas.removeTransition(element.canvasElement);
+            }
         }
     }
 
@@ -339,7 +343,7 @@ export class ControlPetriflowCanvasService extends PetriflowCanvasService {
             });
             this.petriflowElementsCollection.arcs.splice(
                 this.petriflowElementsCollection.arcs.findIndex(collectionArc => petriflowArc === collectionArc), 1);
-            this.canvas.remove(petriflowArc.element);
+            this.canvas.removeArc(petriflowArc.element);
         }
     }
 
@@ -427,7 +431,7 @@ export class ControlPetriflowCanvasService extends PetriflowCanvasService {
                 throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
             }
             selectedElement.canvasElement.arcs.forEach((arc: Arc) => {
-                this?.canvas?.remove(arc);
+                this?.canvas?.removeArc(arc);
                 removedArcs.push(arc);
             });
             this.petriflowElementsCollection.nodes.forEach(petriflowElement => petriflowElement.canvasElement.deleteArcs(removedArcs));
@@ -435,7 +439,11 @@ export class ControlPetriflowCanvasService extends PetriflowCanvasService {
                 let arcIndex = this.petriflowElementsCollection.arcs.findIndex(petriflowArc => petriflowArc.element === arc);
                 this.petriflowElementsCollection.arcs.splice(arcIndex, 1);
             });
-            this.canvas.remove(selectedElement.canvasElement);
+            if (selectedElement instanceof PetriflowPlace) {
+                this.canvas.removePlace(selectedElement.canvasElement);
+            } else if (selectedElement instanceof PetriflowTransition) {
+                this.canvas.removeTransition(selectedElement.canvasElement);
+            }
             collection.splice(collection.indexOf(selectedElement), 1);
         });
     }
@@ -464,7 +472,11 @@ export class ControlPetriflowCanvasService extends PetriflowCanvasService {
             if (!this.canvas) {
                 throw new Error('SVG canvas for petriflow objects doesn\'t exists!');
             }
-            this.canvas.add(copyElement.canvasElement);
+            if (copyElement instanceof PetriflowPlace) {
+                this.canvas.addPlace(copyElement.canvasElement);
+            } else if (copyElement instanceof PetriflowTransition) {
+                this.canvas.addTransition(copyElement.canvasElement);
+            }
         });
         this.petriflowElementsCollection.arcs.filter(arc => arc.isSelected()).forEach(copyElement => {
             copyElement.moveBy(matrix.e, matrix.f);

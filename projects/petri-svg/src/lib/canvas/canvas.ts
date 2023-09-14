@@ -1,4 +1,4 @@
-import {Arc, ArcEnd, CanvasElement, Container, Place, Transition} from './svg-elements';
+import {Arc, ArcEnd, Container, Place, Transition} from './svg-elements';
 import {CanvasConfiguration} from './canvas-configuration';
 
 export class Canvas extends Container {
@@ -26,18 +26,6 @@ export class Canvas extends Container {
         this.svg.appendChild(this.container);
     }
 
-    public add(element: CanvasElement): void {
-        if (element instanceof Arc) {
-            this.addArc(element);
-        } else if (element instanceof Place) {
-            this.addPlace(element);
-        } else if (element instanceof Transition) {
-            this.addTransition(element);
-        } else {
-            this.container.appendChild(element.container);
-        }
-    }
-
     public addArc(arc: Arc): void {
         this._arcs.container.appendChild(arc.container);
     }
@@ -48,19 +36,8 @@ export class Canvas extends Container {
 
     public addTransition(transition: Transition): void {
         this._transitions.container.appendChild(transition.container);
-        transition.setLabelText(transition.label.wholeText);
-    }
-
-    public remove(element: CanvasElement): SVGGElement {
-        if (element instanceof Arc) {
-            return this.removeArc(element);
-        } else if (element instanceof Place) {
-            return this.removePlace(element);
-        } else if (element instanceof Transition) {
-            return this.removeTransition(element);
-        } else {
-            return this.container.removeChild(element.container);
-        }
+        // TODO: PF-48 needed? why not in addPlace?
+        // transition.setLabelText(transition.label.wholeText);
     }
 
     public removeArc(arc: Arc): SVGGElement {
@@ -76,7 +53,15 @@ export class Canvas extends Container {
     }
 
     public removeAll(): void {
-        this.container.childNodes.forEach(value => value.remove());
+        while (this._arcs.container.firstChild) {
+            this._arcs.container.removeChild(this._arcs.container.firstChild);
+        }
+        while (this._places.container.firstChild) {
+            this._places.container.removeChild(this._places.container.firstChild);
+        }
+        while (this._transitions.container.firstChild) {
+            this._transitions.container.removeChild(this._transitions.container.firstChild);
+        }
     }
 
     public register(arcEnd: ArcEnd): void {
