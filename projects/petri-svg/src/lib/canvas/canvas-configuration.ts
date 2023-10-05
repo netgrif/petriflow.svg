@@ -4,7 +4,6 @@ export class CanvasConfiguration {
         ACTIVE: 'blue',
         INACTIVE: 'black'
     };
-    public static RADIUS = 18;
     public static SIZE = 36;
     public static ICON_SIZE = 25;
     public static TOKEN_RADIUS = 3;

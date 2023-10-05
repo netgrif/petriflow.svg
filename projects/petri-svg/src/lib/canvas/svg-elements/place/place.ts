@@ -24,7 +24,7 @@ export class Place extends LabeledObject {
         super(id, label, position);
         this.element = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'circle') as SVGCircleElement;
         this.element.id = `svg_place_${id}`;
-        this.element.setAttributeNS(null, 'r', `${CanvasConfiguration.RADIUS}`);
+        this.element.setAttributeNS(null, 'r', `${CanvasConfiguration.SIZE / 2}`);
         this.element.setAttributeNS(null, 'stroke-width', '2');
         this.element.setAttributeNS(null, 'fill', 'white');
         this.container.appendChild(this.element);
@@ -131,7 +131,7 @@ export class Place extends LabeledObject {
      */
     getEdgeIntersection(from: DOMPoint, offset: number): DOMPoint {
         const offsetFrom = new DOMPoint(from.x - this.position.x, from.y - this.position.y);
-        const r = CanvasConfiguration.RADIUS + offset;
+        const r = CanvasConfiguration.SIZE / 2 + offset;
         const dx = 0 - offsetFrom.x;
         const dy = 0 - offsetFrom.y;
         const dr = Math.sqrt(dx * dx + dy * dy);

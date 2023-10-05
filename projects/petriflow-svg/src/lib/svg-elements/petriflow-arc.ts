@@ -31,6 +31,10 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
         this._element.activate();
     }
 
+    deactivate(): void {
+        this._element.deactivate();
+    }
+
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
         return this._element.isEnclosedByRectangle(rectangle); // TODO: PF-48
     }
@@ -45,7 +49,7 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
 
     deselect(): void {
         this.setSelected(false);
-        this._element.deactivate();
+        this.deactivate();
     }
 
     select(): void {

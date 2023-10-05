@@ -10,6 +10,8 @@ export interface PetriflowCanvasElement {
 
     activate(): void;
 
+    deactivate(): void;
+
     isSelected(): boolean;
 
     setSelected(value: boolean): void;

@@ -38,14 +38,14 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         return new PetriflowTransition(new Transition(id, label, position), icon);
     }
 
-    setIcon(icon: string | undefined) {
+    setIcon(icon: string | undefined): void {
         this.removeIcon();
         if (!!icon) {
             this.addIcon(icon);
         }
     }
 
-    addIcon(icon: string) {
+    addIcon(icon: string): void {
         this._iconElement = (document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'text') as unknown) as SVGTextElement;
         this._iconElement.setAttributeNS(null, 'x', String(this.canvasElement.position.x - CanvasConfiguration.ICON_SIZE / 2));
         this._iconElement.setAttributeNS(null, 'y', String(this.canvasElement.position.y + CanvasConfiguration.ICON_SIZE / 2));
@@ -67,7 +67,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this.canvasElement.container.appendChild(this._iconElement);
     }
 
-    removeIcon() {
+    removeIcon(): void {
         if (!!this._iconElement) {
             this.canvasElement.container.removeChild(this._iconElement);
             this._icon = undefined;
@@ -107,7 +107,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this._finishArrow.setAttributeNS(null, 'points', this.canvasElement.finishArrowPoints(this.canvasElement.position));
     }
 
-    move(position: DOMPoint) {
+    move(position: DOMPoint): void {
         this.canvasElement.move(position);
         this._cancelArrow.setAttributeNS(null, 'points', this.canvasElement.cancelArrowPoints(position));
         this._finishArrow.setAttributeNS(null, 'points', this.canvasElement.finishArrowPoints(position));
@@ -130,24 +130,24 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this._iconElement?.setAttributeNS(null, 'class', 'svg-inactive-fill');
     }
 
-    private setIconElementPosition(position: DOMPoint) {
+    private setIconElementPosition(position: DOMPoint): void {
         if (this._iconElement) {
             this._iconElement.setAttributeNS(null, 'x', `${position.x - CanvasConfiguration.ICON_SIZE / 2}`);
             this._iconElement.setAttributeNS(null, 'y', `${position.y + CanvasConfiguration.ICON_SIZE / 2}`);
         }
     }
 
-    public enable(firing: boolean) {
+    public enable(firing: boolean): void {
         this.canvasElement.enable(firing);
         this.setIconFiringClass(firing);
     }
 
-    public disable(firing: boolean) {
+    public disable(firing: boolean): void {
         this.canvasElement.disable();
         this.setIconFiringClass(firing);
     }
 
-    private setIconFiringClass(firing: boolean) {
+    private setIconFiringClass(firing: boolean): void {
         if (firing) {
             this._cancelArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-cancel-active');
             this._finishArrow.setAttributeNS(null, 'class', 'svg-fire-arrow-finish-active');
