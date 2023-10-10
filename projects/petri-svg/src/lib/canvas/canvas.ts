@@ -16,9 +16,9 @@ export class Canvas extends Container {
             defs = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'defs') as SVGDefsElement;
         }
         this._defs = defs;
-        this._arcs = new Container();
-        this._places = new Container();
-        this._transitions = new Container();
+        this._arcs = new Container('arcs');
+        this._places = new Container('places');
+        this._transitions = new Container('transitions');
         this.container.appendChild(this._defs);
         this.container.appendChild(this._arcs.container);
         this.container.appendChild(this._places.container);
