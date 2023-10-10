@@ -215,5 +215,9 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
     changeId(id: string): void {
         this.canvasElement.id = `svg_transition_${id}`;
         this.canvasElement.label.textContent = id;
+        this.canvasElement.labelElement.id = `svg_transition_label_${id}`;
+        this.canvasElement.labelBackground.id = `svg_transition_label_background_${id}`;
+        this.finishArrow.id = `svg_transition_finish_${id}`;
+        this.cancelArrow.id = `svg_transition_start_${id}`;
     }
 }

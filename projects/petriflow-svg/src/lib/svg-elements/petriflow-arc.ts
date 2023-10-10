@@ -10,6 +10,9 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
     protected constructor(element: T) {
         this._element = element;
         this._onClickEvent = EMPTY_FUNCTION;
+        this.element.arcLine.id = `svg_arc_${element.id}`;
+        this.element.arcLineBackground.id = `svg_arc_background_${element.id}`;
+        this.element.multiplicityElement.id = `svg_arc_multiplicity_${element.id}`;
     }
 
     cloneArc(id: string, start: NodeElement, end: NodeElement): PetriflowArc<Arc> {
