@@ -11,6 +11,7 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
         this._element = element;
         this._onClickEvent = EMPTY_FUNCTION;
         this.element.arcLine.id = `svg_arc_${element.id}`;
+        this.element.container.id = `svg_arc_container_${element.id}`;
         this.element.arcLineBackground.id = `svg_arc_background_${element.id}`;
         this.element.multiplicityElement.id = `svg_arc_multiplicity_${element.id}`;
     }
