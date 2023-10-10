@@ -10,6 +10,7 @@ export class PetriflowPlace extends PetriflowNode<Place> {
     constructor(place: Place) {
         super(place);
         this._onTokenClickEvent = EMPTY_FUNCTION;
+        this.changeId(place.id);
     }
 
     public static of(id: string, label: string, marking: number, position: DOMPoint): PetriflowPlace {

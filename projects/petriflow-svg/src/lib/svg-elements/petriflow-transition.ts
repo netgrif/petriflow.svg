@@ -14,7 +14,6 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         super(transition);
 
         this._cancelArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
-        this._cancelArrow.id = `svg_transition_start_${transition.id}`;
         this._cancelArrow.setAttributeNS(null, 'fill', 'white');
         this._cancelArrow.setAttributeNS(null, 'stroke', 'white');
         this._cancelArrow.setAttributeNS(null, 'stroke-width', '2');
@@ -22,7 +21,6 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this.canvasElement.container.appendChild(this._cancelArrow);
 
         this._finishArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
-        this._finishArrow.id = `svg_transition_finish_${transition.id}`;
         this._finishArrow.setAttributeNS(null, 'fill', 'white');
         this._finishArrow.setAttributeNS(null, 'stroke', 'white');
         this._finishArrow.setAttributeNS(null, 'stroke-width', '2');
@@ -30,7 +28,7 @@ export class PetriflowTransition extends PetriflowNode<Transition> {
         this.canvasElement.container.appendChild(this._finishArrow);
 
         this.setIcon(icon);
-
+        this.changeId(transition.id);
         this.deactivate();
     }
 
