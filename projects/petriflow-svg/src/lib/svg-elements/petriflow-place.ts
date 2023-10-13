@@ -44,7 +44,6 @@ export class PetriflowPlace extends PetriflowNode<Place> {
     changeId(id: string): void {
         this.canvasElement.id = `svg_place_${id}`;
         this.canvasElement.container.id = `svg_place_container_${id}`;
-        this.canvasElement.label.textContent = id;
         this.canvasElement.labelElement.id = `svg_place_label_${id}`;
         this.canvasElement.markingElement.id = `svg_place_marking_number_${id}`;
         this.canvasElement.markingTokens.forEach((token, index) => token.id = `svg_place_marking_token_${index}_${id}`);
