@@ -32,12 +32,12 @@ export class Canvas extends Container {
 
     public addPlace(place: Place): void {
         this._places.container.appendChild(place.container);
+        place.updateLabelBackground();
     }
 
     public addTransition(transition: Transition): void {
         this._transitions.container.appendChild(transition.container);
-        // TODO: PF-48 needed? why not in addPlace?
-        // transition.setLabelText(transition.label.wholeText);
+        transition.updateLabelBackground();
     }
 
     public removeArc(arc: Arc): SVGGElement {

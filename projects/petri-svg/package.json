@@ -1,6 +1,6 @@
 {
     "name": "@netgrif/petri.svg",
-    "version": "1.2.0-rc16",
+    "version": "1.2.0-rc18",
     "description": "Javascript/Typescript library of SVG object of Petri Net",
     "main": "petri.svg.js",
     "module": "petri.svg.esm.js",

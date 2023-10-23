@@ -30,6 +30,7 @@ export abstract class LabeledObject extends NodeElement implements Movable {
         this.container.appendChild(this._labelElement);
 
         this.setLabelElementPosition(position);
+        this.setLabelText(label);
     }
 
     public setLabelText(newLabel: string): void {
@@ -37,7 +38,7 @@ export abstract class LabeledObject extends NodeElement implements Movable {
         this.updateLabelBackground();
     }
 
-    private updateLabelBackground(): void {
+    public updateLabelBackground(): void {
         this._labelBackground.setAttributeNS(null, 'width', `${this.labelBackgroundWidth()}`);
         this._labelBackground.setAttributeNS(null, 'x', `${this.position.x - this._labelElement.getComputedTextLength() / 2 - CanvasConfiguration.FONT.BACKGROUND.OVERLAP}`);
     }
