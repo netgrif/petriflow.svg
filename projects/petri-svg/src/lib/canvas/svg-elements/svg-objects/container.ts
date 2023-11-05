@@ -6,7 +6,7 @@ export class Container {
 
     protected constructor(id?: string) {
         this._container = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'g') as SVGGElement;
-        if (!!id) {
+        if (id != null && id.length > 0) {
             this._container.id = id;
         }
     }

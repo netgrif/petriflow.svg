@@ -35,7 +35,7 @@ export default [
             terser(),
             copy({
                 targets: [
-                    {src: ["./package.json", "./README.md", "./LICENSE", "../../CHANGELOG.md"], dest: dist},
+                    {src: ["./package.json", "./README.md", "./LICENSE.txt", "../../CHANGELOG.md"], dest: dist},
                 ]
             })
         ]

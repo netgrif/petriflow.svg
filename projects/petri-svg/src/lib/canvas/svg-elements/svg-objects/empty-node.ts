@@ -1,5 +1,5 @@
-import {NodeElement} from './node-element';
 import {CanvasElement} from './canvas-element';
+import {NodeElement} from './node-element';
 
 export class EmptyNode extends NodeElement {
 

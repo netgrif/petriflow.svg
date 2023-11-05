@@ -1,6 +1,6 @@
-import {CanvasElement} from './canvas-element';
+import {CanvasConfiguration} from '../../canvas-configuration';
 import {Arc} from '../arc';
-import {CanvasConfiguration} from "../../canvas-configuration";
+import {CanvasElement} from './canvas-element';
 
 export abstract class NodeElement extends CanvasElement {
 

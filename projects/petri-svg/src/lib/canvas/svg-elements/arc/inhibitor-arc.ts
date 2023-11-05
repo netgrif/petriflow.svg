@@ -1,5 +1,5 @@
-import {PlaceTransitionArc} from './abstract-arc';
 import {NodeElement} from '../svg-objects';
+import {PlaceTransitionArc} from './abstract-arc';
 
 export class InhibitorArc extends PlaceTransitionArc {
 

@@ -1,5 +1,5 @@
-import {PlaceTransitionArc} from './abstract-arc/place-transition-arc';
 import {NodeElement} from '../svg-objects/node-element';
+import {PlaceTransitionArc} from './abstract-arc/place-transition-arc';
 
 export class ResetArc extends PlaceTransitionArc {
 

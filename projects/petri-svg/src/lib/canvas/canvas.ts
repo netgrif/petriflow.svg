@@ -1,5 +1,5 @@
-import {Arc, ArcEnd, Container, Place, Transition} from './svg-elements';
 import {CanvasConfiguration} from './canvas-configuration';
+import {Arc, ArcEnd, Container, Place, Transition} from './svg-elements';
 
 export class Canvas extends Container {
 

@@ -1,5 +1,5 @@
-import {ArcEnd} from './arc-end';
 import {CanvasConfiguration} from '../../../canvas-configuration';
+import {ArcEnd} from './arc-end';
 
 export class ArrowArcEnd extends ArcEnd {
 
