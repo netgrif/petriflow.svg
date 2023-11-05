@@ -1,7 +1,7 @@
 import {Place} from '@netgrif/petri.svg';
 import {PetriflowNode} from './petriflow-node';
 import {PetriflowCanvasConfiguration} from '../petriflow-canvas-configuration';
-import {defaultPlace, EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from "../common";
+import {defaultPlace, EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from '../common';
 
 export class PetriflowPlace extends PetriflowNode<Place> {
 
@@ -9,30 +9,21 @@ export class PetriflowPlace extends PetriflowNode<Place> {
 
     constructor(place: Place) {
         super(place);
-        this.canvasElement.markingTokens.forEach(markingToken => {
-            this.setPlaceActions(markingToken);
-        });
         this._onTokenClickEvent = EMPTY_FUNCTION;
+        this.changeId(place.id);
     }
 
-    private setPlaceActions(svgElement: SVGElement) {
-        svgElement.onmouseenter = () => {
-            this.canvasElement.activate();
-        };
-        svgElement.onmouseleave = () => {
-            if (!this.isSelected()) {
-                this.canvasElement.deactivate();
-            }
-        };
+    public static of(id: string, label: string, marking: number, position: DOMPoint): PetriflowPlace {
+        return new PetriflowPlace(new Place(id, label, marking, position));
     }
 
     clone(): PetriflowPlace {
         const cloned = new PetriflowPlace(this.canvasElement.clone() ?? defaultPlace());
-        cloned.canvasElement.element.onclick = () => this.onClickEvent(cloned);
         cloned.canvasElement.markingTokens.forEach(token => {
             token.onclick = () => this._onTokenClickEvent(cloned);
         });
         cloned.setOnClick((clone) => this.onClickEvent(clone));
+        cloned.setOnContext((clone) => this.onContextEvent(clone));
         cloned.setOnTokenClickEvent((clone) => this._onTokenClickEvent(clone));
         cloned.changeId(`p${++PetriflowCanvasConfiguration.PLACE_ID_COUNTER}`);
         return cloned;
@@ -45,10 +36,20 @@ export class PetriflowPlace extends PetriflowNode<Place> {
                 event(this);
             };
         });
+        this.canvasElement.markingElement.onclick = () => {
+            event(this);
+        };
     }
 
     changeId(id: string): void {
         this.canvasElement.id = `svg_place_${id}`;
-        this.canvasElement.label.textContent = id;
+        this.canvasElement.container.id = `svg_place_container_${id}`;
+        this.canvasElement.labelElement.id = `svg_place_label_${id}`;
+        this.canvasElement.markingElement.id = `svg_place_marking_number_${id}`;
+        this.canvasElement.markingTokens.forEach((token, index) => token.id = `svg_place_marking_token_${index}_${id}`);
+    }
+
+    move(position: DOMPoint) {
+        this.canvasElement.move(position);
     }
 }

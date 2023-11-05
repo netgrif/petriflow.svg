@@ -5,6 +5,7 @@
         "entryFile": "src/public-api.ts"
     },
     "allowedNonPeerDependencies": [
-        "@netgrif/petri.svg"
+        "@netgrif/petri.svg",
+        "@panzoom/panzoom"
     ]
 }

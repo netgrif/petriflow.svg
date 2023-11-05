@@ -1,5 +1,4 @@
 import {CircleArcEnd} from './circle-arc-end';
-import {CanvasConfiguration} from '../../../canvas-configuration';
 
 export class FullCircleArcEnd extends CircleArcEnd {
 
@@ -7,16 +6,19 @@ export class FullCircleArcEnd extends CircleArcEnd {
 
     constructor() {
         super(FullCircleArcEnd.ID);
-        this.deactivate();
     }
 
-    activate(): void {
-        this.circle.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.ACTIVE);
-        this.circle.setAttributeNS(null, 'fill', CanvasConfiguration.COLORS.ACTIVE);
+    public arrow(): SVGMarkerElement {
+        const arrow = super.arrow();
+        const arrowHead = this.getCircle('svg-inactive-fill svg-inactive-stroke');
+        arrow.appendChild(arrowHead);
+        return arrow;
     }
 
-    deactivate(): void {
-        this.circle.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.INACTIVE);
-        this.circle.setAttributeNS(null, 'fill', CanvasConfiguration.COLORS.INACTIVE);
+    public activeArrow(): SVGMarkerElement {
+        const arrow = super.activeArrow();
+        const arrowHead = this.getCircle('svg-active-fill svg-active-stroke');
+        arrow.appendChild(arrowHead);
+        return arrow;
     }
 }

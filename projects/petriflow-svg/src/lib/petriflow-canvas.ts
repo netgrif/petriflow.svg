@@ -2,8 +2,8 @@ import {ArrowArcEnd, Canvas, DoubleArrowArcEnd, EmptyCircleArcEnd, FullCircleArc
 
 export class PetriflowCanvas extends Canvas {
 
-    constructor(svg: SVGSVGElement) {
-        super(svg);
+    constructor(svg: SVGSVGElement, defs?: SVGDefsElement) {
+        super(svg, defs);
         this.register(new ArrowArcEnd());
         this.register(new EmptyCircleArcEnd());
         this.register(new FullCircleArcEnd());

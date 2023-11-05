@@ -12,6 +12,7 @@ export abstract class NodeElement extends CanvasElement {
         super();
         this._arcs = [];
         this._position = position;
+        // TODO: PF-48 remove?
         this._element = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'rect') as SVGRectElement;
     }
 
@@ -70,5 +71,9 @@ export abstract class NodeElement extends CanvasElement {
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
         this.setSelected(super.isEnclosedByRectangle(rectangle));
         return this.isSelected();
+    }
+
+    public getElements(): Array<SVGElement> {
+        return [this.element];
     }
 }

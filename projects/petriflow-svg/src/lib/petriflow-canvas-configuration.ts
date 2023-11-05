@@ -5,4 +5,5 @@ export class PetriflowCanvasConfiguration {
 
     public static TRANSITION_ID_COUNTER = 0;
     public static PLACE_ID_COUNTER = 0;
+    public static ARC_ID_COUNTER = 0;
 }

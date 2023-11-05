@@ -42,6 +42,7 @@
         "petriflowsvg:doc": "typedoc --tsconfig projects/petriflow-svg/tsconfig.lib.json --entryPoints projects/petriflow-svg/src/lib/public-api.ts --exclude **/*.spec.* --out projects/petriflow-svg/docs --theme default",
         "example:build:prod": "ng build example-app --configuration production --base-href /petriflow.svg/",
         "example:start": "ng serve example-app",
+        "project:start": "npm run petrisvg:build:local && npm run petriflowsvg:build:local && npm run example:build:prod && npm run example:start",
         "ng-high-memory": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng serve"
     },
     "private": true,

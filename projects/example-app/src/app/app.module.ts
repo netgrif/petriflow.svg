@@ -5,7 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {RouterModule, Routes} from '@angular/router';
 import {JoyrideModule} from 'ngx-joyride';
-import {PetriflowCanvasModule} from 'petriflow-svg';
+import {PetriflowCanvasModule} from '@netgrif/petriflow.svg';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {PetriflowInfoDialogComponent} from './petriflow-info-dialog/petriflow-info-dialog.component';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,6 +15,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {HttpClientModule} from '@angular/common/http';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {FormsModule} from "@angular/forms";
 
 const appRoutes: Routes = [
     {path: 'app', component: AppComponent},
@@ -41,7 +42,8 @@ const appRoutes: Routes = [
         MatSnackBarModule,
         MatButtonModule,
         HttpClientModule,
-        MatTooltipModule
+        MatTooltipModule,
+        FormsModule
     ],
     entryComponents: [PetriflowInfoDialogComponent],
     bootstrap: [

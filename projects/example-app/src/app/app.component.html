@@ -1,12 +1,15 @@
 <mat-toolbar fxLayout="row" class="app-container mat-toolbar mat-toolbar-single-row">
     <mat-toolbar-row fxFlex>
         <mat-icon id="netgrif-icon" svgIcon="netgrif_logo"></mat-icon>
-        <mat-button-toggle-group [value]="_mode" fxLayoutAlign="start end">
+        <mat-button-toggle-group [(ngModel)]="_mode" fxLayoutAlign="start end">
             <mat-button-toggle mat-button [value]="canvasMode.SELECT" (click)="changeCanvasMode(canvasMode.SELECT)">
+                <mat-icon svgIcon="cursor-default-outline"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle mat-button [value]="canvasMode.PANNING" (click)="changeCanvasMode(canvasMode.PANNING)">
                 <mat-icon>open_with</mat-icon>
             </mat-button-toggle>
             <mat-button-toggle mat-button [value]="canvasMode.LASSO"
-                               (click)="changeCanvasMode(canvasMode.LASSO, false)">
+                               (click)="changeCanvasMode(canvasMode.LASSO)">
                 <mat-icon>tab_unselected</mat-icon>
             </mat-button-toggle>
             <mat-button-toggle mat-button [value]="canvasMode.CREATE_TRANSITION"
@@ -42,6 +45,9 @@
             <mat-button-toggle mat-button (click)="openDialog()">
                 <mat-icon>info</mat-icon>
             </mat-button-toggle>
+            <mat-button-toggle mat-button (click)="petriflowCanvasService.gridOnOff()">
+                <mat-icon>clear</mat-icon>
+            </mat-button-toggle>
             <mat-button-toggle mat-button id="reset-zoom-button" (click)="resetPanZoom()">
                 <mat-icon>clear</mat-icon>
             </mat-button-toggle>
@@ -68,5 +74,6 @@
     </mat-toolbar-row>
 </mat-toolbar>
 <div class="outer">
-    <petriflow-svg-canvas class="canvas"></petriflow-svg-canvas>
+    <petriflow-svg-canvas class="canvas" [panzoomConfiguration]="panzoomConfiguration"
+                          [gridConfiguration]="petriflowCanvasService.gridConfiguration"></petriflow-svg-canvas>
 </div>

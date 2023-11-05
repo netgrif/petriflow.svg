@@ -2,28 +2,41 @@ import {CanvasConfiguration} from '../../../canvas-configuration';
 
 export abstract class ArcEnd {
 
-    private _arrow: SVGMarkerElement;
+    protected id: string;
+    protected height: number;
+    protected width: number;
+    protected refX: number;
+    protected refY: number;
 
     protected constructor(id: string, height: number, width: number, refX: number, refY: number) {
-        this._arrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'marker') as SVGMarkerElement;
-        this._arrow.setAttributeNS(null, 'id', id);
-        this._arrow.setAttributeNS(null, 'markerHeight', `${height}`);
-        this._arrow.setAttributeNS(null, 'markerWidth', `${width}`);
-        this._arrow.setAttributeNS(null, 'refX', `${refX}`);
-        this._arrow.setAttributeNS(null, 'refY', `${refY}`);
-        this._arrow.setAttributeNS(null, 'orient', 'auto');
-        this._arrow.setAttributeNS(null, 'overflow', `visible`);
+        this.id = id;
+        this.height = height;
+        this.width = width;
+        this.refX = refX;
+        this.refY = refY;
     }
 
-    get arrow(): SVGMarkerElement {
-        return this._arrow;
+    public arrow(): SVGMarkerElement {
+        const arrow = this.defaultArrow(`${this.id}`);
+        arrow.setAttributeNS(null, 'class', `svg-inactive-fill`);
+        return arrow;
     }
 
-    set arrow(arrow: SVGMarkerElement) {
-        this._arrow = arrow;
+    public activeArrow(): SVGMarkerElement {
+        const arrow = this.defaultArrow(`${this.id}-active`);
+        arrow.setAttributeNS(null, 'class', `svg-active-fill`);
+        return arrow;
     }
 
-    abstract activate(): void;
-
-    abstract deactivate(): void;
+    private defaultArrow(id: string): SVGMarkerElement {
+        const arrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'marker') as SVGMarkerElement;
+        arrow.setAttributeNS(null, 'id', id);
+        arrow.setAttributeNS(null, 'markerHeight', `${this.height}`);
+        arrow.setAttributeNS(null, 'markerWidth', `${this.width}`);
+        arrow.setAttributeNS(null, 'refX', `${this.refX}`);
+        arrow.setAttributeNS(null, 'refY', `${this.refY}`);
+        arrow.setAttributeNS(null, 'orient', 'auto');
+        arrow.setAttributeNS(null, 'overflow', `visible`);
+        return arrow;
+    }
 }
