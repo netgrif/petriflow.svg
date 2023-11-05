@@ -4,7 +4,6 @@ export class CanvasConfiguration {
         ACTIVE: 'blue',
         INACTIVE: 'black'
     };
-    public static RADIUS = 18;
     public static SIZE = 36;
     public static ICON_SIZE = 25;
     public static TOKEN_RADIUS = 3;
@@ -12,8 +11,13 @@ export class CanvasConfiguration {
     public static FONT = {
         FAMILY: 'verdana',
         SIZE: 12,
-        SIZE_OFFSET: 18
+        BACKGROUND: {
+            OVERLAP: 3,
+            OPACITY: 0.7
+        }
     };
     public static ARROW_HEAD_SIZE = 5;
     public static WEIGHT_OFFSET = 10;
+    public static WIDTH = 10000;
+    public static HEIGHT = 10000;
 }

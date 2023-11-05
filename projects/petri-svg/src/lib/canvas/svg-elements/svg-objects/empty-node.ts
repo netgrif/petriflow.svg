@@ -1,14 +1,14 @@
-import {NodeElement} from './node-element';
 import {CanvasElement} from './canvas-element';
+import {NodeElement} from './node-element';
 
 export class EmptyNode extends NodeElement {
 
     activate(): void {
-        // ignore
+        super.activate();
     }
 
     deactivate(): void {
-        // ignore
+        super.deactivate();
     }
 
     getEdgeIntersection(): DOMPoint {

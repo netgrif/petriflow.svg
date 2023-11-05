@@ -1,28 +1,37 @@
-import {ArcEnd} from './arc-end';
 import {CanvasConfiguration} from '../../../canvas-configuration';
+import {ArcEnd} from './arc-end';
 
 export class DoubleArrowArcEnd extends ArcEnd {
 
     public static readonly ID = 'arc_end_double_arrow';
 
-    private readonly _arrowHead: SVGPolygonElement;
-
     constructor() {
         super(DoubleArrowArcEnd.ID, CanvasConfiguration.ARROW_HEAD_SIZE, CanvasConfiguration.ARROW_HEAD_SIZE, CanvasConfiguration.ARROW_HEAD_SIZE - 1, CanvasConfiguration.ARROW_HEAD_SIZE / 2);
-        this._arrowHead = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
-        this._arrowHead.setAttributeNS(null, 'points', `0,0 ${CanvasConfiguration.ARROW_HEAD_SIZE},${CanvasConfiguration.ARROW_HEAD_SIZE / 2} 0,${CanvasConfiguration.ARROW_HEAD_SIZE}`);
-        const secondArrow = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
-        secondArrow.setAttributeNS(null, 'points', `${-CanvasConfiguration.ARROW_HEAD_SIZE + 1},0 1,${CanvasConfiguration.ARROW_HEAD_SIZE / 2} ${-CanvasConfiguration.ARROW_HEAD_SIZE + 1},${CanvasConfiguration.ARROW_HEAD_SIZE}`);
-
-        this.arrow.appendChild(this._arrowHead);
-        this.arrow.appendChild(secondArrow);
     }
 
-    activate(): void {
-        this._arrowHead.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.ACTIVE);
+    public arrow(): SVGMarkerElement {
+        const arrow = super.arrow();
+        const arrowHeads = this.arrowHead('svg-inactive-fill');
+        arrow.appendChild(arrowHeads[0]);
+        arrow.appendChild(arrowHeads[1]);
+        return arrow;
     }
 
-    deactivate(): void {
-        this._arrowHead.setAttributeNS(null, 'stroke', CanvasConfiguration.COLORS.INACTIVE);
+    public activeArrow(): SVGMarkerElement {
+        const arrow = super.activeArrow();
+        const arrowHeads = this.arrowHead('svg-active-fill');
+        arrow.appendChild(arrowHeads[0]);
+        arrow.appendChild(arrowHeads[1]);
+        return arrow;
+    }
+
+    private arrowHead(cssClass: string): SVGPolygonElement[] {
+        const arrowHead = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
+        arrowHead.setAttributeNS(null, 'points', `0,0 ${CanvasConfiguration.ARROW_HEAD_SIZE},${CanvasConfiguration.ARROW_HEAD_SIZE / 2} 0,${CanvasConfiguration.ARROW_HEAD_SIZE}`);
+        arrowHead.setAttributeNS(null, 'class', cssClass);
+        const secondArrowHead = document.createElementNS(CanvasConfiguration.SVG_NAMESPACE, 'polygon') as SVGPolygonElement;
+        secondArrowHead.setAttributeNS(null, 'points', `${-CanvasConfiguration.ARROW_HEAD_SIZE + 1},0 1,${CanvasConfiguration.ARROW_HEAD_SIZE / 2} ${-CanvasConfiguration.ARROW_HEAD_SIZE + 1},${CanvasConfiguration.ARROW_HEAD_SIZE}`);
+        secondArrowHead.setAttributeNS(null, 'class', cssClass);
+        return [arrowHead, secondArrowHead];
     }
 }

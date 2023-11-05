@@ -4,4 +4,5 @@ export interface Activable {
 
     deactivate(): void;
 
+    isActive(): boolean;
 }

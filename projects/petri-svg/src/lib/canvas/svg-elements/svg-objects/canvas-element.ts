@@ -3,15 +3,24 @@ import {Container} from './container';
 
 export abstract class CanvasElement extends Container implements Activable {
 
-    private _isSelected = false;
+    private _isActive = false;
+    private _isSelected = false; // TODO: PF-48 remove
 
     public static pointsToString(...points: Array<DOMPoint>): string {
         return points.map(p => `${p.x},${p.y}`).join(' ') + ' ';
     }
 
-    abstract activate(): void;
+    public activate(): void {
+        this._isActive = true;
+    }
 
-    abstract deactivate(): void;
+    public deactivate(): void {
+        this._isActive = false;
+    }
+
+    public isActive(): boolean {
+        return this._isActive;
+    }
 
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
         const canvasElementBox = this.container.getBBox();
@@ -32,4 +41,6 @@ export abstract class CanvasElement extends Container implements Activable {
     setSelected(value: boolean) {
         this._isSelected = value;
     }
+
+    public abstract getElements(): Array<SVGElement>;
 }

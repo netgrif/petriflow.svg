@@ -247,7 +247,6 @@ Thumbs.db
 
 # Sonar bullshit
 .scannerwork/
-out/
 /.npmrc
 **/package-lock.json
 

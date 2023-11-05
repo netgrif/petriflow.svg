@@ -1,2 +1,13 @@
-<svg #canvas width="100%" height="100%" style="width: 100%; height: 100%">
+<svg #canvas [attr.width]="gridConfiguration.width" [attr.height]="gridConfiguration.height">
+    <defs #canvasDefs>
+        <pattern id="canvas-grid" [attr.width]="gridConfiguration.size" [attr.height]="gridConfiguration.size"
+                 patternUnits="userSpaceOnUse">
+            <rect [attr.width]="gridConfiguration.size" [attr.height]="gridConfiguration.size"
+                  fill="url(#smallGrid)"/>
+            <path id="canvas-grid-path" [attr.d]="'M '+gridConfiguration.size+' 0 L 0 0 0 '+gridConfiguration.size"
+                  fill="none" [attr.stroke]="gridConfiguration.stroke"
+                  stroke-width="1"/>
+        </pattern>
+    </defs>
+    <rect *ngIf="gridConfiguration.enabled" width="100%" height="100%" fill="url(#canvas-grid)" #canvasGrid/>
 </svg>

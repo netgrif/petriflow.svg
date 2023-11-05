@@ -7,7 +7,11 @@ export class PetriflowTransitionPlaceArc extends PetriflowArc<RegularTransitionP
         super(arc);
     }
 
-    createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
-        return new PetriflowTransitionPlaceArc(new RegularPlaceTransitionArc(start, end, points, multiplicity));
+    public static of(id: string, start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string | null): PetriflowTransitionPlaceArc {
+        return new PetriflowTransitionPlaceArc(new RegularTransitionPlaceArc(id, start, end, linePoints, multiplicityLabel));
+    }
+
+    createClonedInstanceOfArc(id: string, start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
+        return new PetriflowTransitionPlaceArc(new RegularTransitionPlaceArc(id, start, end, points, multiplicity));
     }
 }

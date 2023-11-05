@@ -7,7 +7,11 @@ export class PetriflowReadArc extends PetriflowArc<ReadArc> {
         super(arc);
     }
 
-    createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
-        return new PetriflowReadArc(new ReadArc(start, end, points, multiplicity));
+    public static of(id: string, start: NodeElement, end: NodeElement, linePoints?: Array<DOMPoint>, multiplicityLabel?: string | null): PetriflowReadArc {
+        return new PetriflowReadArc(new ReadArc(id, start, end, linePoints, multiplicityLabel));
+    }
+
+    createClonedInstanceOfArc(id: string, start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string) {
+        return new PetriflowReadArc(new ReadArc(id, start, end, points, multiplicity));
     }
 }

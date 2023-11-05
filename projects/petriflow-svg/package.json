@@ -1,6 +1,6 @@
 {
     "name": "@netgrif/petriflow.svg",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Petriflow library of SVG object",
     "homepage": "https://netgrif.github.io/petriflow.svg",
     "license": "Apache-2.0",
@@ -28,7 +28,7 @@
         "tslib": "~2.4.0"
     },
     "peerDependencies": {
-        "@netgrif/petri.svg": "1.0.0",
+        "@panzoom/panzoom": "~4.5.1",
         "@angular/animations": "~13.3.11",
         "@angular/cdk": "~13.3.9",
         "@angular/common": "~13.3.11",
@@ -43,6 +43,7 @@
         "@angular/router": "~13.3.11",
         "@mdi/angular-material": "~7.0.96",
         "@mdi/font": "~7.0.96",
+        "@netgrif/petri.svg": "1.2.0-rc18",
         "@ngx-translate/core": "~13.0.0",
         "@ngx-translate/http-loader": "~6.0.0",
         "@types/mousetrap": "1.6.3",
@@ -58,7 +59,6 @@
         "ngx-joyride": "~2.5.0",
         "ngx-monaco-editor": "~12.0.0",
         "ngx-quill": "~18.0.0",
-        "panzoom": "~9.4.3",
         "quill": "~1.3.7",
         "rxjs": "~7.5.6",
         "zone.js": "~0.11.8"

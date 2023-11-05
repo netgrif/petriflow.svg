@@ -58,15 +58,15 @@ export class Transition extends LabeledObject {
         this.element.setAttributeNS(null, 'y', `${position.y - CanvasConfiguration.SIZE / 2}`);
     }
 
-    setEnabled(firing: boolean) {
+    enable(firing?: boolean) {
+        let svgClass = 'svg-transition-enabled';
         if (firing) {
-            this.element.setAttributeNS(null, 'class', 'svg-transition-firing');
-        } else {
-            this.element.setAttributeNS(null, 'class', 'svg-transition-enabled');
+            svgClass = 'svg-transition-firing';
         }
+        this.element.setAttributeNS(null, 'class', svgClass);
     }
 
-    setDisabled() {
+    disable() {
         this.element.setAttributeNS(null, 'class', 'svg-transition-disabled');
     }
 

@@ -1,4 +1,5 @@
 export interface PetriflowCanvasElement {
+    // TODO: PF-48 remove select/deselect
     select(): void;
 
     deselect(): void;
@@ -8,6 +9,8 @@ export interface PetriflowCanvasElement {
     isEnclosedByRectangle(rectangle: SVGRect): boolean;
 
     activate(): void;
+
+    deactivate(): void;
 
     isSelected(): boolean;
 

@@ -1,6 +1,6 @@
 import {PetriflowCanvasElement} from './petriflow-canvas-element';
 import {Arc, NodeElement} from '@netgrif/petri.svg';
-import {PetriflowNodeClickEventFunction, EMPTY_FUNCTION} from "../common";
+import {EMPTY_FUNCTION, PetriflowNodeClickEventFunction} from "../common";
 
 export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElement {
 
@@ -9,37 +9,38 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
 
     protected constructor(element: T) {
         this._element = element;
-        this._element.arcLine.onmouseenter = () => {
-            this.activate();
-        };
-        this._element.arcLine.onmouseleave = () => {
-            if (!this.isSelected()) {
-                this._element.deactivate();
-            }
-        };
         this._onClickEvent = EMPTY_FUNCTION;
+        this.element.arcLine.id = `svg_arc_${element.id}`;
+        this.element.container.id = `svg_arc_container_${element.id}`;
+        this.element.arcLineBackground.id = `svg_arc_background_${element.id}`;
+        this.element.multiplicityElement.id = `svg_arc_multiplicity_${element.id}`;
     }
 
-    cloneArc(start: NodeElement, end: NodeElement): PetriflowArc<Arc> {
+    cloneArc(id: string, start: NodeElement, end: NodeElement): PetriflowArc<Arc> {
         const newLinePoints: Array<DOMPoint> = [];
         this.element.linePoints.forEach(point => newLinePoints.push(Object.assign({}, {
             x: point.x,
             y: point.y
         } as DOMPoint)));
-        const cloned = this.createClonedInstanceOfArc(start, end, newLinePoints, this._element.multiplicity?.textContent ?? '');
+        const cloned = this.createClonedInstanceOfArc(id, start, end, newLinePoints, this._element.multiplicity?.textContent ?? '');
         cloned.element.arcLine.onclick = () => this._onClickEvent(cloned);
         cloned.setOnClick((clone) => this._onClickEvent(clone));
         return cloned;
     }
 
-    abstract createClonedInstanceOfArc(start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string): PetriflowArc<Arc>;
+    // TODO: PF-48 remove and use static of?
+    abstract createClonedInstanceOfArc(id: string, start: NodeElement, end: NodeElement, points: Array<DOMPoint>, multiplicity: string): PetriflowArc<Arc>;
 
     activate(): void {
         this._element.activate();
     }
 
+    deactivate(): void {
+        this._element.deactivate();
+    }
+
     isEnclosedByRectangle(rectangle: SVGRect): boolean {
-        return this._element.isEnclosedByRectangle(rectangle); // TODO
+        return this._element.isEnclosedByRectangle(rectangle); // TODO: PF-48
     }
 
     isSelected(): boolean {
@@ -52,7 +53,7 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
 
     deselect(): void {
         this.setSelected(false);
-        this._element.deactivate();
+        this.deactivate();
     }
 
     select(): void {
@@ -62,6 +63,10 @@ export abstract class PetriflowArc<T extends Arc> implements PetriflowCanvasElem
 
     setSelected(value: boolean): void {
         this._element.setSelected(value);
+    }
+
+    setMultiplicity(multiplicity: string): void {
+        this._element.multiplicity.textContent = multiplicity;
     }
 
     get element(): T {

@@ -8,20 +8,14 @@
     background-color: map-get($netgrif-blue, 600);;
 }
 
-.canvas {
-    width: 10000px;
-    height: 10000px;
-}
-
 .inner {
     display: block;
 }
 
 .outer {
     display: flex;
-    overflow: scroll;
-    min-height: 100%;
-
+    height: inherit;
+    width: inherit;
 }
 
 .link-icon-button {
