@@ -3,7 +3,7 @@
         <pattern id="canvas-grid" [attr.width]="gridConfiguration.size" [attr.height]="gridConfiguration.size"
                  patternUnits="userSpaceOnUse">
             <rect [attr.width]="gridConfiguration.size" [attr.height]="gridConfiguration.size"
-                  fill="url(#smallGrid)"/>
+                  fill="white"/>
             <path id="canvas-grid-path" [attr.d]="'M '+gridConfiguration.size+' 0 L 0 0 0 '+gridConfiguration.size"
                   fill="none" [attr.stroke]="gridConfiguration.stroke"
                   stroke-width="1"/>
