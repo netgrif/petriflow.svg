@@ -1,6 +1,6 @@
 {
     "name": "@netgrif/petriflow.svg-project",
-    "version": "1.1.1-RC.1",
+    "version": "1.1.1",
     "description": "Netgrif Petriflow SVG example for drawing of the Petri Net SVG elements.",
     "homepage": "https://netgrif.github.io/petriflow.svg",
     "repository": {
