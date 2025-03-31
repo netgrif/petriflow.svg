@@ -55,7 +55,7 @@ module.exports = function (config) {
             useBrowserName: false
         },
 
-        customLauncher: {
+        customLaunchers: {
             ChromeHeadlessCI: {
                 base: 'ChromeHeadless',
                 flags: [
@@ -74,7 +74,7 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['ChromeHeadless'],
+        browsers: ['ChromeHeadlessCI'],
         // browsers: ['Chrome'],
         singleRun: true,
         restartOnFileChange: false
