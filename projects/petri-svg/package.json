@@ -7,13 +7,13 @@
     "types": "petri.svg.d.ts",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/netgrif/petriflow.svg.git"
+        "url": "https://github.com/petriflow/petriflow.svg"
     },
     "license": "Apache-2.0",
     "bugs": {
-        "url": "https://github.com/netgrif/petriflow.svg.git/issues"
+        "url": "https://github.com/petriflow/petriflow.svg.git/issues"
     },
-    "homepage": "https://netgrif.github.io/petriflow.svg",
+    "homepage": "https://petriflow.github.io/petriflow.svg",
     "author": {
         "name": "NETGRIF, s.r.o.",
         "email": "oss@netgrif.com",

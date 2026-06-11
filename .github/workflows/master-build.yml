@@ -1,59 +1,62 @@
 name: Master Build & Test
 
 on:
-    push:
-        branches: [ master, main ]
+  push:
+    branches: [ master, main ]
 
 jobs:
-    build:
-        name: Build
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v3
-                with:
-                    fetch-depth: 0
-            -   name: Use Node.js 18
-                uses: actions/setup-node@v3
-                with:
-                    node-version: 18
-            -   run: |
-                    npm i --legacy-peer-deps
-                    cd projects/petri-svg
-                    npm i
-                    cd ../..
-            -   name: Build & test petri.svg
-                run: |
-                    npm run petrisvg:build
-                    npm run petrisvg:test:full
-                    npm run petrisvg:doc
-                    npm i ./dist/petri-svg --save-optional --legacy-peer-deps
-            -   name: Build & test petriflow.svg
-                run: |
-                    npm run petriflowsvg:build
-                    npm run petriflowsvg:test:full
-                    npm run petriflowsvg:doc
-                    npm i ./dist/petriflow-svg --save-optional --legacy-peer-deps
-            -   name: SonarCloud scan
-                uses: SonarSource/sonarcloud-github-action@master
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            -   name: Build example app
-                run: npm run example:build:prod
-            -   name: Build documentations
-                run: |
-                    rm -rf docs/*
-                    mkdir -p docs/petri.svg
-                    mkdir -p docs/petriflow.svg
-                    touch docs/.nojekyll
-                    cp -r projects/petri-svg/docs/* docs/petri.svg/
-                    cp -r projects/petriflow-svg/docs/* docs/petriflow.svg/
-                    cp -r dist/example-app/* docs/
-            -   uses: EndBug/add-and-commit@v9
-                with:
-                    add: docs
-                    pathspec_error_handling: exitImmediately
-                    default_author: github_actions
-                    committer_name: Netgrif DevOps
-                    committer_email: devops@netgrif.com
-                    message: 'CI - Update documentation'
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 18
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+          check-latest: false
+          registry-url: https://registry.npmjs.org/
+      - run: npm install -g npm@^11.5.1
+      - run: |
+          npm i --legacy-peer-deps
+          cd projects/petri-svg
+          npm i
+          cd ../..
+      - name: Build & test petri.svg
+        run: |
+          npm run petrisvg:build
+          npm run petrisvg:test:full
+          npm run petrisvg:doc
+          npm i ./dist/petri-svg --save-optional --legacy-peer-deps
+      - name: Build & test petriflow.svg
+        run: |
+          npm run petriflowsvg:build
+          npm run petriflowsvg:test:full
+          npm run petriflowsvg:doc
+          npm i ./dist/petriflow-svg --save-optional --legacy-peer-deps
+#      - name: SonarCloud scan
+#        uses: SonarSource/sonarcloud-github-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Build example app
+        run: npm run example:build:prod
+      - name: Build documentations
+        run: |
+          rm -rf docs/*
+          mkdir -p docs/petri.svg
+          mkdir -p docs/petriflow.svg
+          touch docs/.nojekyll
+          cp -r projects/petri-svg/docs/* docs/petri.svg/
+          cp -r projects/petriflow-svg/docs/* docs/petriflow.svg/
+          cp -r dist/example-app/* docs/
+      - uses: EndBug/add-and-commit@v10
+        with:
+          add: docs
+          pathspec_error_handling: exitImmediately
+          default_author: github_actions
+          committer_name: Netgrif DevOps
+          committer_email: devops@netgrif.com
+          message: 'CI - Update documentation'

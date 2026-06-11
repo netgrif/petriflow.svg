@@ -2,13 +2,13 @@
     "name": "@netgrif/petriflow.svg-project",
     "version": "1.1.1",
     "description": "Netgrif Petriflow SVG example for drawing of the Petri Net SVG elements.",
-    "homepage": "https://netgrif.github.io/petriflow.svg",
+    "homepage": "https://petriflow.github.io/petriflow.svg",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/netgrif/petriflow.svg.git"
+        "url": "https://github.com/petriflow/petriflow.svg"
     },
     "bugs": {
-        "url": "https://github.com/netgrif/petriflow.svg/issues"
+        "url": "https://github.com/petriflow/petriflow.svg/issues"
     },
     "keywords": [
         "netgrif",

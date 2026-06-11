@@ -1,13 +1,13 @@
 # Petriflow.SVG
 
-[![GitHub](https://img.shields.io/github/license/netgrif/petriflow.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![GitHub](https://img.shields.io/github/license/petriflow/petriflow.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![npm dev dependency version (scoped)](https://img.shields.io/npm/dependency-version/@netgrif/petriflow.svg/dev/typescript?label=Typescript)](https://www.typescriptlang.org/)
 [![Petriflow 1.0.1](https://img.shields.io/badge/Petriflow-1.0.1-0aa8ff)](https://petriflow.com)
 [![npm (scoped)](https://img.shields.io/npm/v/@netgrif/petriflow.svg)](https://www.npmjs.com/package/@netgrif/petriflow.svg)
 [![npm](https://img.shields.io/npm/dt/@netgrif/petriflow.svg)](https://www.npmjs.com/package/@netgrif/petriflow.svg)
-[![build](https://github.com/netgrif/petriflow.svg/actions/workflows/master-build.yml/badge.svg)](https://github.com/netgrif/petriflow.svg/actions/workflows/release-build.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=netgrif_petriflow.svg&metric=alert_status)](https://sonarcloud.io/dashboard?id=netgrif_petriflow.svg)
-[![Known Vulnerabilities](https://snyk.io/test/github/netgrif/petriflow.svg/badge.svg)](https://snyk.io/test/github/netgrif/petriflow.svg)
+[![build](https://github.com/petriflow/petriflow.svg/actions/workflows/master-build.yml/badge.svg)](https://github.com/petriflow/petriflow.svg/actions/workflows/release-build.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=petriflow_petriflow.svg&metric=alert_status)](https://sonarcloud.io/dashboard?id=petriflow_petriflow.svg)
+[![Known Vulnerabilities](https://snyk.io/test/github/petriflow/petriflow.svg/badge.svg)](https://snyk.io/test/github/petriflow/petriflow.svg)
 
 > Visual library for Petriflow objects
 
@@ -47,12 +47,12 @@ see `peerDependencies` attribute in [the library package.json](../../projects/pe
 
 The library publishes Angular component `petriflow-svg-canvas` that represent drawing canvas for SVG objects.
 The component does not have any inputs or
-output. [See documentation for more information.](https://netgrif.github.io/petriflow.svg)
+output. [See documentation for more information.](https://petriflow.github.io/petriflow.svg)
 
 ## Reporting issues
 
 If you find a bug, let us know. First, please read
-our [Contribution guide](https://github.com/netgrif/petriflow.js/blob/master/CONTRIBUTING.md)
+our [Contribution guide](https://github.com/petriflow/petriflow.js/blob/master/CONTRIBUTING.md)
 
 ## License
 

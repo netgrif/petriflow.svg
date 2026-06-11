@@ -2,14 +2,14 @@
     "name": "@netgrif/petriflow.svg",
     "version": "1.1.1",
     "description": "Petriflow library of SVG object",
-    "homepage": "https://netgrif.github.io/petriflow.svg",
+    "homepage": "https://petriflow.github.io/petriflow.svg",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/netgrif/petriflow.svg.git"
+        "url": "https://github.com/petriflow/petriflow.svg"
     },
     "bugs": {
-        "url": "https://github.com/netgrif/petriflow.svg/issues"
+        "url": "https://github.com/petriflow/petriflow.svg/issues"
     },
     "author": {
         "name": "NETGRIF, s.r.o.",
